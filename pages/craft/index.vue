@@ -46,7 +46,7 @@
               <div class="craft__slider">
                 <div class="craft__top">
                   <span class="craft__desc">Probability of winning</span>
-                  <span class="craft__progress"> progress %</span>
+                  <span class="craft__progress"> {{ progress }} %</span>
                 </div>
                 <client-only>
                   <vue-slide-bar :lineHeight="8" v-model="progress" />
@@ -67,7 +67,7 @@
     <section class="inventory">
       <b-container>
         <div class="faq__title">
-          <h2>Choose an Item</h2>
+          <h2>Choose</h2>
           <div v-if="getWindowSize > 1200" class="faq__filter">
             <span class="faq__filter_active">Restless</span>
             <span>Advanced</span>
@@ -130,9 +130,9 @@ export default {
   },
   data () {
     return {
-      filterItems: '',
+      filterItems: 'Restless',
       options: ['Restless', 'Advanced', 'Splash', 'Patience', 'Wisdom', 'Prisma', 'Gloves'],
-      progress: ''
+      progress: 0
     }
   },
   computed: {
@@ -145,42 +145,6 @@ export default {
 
 <style lang="sass">
 @import '@/theme/_mix.sass'
-.inventory
-  &__select
-    width: initial
-    min-width: 200px
-  .multiselect
-    &__tags
-      min-height: initial
-      padding: 6px 42px 6px 12px
-      border-radius: 18px
-      box-shadow: 0 8px 8px -4px rgba(0, 187, 255, 0.12), 0 16px 24px 0 rgba(0, 187, 255, 0.24), 0 2px 4px -1px rgba(10, 70, 82, 0.12), 0 0 1px 0 rgba(0, 187, 255, 0.24)
-      background-image: linear-gradient(101deg, #00ffaa, #00bbff 53%, #4579f5)
-      border: none
-      cursor: pointer
-    &__element
-      font-size: 14px
-      line-height: 18px
-    &__single
-      margin-bottom: 0
-      padding: 0
-      background: transparent
-      color: white
-      font-size: 14px
-      font-weight: 500
-      line-height: 24px
-    &__placeholder
-      margin-bottom: 0
-      padding: 0
-      background: transparent
-      color: white
-      font-size: 14px
-      font-weight: 500
-      line-height: 24px
-    &__select
-      height: 32px
-      &::before
-        border-color: white transparent transparent
 .inventory
   padding-bottom: 16px
   +lg

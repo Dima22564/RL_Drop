@@ -10,7 +10,7 @@
             <h2 class="ice__title">
               Ice Melting Event
             </h2>
-            <div class="ice__timer">
+            <!-- <div class="ice__timer">
               <div class="ice__timer-item">
                 <div class="num">
                   32
@@ -43,7 +43,24 @@
                   sec
                 </div>
               </div>
-            </div>
+            </div> -->
+            <Timer
+              starttime="May 10, 2020 15:37:25"
+              endtime="May 13, 2020 16:37:25"
+              trans='{
+                "day":"Day",
+                "hours":"Hrs",
+                "minutes":"Min",
+                "seconds":"Sec",
+                "expired":"Event has been expired.",
+                "running":"Till the end of event.",
+                "upcoming":"Till start of event.",
+                "status": {
+                   "expired":"Expired",
+                   "running":"Running",
+                   "upcoming":"Future"
+                  }}'
+              />
           </div>
           <div class="ice__btn">
             <button class="btn btn_primary btn-arrow">
@@ -110,10 +127,12 @@
 <script>
 import ArrowRightIcon from 'vue-material-design-icons/ArrowRight.vue'
 import { mapGetters } from 'vuex'
+import Timer from '../components/Timer'
 export default {
   layout: 'default',
   components: {
-    ArrowRightIcon
+    ArrowRightIcon,
+    Timer
   },
   computed: {
     ...mapGetters({
@@ -174,6 +193,9 @@ export default {
       justify-content: center
       width: 100%
     &-item
+      display: flex
+      flex-direction: column
+      align-items: center
       &:not(:last-child)
         margin-right: 8px
       .num

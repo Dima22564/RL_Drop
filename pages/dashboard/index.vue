@@ -102,7 +102,7 @@
       <b-container>
         <div class="inventory__top">
           <h3>Inventory</h3>
-          <div class="inventory__filter">
+          <div v-if="getWindowSize >= 991" class="inventory__filter">
             <div class="inventory__filterItem inventory__filterItem_active">
               <span>PC</span>
               <span class="quantity">320+</span>
@@ -116,6 +116,29 @@
               <span class="quantity">320+</span>
             </div>
           </div>
+          <multiselect
+            v-model="filterItems"
+            v-else
+            :options="options"
+            :searchable="false"
+            :allowEmpty="false"
+            :showLabels="false"
+            :hideSelected="true"
+            class="inventory__select"
+          >
+            <template slot="singleLabel" slot-scope="props">
+              <div class="customLabel">
+                <span class="customLabel__name">{{ props.option }}</span>
+                <span class="customLabel__num">45+</span>
+              </div>
+            </template>
+            <template slot="option" slot-scope="props">
+              <div class="customLabel">
+                <span class="customLabel__name">{{ props.option }}</span>
+                <span class="customLabel__num">45+</span>
+              </div>
+            </template>
+          </multiselect>
         </div>
 
         <b-row class="inventoryItem__row">
@@ -142,6 +165,12 @@ export default {
     PlusIcon,
     InventoryItem
   },
+  data () {
+    return {
+      filterItems: 'vdfbv',
+      options: ['vdfbv', 'brtdgbrb', 'brtbrtdbrt']
+    }
+  },
   computed: {
     ...mapGetters({
       getWindowSize: 'common/getWindowSize'
@@ -152,6 +181,20 @@ export default {
 
 <style lang="sass">
 @import '@/theme/_mix.sass'
+.customLabel
+  display: flex
+  align-items: center
+  font-weight: 500
+  &__name
+    color: 14px
+    margin-right: 12px
+  &__num
+    font-size: 13px
+    line-height: 16px
+    color: #00bbff
+    background: white
+    padding: 1px 4px
+    border-radius: 64px
 .accounntDash
   padding-top: 16px
   &__top
