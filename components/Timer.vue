@@ -1,35 +1,42 @@
 <template>
-  <div v-show="statusType !== 'expired'" class="ice__timer">
-    <div class="ice__timer-item">
-      <div class="num">
-        {{ days }}
+  <div>
+    <div v-if="statusType !== 'expired'" class="ice__timer">
+      <div class="ice__timer-item">
+        <div class="num">
+          {{ days }}
+        </div>
+        <div class="day">
+          {{ wordString.day }}
+        </div>
       </div>
-      <div class="day">
-        {{ wordString.day }}
+      <div class="ice__timer-item">
+        <div class="num">
+          {{ hours }}
+        </div>
+        <div class="day">
+          {{ wordString.hours }}
+        </div>
+      </div>
+      <div class="ice__timer-item">
+        <div class="num">
+          {{ minutes }}
+        </div>
+        <div class="day">
+          {{ wordString.minutes }}
+        </div>
+      </div>
+      <div class="ice__timer-item">
+        <div class="num">
+          {{ seconds }}
+        </div>
+        <div class="day">
+          {{ wordString.seconds }}
+        </div>
       </div>
     </div>
-    <div class="ice__timer-item">
-      <div class="num">
-        {{ hours }}
-      </div>
-      <div class="day">
-        {{ wordString.hours }}
-      </div>
-    </div>
-    <div class="ice__timer-item">
-      <div class="num">
-        {{ minutes }}
-      </div>
-      <div class="day">
-        {{ wordString.minutes }}
-      </div>
-    </div>
-    <div class="ice__timer-item">
-      <div class="num">
-        {{ seconds }}
-      </div>
-      <div class="day">
-        {{ wordString.seconds }}
+    <div v-else class="ice__timer-item">
+      <div class="expired">
+        {{ statusType }}
       </div>
     </div>
   </div>

@@ -45,8 +45,8 @@
               </div>
             </div> -->
             <Timer
-              starttime="May 10, 2020 15:37:25"
-              endtime="May 13, 2020 16:37:25"
+              starttime="May 12, 2020 15:37:25"
+              endtime="Jun 13, 2020 16:37:25"
               trans='{
                 "day":"Day",
                 "hours":"Hrs",
@@ -157,6 +157,7 @@ export default {
   align-items: flex-start
   justify-content: space-between
   position: relative
+  min-height: 228px
   +md
     flex-direction: column
   &__title
@@ -165,6 +166,7 @@ export default {
     position: absolute
     right: -30px
     bottom: -30px
+    user-select: none
     +lg
       width: 100%
       bottom: -22px
@@ -189,6 +191,7 @@ export default {
   &__timer
     display: flex
     align-items: flex-start
+    user-select: none
     +md
       justify-content: center
       width: 100%
@@ -210,6 +213,7 @@ export default {
         font-weight: bold
         color: white
         border-radius: 4px
+        text-transform: uppercase
         background-color: rgba(224, 224, 255, 0.02)
       .day
         text-align: center
@@ -219,6 +223,11 @@ export default {
         color: rgba(224, 224, 255, 0.6)
         letter-spacing: 1px
         font-weight: 600
+      .expired
+        font-size: 24px
+        text-transform: uppercase
+        font-weight: 600
+        color: rgba(224, 224, 255, 0.6)
 .chests
   padding-bottom: 16px
   +lg
