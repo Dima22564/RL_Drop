@@ -38,6 +38,10 @@ module.exports = {
       src: '@/plugins/slick',
       ssr: false
     },
+    {
+      src: '@/plugins/slide-bar',
+      ssr: false
+    },
     '@/plugins/multi-select'
   ],
   /*

@@ -1,34 +1,9 @@
 <template>
   <b-col xl="2" lg="2" md="3" sm="4" cols="6">
-    <div @click.stop="showSell = true" @mouseleave="showSell = false" class="inventoryItem">
-      <div v-if="showSell" class="inventoryItem__click">
-        <p class="inventoryItem__name">
-          {{ name }}
-        </p>
-        <p class="inventoryItem__desc">
-          {{ desc }}
-        </p>
-        <button @click="sell" class="btn btn_primary inventoryItem__btn">
-          Sell
-        </button>
-        <button class="btn btn_trans inventoryItem__acc">
-          To Account
-        </button>
-      </div>
-
-      <div v-if="showConfirm" @mouseleave="showConfirm = false" class="inventoryItem__click">
-        <p class="inventoryItem__name">
-          Sell this item
-        </p>
-        <p class="inventoryItem__desc inventoryItem__desc_emp">
-          for $41.62?
-        </p>
-        <button class="btn btn_primary inventoryItem__btn">
-          Confirm
-        </button>
-        <button @click.prevent="showConfirm = false" class="btn btn_trans inventoryItem__acc">
-          Cancel
-        </button>
+    <input :value="itemId" type="hidden" name="">
+    <div @click="check" :class="checked ? 'inventoryItem_checked' : ''" class="inventoryItem">
+      <div v-if="checked" class="inventoryItem__check">
+        <CheckIcon class="icon" />
       </div>
 
       <img :src="img" alt="" class="inventoryItem__img">
@@ -48,7 +23,11 @@
 </template>
 
 <script>
+import CheckIcon from 'vue-material-design-icons/Check.vue'
 export default {
+  components: {
+    CheckIcon
+  },
   props: {
     name: {
       type: String,
@@ -63,20 +42,22 @@ export default {
       required: true
     },
     price: {
-      type: Number,
+      type: String,
+      required: true
+    },
+    itemId: {
+      type: String,
       required: true
     }
   },
   data () {
     return {
-      showSell: false,
-      showConfirm: false
+      checked: false
     }
   },
   methods: {
-    sell () {
-      this.showSell = false
-      this.showConfirm = true
+    check () {
+      this.checked ? this.checked = false : this.checked = true
     }
   }
 
@@ -96,6 +77,8 @@ export default {
   border-radius: 12px
   max-height: 180px
   cursor: pointer
+  &_checked
+    background: rgba(0, 187, 255, 0.03)
   &::after
     content: ''
     background: #00bbff
@@ -171,4 +154,19 @@ export default {
     background: #00ffaa
     border-radius: 12px 3px 12px 3px
     font-weight: bold
+  &__check
+    position: absolute
+    top: 16px
+    left: 16px
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 24px
+    height: 24px
+    border-radius: 50%
+    background: #00bbff
+    color: white
+    font-size: 20px
+  .icon
+    height: 15px
 </style>

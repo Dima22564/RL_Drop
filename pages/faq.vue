@@ -64,29 +64,6 @@ export default {
 @import '@/theme/_mix.sass'
 .faq
   padding: 16px 0 32px
-  &__title
-    display: flex
-    align-items: center
-    justify-content: space-between
-    margin-bottom: 32px
-  &__filter
-    font-size: 14px
-    color: rgba(224, 224, 255, 0.6)
-    font-weight: 500
-    display: flex
-    align-items: center
-    span
-      padding: 6px 16px
-      border-radius: 18px
-      cursor: pointer
-      transition: all 0.1s
-      &:hover
-        color: white
-      &:not(:last-child)
-        margin-right: 16px
-  &__select
-    width: initial
-    min-width: 200px
   .multiselect
     &__tags
       min-height: initial

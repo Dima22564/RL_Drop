@@ -97,7 +97,7 @@
       </b-container>
     </section>
 
-    <!-- Inventory  adapted =  -->
+    <!-- Inventory  adapted = true -->
     <section class="inventory">
       <b-container>
         <div class="inventory__top">
