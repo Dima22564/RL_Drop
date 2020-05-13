@@ -10,40 +10,6 @@
             <h2 class="ice__title">
               Ice Melting Event
             </h2>
-            <!-- <div class="ice__timer">
-              <div class="ice__timer-item">
-                <div class="num">
-                  32
-                </div>
-                <div class="day">
-                  day
-                </div>
-              </div>
-              <div class="ice__timer-item">
-                <div class="num">
-                  32
-                </div>
-                <div class="day">
-                  hrs
-                </div>
-              </div>
-              <div class="ice__timer-item">
-                <div class="num">
-                  32
-                </div>
-                <div class="day">
-                  min
-                </div>
-              </div>
-              <div class="ice__timer-item">
-                <div class="num">
-                  32
-                </div>
-                <div class="day">
-                  sec
-                </div>
-              </div>
-            </div> -->
             <Timer
               starttime="May 12, 2020 15:37:25"
               endtime="Jun 13, 2020 16:37:25"
