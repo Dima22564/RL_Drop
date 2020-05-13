@@ -10,7 +10,7 @@
               <DashboardIcon />
               <span class="text">Dashboard</span>
             </nuxt-link>
-            <nuxt-link :to="getWindowSize >= 768 ? '/settings/personal' : '/settings'" active-class="dashLinks__link_active" class="dashLinks__link">
+            <nuxt-link to="/settings" active-class="dashLinks__link_active" class="dashLinks__link">
               <SettingsIcon />
               <span class="text">Settings</span>
             </nuxt-link>

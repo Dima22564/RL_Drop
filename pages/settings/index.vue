@@ -218,7 +218,7 @@
       <b-container>
         <div class="inventory__top">
           <h3>Inventory</h3>
-          <div class="inventory__filter">
+          <div v-if="getWindowSize >= 991" class="inventory__filter">
             <div class="inventory__filterItem inventory__filterItem_active">
               <span>PC</span>
               <span class="quantity">320+</span>
@@ -232,6 +232,29 @@
               <span class="quantity">320+</span>
             </div>
           </div>
+          <multiselect
+            v-model="filterItems"
+            v-else
+            :options="options"
+            :searchable="false"
+            :allowEmpty="false"
+            :showLabels="false"
+            :hideSelected="true"
+            class="inventory__select"
+          >
+            <template slot="singleLabel" slot-scope="props">
+              <div class="customLabel">
+                <span class="customLabel__name">{{ props.option }}</span>
+                <span class="customLabel__num">45+</span>
+              </div>
+            </template>
+            <template slot="option" slot-scope="props">
+              <div class="customLabel">
+                <span class="customLabel__name">{{ props.option }}</span>
+                <span class="customLabel__num">45+</span>
+              </div>
+            </template>
+          </multiselect>
         </div>
 
         <b-row class="inventoryItem__row">
@@ -279,7 +302,9 @@ export default {
       isShowSecurity: false,
       isShowVerification: false,
       isShowLinks: false,
-      isShowMain: true
+      isShowMain: true,
+      filterItems: 'vdfbv',
+      options: ['vdfbv', 'brtdgbrb', 'brtbrtdbrt']
     }
   },
   computed: {
@@ -287,7 +312,18 @@ export default {
       getWindowSize: 'common/getWindowSize'
     })
   },
+  mounted () {
+    this.checkMain()
+    window.addEventListener('resize', this.checkMain)
+  },
   methods: {
+    checkMain () {
+      if (screen.width > 768) {
+        this.isShowMain = true
+      } else {
+        this.isShowMain = false
+      }
+    },
     showPersonal () {
       this.isShowPersonal = true
       this.isShowSecurity = false
