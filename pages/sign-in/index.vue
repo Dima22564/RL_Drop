@@ -14,14 +14,21 @@
           <h1 class="registerPage__title">
             Sign In
           </h1>
-          <form action="" class="regForm">
+          <form class="regForm">
             <div class="input regForm__input">
               <label for="username" class="input__label">Username</label>
-              <input id="number" type="text" name="number" class="input__input" placeholder="Username">
+              <input
+                id="number"
+                v-model="userName"
+                type="text"
+                name="userName"
+                class="input__input"
+                placeholder="Username"
+              >
             </div>
-            <div class="input input_withIconR regForm__input">
+            <div class="input regForm__input">
               <label for="username" class="input__label">Password</label>
-              <input id="number" :type="showPasswod ? 'text' : 'password'" name="number" class="input__input" placeholder="Password">
+              <input id="number" :type="showPasswod ? 'text' : 'password'" name="number" class="input__input input__input_withIconR" placeholder="Password">
               <EyeIcon v-if="!showPasswod" @click="showPasswod = true" class="input__icon_r input__icon" />
               <EyeOffIcon v-if="showPasswod" @click="showPasswod = false" class="input__icon_r input__icon" />
             </div>
@@ -36,7 +43,7 @@
                   Sign Up Now
                 </nuxt-link>
               </p>
-              <button class="btn btn_primary">
+              <button class="btn btn_primary" type="submit">
                 Sign In
               </button>
             </div>
@@ -58,7 +65,8 @@ export default {
   },
   data () {
     return {
-      showPasswod: false
+      showPasswod: false,
+      userName: ''
     }
   }
 }
