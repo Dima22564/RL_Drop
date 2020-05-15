@@ -320,6 +320,9 @@ export default {
     checkMain () {
       if (screen.width > 768) {
         this.isShowMain = true
+        if ((this.isShowPersonal && this.isShowSecurity && this.isShowVerification && this.isShowLinks) === false) {
+          this.isShowPersonal = true
+        }
       } else {
         this.isShowMain = false
       }
