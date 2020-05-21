@@ -15,27 +15,45 @@
             Sign In
           </h1>
           <form class="regForm">
-            <div class="input regForm__input">
-              <label for="username" class="input__label">Username</label>
-              <input
-                id="number"
-                v-model="userName"
-                type="text"
-                name="userName"
-                class="input__input"
-                placeholder="Username"
-              >
-            </div>
-            <div class="input regForm__input">
-              <label for="username" class="input__label">Password</label>
-              <input id="number" :type="showPasswod ? 'text' : 'password'" name="number" class="input__input input__input_withIconR" placeholder="Password">
-              <EyeIcon v-if="!showPasswod" @click="showPasswod = true" class="input__icon_r input__icon" />
-              <EyeOffIcon v-if="showPasswod" @click="showPasswod = false" class="input__icon_r input__icon" />
-            </div>
-            <div class="input regForm__input">
-              <label for="username" class="input__label">2FA Code</label>
-              <input id="number" type="text" name="number" class="input__input" placeholder="2FA">
-            </div>
+            <MyInput
+              v-model="userName"
+              :rightIcon="false"
+              :leftIcon="false"
+              name="Name"
+              label="User name"
+              type="text"
+              class="regForm__input"
+            />
+            <MyInput
+              v-model="password"
+              :rightIcon="true"
+              :leftIcon="false"
+              :type="showPasswod ? 'text' : 'password'"
+              name="password"
+              label="Password"
+              class="regForm__input"
+            >
+              <template slot="rightIcon">
+                <EyeIcon v-if="!showPasswod" @click="showPasswod = true" />
+                <EyeOffIcon v-if="showPasswod" @click="showPasswod = false" />
+              </template>
+              <template slot="label">
+                <div class="input__label input__custom-label">
+                  <label for="password">Password</label>
+                  <nuxt-link tag="span" class="emp" to="/password-recovery">Forgot password?</nuxt-link>
+                </div>
+              </template>
+            </MyInput>
+
+            <MyInput
+              v-model="TwoFA"
+              :rightIcon="false"
+              :leftIcon="false"
+              name="TwoFA"
+              label="2FA Code"
+              type="text"
+              class="regForm__input"
+            />
 
             <div class="regForm__bottom">
               <p class="regForm__text">
@@ -66,7 +84,9 @@ export default {
   data () {
     return {
       showPasswod: false,
-      userName: ''
+      userName: '',
+      'TwoFA': '',
+      password: ''
     }
   }
 }
@@ -146,4 +166,14 @@ export default {
       display: block
       background: rgba(224, 224, 255, 0.04)
       border-radius: 4px
+.input
+  &__custom
+    &-label
+      display: flex
+      align-items: center
+      width: 100%
+      justify-content: space-between
+      .emp
+        color: #00bbff
+        cursor: pointer
 </style>

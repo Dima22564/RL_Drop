@@ -3,7 +3,9 @@
     <div class="input__icon">
       <slot name="leftIcon" class="" />
     </div>
-    <label for="username" class="input__label">{{ label }}</label>
+    <slot name="label">
+      <label :for="name" class="input__label">{{ label }}</label>
+    </slot>
     <input
       :id="name"
       :value="value"
@@ -108,6 +110,8 @@ export default {
     position: absolute
     left: 8px
     bottom: 0
+    width: 25px
+    height: 25px
     transform: translateY(calc(-100% + 10px))
     color: rgba(224, 224, 255, 0.6)
     font-size: 25px
@@ -116,7 +120,7 @@ export default {
       left: initial
       cursor: pointer
   &__label
-    padding-left: 12px
+    padding: 0 12px
     font-size: 13px
     line-height: 16px
     color: rgba(224, 224, 255, 0.4)

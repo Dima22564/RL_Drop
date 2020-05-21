@@ -15,22 +15,42 @@
             Sign Up
           </h1>
           <form action="" class="regForm">
-            <div class="input regForm__input">
-              <label for="username" class="input__label">Username</label>
-              <input id="number" type="text" name="number" class="input__input" placeholder="Username">
-            </div>
-            <div class="input regForm__input">
-              <label for="username" class="input__label">Email</label>
-              <input id="number" type="text" name="number" class="input__input" placeholder="Email">
-            </div>
-            <div class="input regForm__input">
-              <label for="username" class="input__label">Password</label>
-              <input id="number" type="text" name="number" class="input__input" placeholder="Password">
-            </div>
-            <div class="input regForm__input">
-              <label for="username" class="input__label">Confirm password</label>
-              <input id="number" type="text" name="number" class="input__input" placeholder="Confirm_password">
-            </div>
+            <MyInput
+              v-model="userName"
+              :rightIcon="false"
+              :leftIcon="false"
+              name="Name"
+              label="User name"
+              type="text"
+              class="regForm__input"
+            />
+            <MyInput
+              v-model="email"
+              :rightIcon="false"
+              :leftIcon="false"
+              name="email"
+              label="Email"
+              type="text"
+              class="regForm__input"
+            />
+            <MyInput
+              v-model="password"
+              :rightIcon="false"
+              :leftIcon="false"
+              name="password"
+              label="Password"
+              type="text"
+              class="regForm__input"
+            />
+            <MyInput
+              v-model="confirmPassword"
+              :rightIcon="false"
+              :leftIcon="false"
+              name="confirmPassword"
+              label="Confirm password"
+              type="text"
+              class="regForm__input"
+            />
 
             <div class="checkbox regForm__checkbox">
               <input id="privacy" type="checkbox" name="privacy" class="checkbox__input">
@@ -60,7 +80,15 @@
 
 <script>
 export default {
-  layout: 'register'
+  layout: 'register',
+  data () {
+    return {
+      userName: '',
+      email: '',
+      password: '',
+      confirmPassword: ''
+    }
+  }
 }
 </script>
 
