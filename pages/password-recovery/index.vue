@@ -18,10 +18,15 @@
             Enter the email address you used and we’ll send you instructions to reset your password.
           </p>
           <form action="" class="regForm">
-            <div class="input regForm__input">
-              <label for="username" class="input__label">Email</label>
-              <input id="number" type="text" name="number" class="input__input" placeholder="Email">
-            </div>
+            <MyInput
+              v-model="email"
+              :rightIcon="false"
+              :leftIcon="false"
+              type="text"
+              name="email"
+              label="Email"
+              class="regForm__input"
+            />
 
             <div class="regForm__bottom">
               <p class="regForm__text">
@@ -42,7 +47,12 @@
 
 <script>
 export default {
-  layout: 'register'
+  layout: 'register',
+  data () {
+    return {
+      email: ''
+    }
+  }
 }
 </script>
 

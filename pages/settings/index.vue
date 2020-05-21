@@ -92,28 +92,10 @@
                     Done
                   </button>
                 </div>
-                <div class="form__inputs">
-                  <div class="input form__input input_error">
-                    <label for="username" class="input__label">Username</label>
-                    <input id="username" type="text" name="username" class="input__input">
-                    <span class="input__error">Error message</span>
-                  </div>
-                  <div class="input form__input">
-                    <label for="username" class="input__label">Phone number</label>
-                    <input id="number" type="text" name="number" class="input__input">
-                  </div>
-                  <div class="input form__input input_w100">
-                    <label for="username" class="input__label">Email</label>
-                    <input id="email" type="text" name="email" class="input__input">
-                  </div>
-                  <div class="input form__input input_w100">
-                    <label for="username" class="input__label">Email</label>
-                    <input id="email" type="text" name="email" class="input__input input__input_withIcon">
-                    <SteamIcon class="input__icon" />
-                  </div>
-                </div>
+                <Personal />
               </form>
             </keep-alive>
+
             <keep-alive>
               <form v-if="isShowSecurity" name="form2" method="POST" class="form">
                 <div class="form__top">
@@ -126,62 +108,26 @@
                     Done
                   </button>
                 </div>
-                <div class="form__inputs">
-                  <div class="input form__input input_error">
-                    <label for="username" class="input__label">Username</label>
-                    <input id="username" type="text" name="username" class="input__input">
-                    <span class="input__error">Error message</span>
-                  </div>
-                  <div class="input form__input">
-                    <label for="username" class="input__label">Phone number</label>
-                    <input id="number" type="text" name="number" class="input__input">
-                  </div>
-                  <div class="input form__input input_w100">
-                    <label for="username" class="input__label">Email</label>
-                    <input id="email" type="text" name="email" class="input__input">
-                  </div>
-                  <div class="input form__input input_w100">
-                    <label for="username" class="input__label">Email</label>
-                    <input id="email" type="text" name="email" class="input__input input__input_withIcon">
-                    <SteamIcon class="input__icon" />
-                  </div>
-                </div>
+                <Security />
               </form>
             </keep-alive>
+
             <keep-alive>
               <form v-if="isShowVerification" name="form3" method="POST" class="form">
                 <div class="form__top">
                   <div @click="back" class="form__back" tag="div">
                     <ArrowL class="icon" />
-                    <span>Back</span>
+                    <span>Activate</span>
                   </div>
                   <h4>Verification</h4>
                   <button class="btn form__btn" type="submit">
                     Done
                   </button>
                 </div>
-                <div class="form__inputs">
-                  <div class="input form__input input_error">
-                    <label for="username" class="input__label">Username</label>
-                    <input id="username" type="text" name="username" class="input__input">
-                    <span class="input__error">Error message</span>
-                  </div>
-                  <div class="input form__input">
-                    <label for="username" class="input__label">Phone number</label>
-                    <input id="number" type="text" name="number" class="input__input">
-                  </div>
-                  <div class="input form__input input_w100">
-                    <label for="username" class="input__label">Email</label>
-                    <input id="email" type="text" name="email" class="input__input">
-                  </div>
-                  <div class="input form__input input_w100">
-                    <label for="username" class="input__label">Email</label>
-                    <input id="email" type="text" name="email" class="input__input input__input_withIcon">
-                    <SteamIcon class="input__icon" />
-                  </div>
-                </div>
+                <Verification />
               </form>
             </keep-alive>
+
             <keep-alive>
               <form v-if="isShowLinks" name="form4" method="POST" class="form">
                 <div class="form__top">
@@ -194,26 +140,7 @@
                     Done
                   </button>
                 </div>
-                <div class="form__inputs">
-                  <div class="input form__input input_error">
-                    <label for="username" class="input__label">Username</label>
-                    <input id="username" type="text" name="username" class="input__input">
-                    <span class="input__error">Error message</span>
-                  </div>
-                  <div class="input form__input">
-                    <label for="username" class="input__label">Phone number</label>
-                    <input id="number" type="text" name="number" class="input__input">
-                  </div>
-                  <div class="input form__input input_w100">
-                    <label for="username" class="input__label">Email</label>
-                    <input id="email" type="text" name="email" class="input__input">
-                  </div>
-                  <div class="input form__input input_w100">
-                    <label for="username" class="input__label">Email</label>
-                    <input id="email" type="text" name="email" class="input__input input__input_withIcon">
-                    <SteamIcon class="input__icon" />
-                  </div>
-                </div>
+                <Links />
               </form>
             </keep-alive>
           </b-col>
@@ -283,11 +210,12 @@ import LayerIcon from 'vue-material-design-icons/Layers.vue'
 import SecurityIcon from 'vue-material-design-icons/Security.vue'
 import WifiIcon from 'vue-material-design-icons/Wifi.vue'
 import ArrowL from 'vue-material-design-icons/ChevronLeft.vue'
-import SteamIcon from 'vue-material-design-icons/Steam.vue'
 import ArrowR from 'vue-material-design-icons/ChevronRight.vue'
 import { mapGetters } from 'vuex'
-// import PersonalSettings from '../../components/PersonalSettings'
-
+import Links from '../../components/Settings/Links'
+import Verification from '../../components/Settings/Verification'
+import Security from '../../components/Settings/Security'
+import Personal from '../../components/Settings/Personal'
 import InventoryItem from '../../components/InventoryItem'
 export default {
   layout: 'default',
@@ -300,8 +228,11 @@ export default {
     SecurityIcon,
     WifiIcon,
     ArrowL,
-    SteamIcon,
-    ArrowR
+    ArrowR,
+    Links,
+    Verification,
+    Security,
+    Personal
   },
   data () {
     return {
@@ -477,5 +408,7 @@ export default {
     width: calc(50% - 12px)
     margin-bottom: 30px
     +lg
+      width: 100%
+    &_w100
       width: 100%
 </style>
