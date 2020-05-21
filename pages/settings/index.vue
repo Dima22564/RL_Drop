@@ -80,134 +80,142 @@
           </b-col>
 
           <b-col xl="9" lg="9" md="8">
-            <form v-if="isShowPersonal" method="POST" class="form">
-              <div class="form__top">
-                <div @click="back" class="form__back" tag="div">
-                  <ArrowL class="icon" />
-                  <span>Back</span>
+            <keep-alive>
+              <form v-if="isShowPersonal" name="form1" method="POST" class="form">
+                <div class="form__top">
+                  <div @click="back" class="form__back" tag="div">
+                    <ArrowL class="icon" />
+                    <span>Back</span>
+                  </div>
+                  <h4>Personal</h4>
+                  <button class="btn form__btn" type="submit">
+                    Done
+                  </button>
                 </div>
-                <h4>Personal</h4>
-                <button class="btn form__btn" type="submit">
-                  Done
-                </button>
-              </div>
-              <div class="form__inputs">
-                <div class="input form__input input_error">
-                  <label for="username" class="input__label">Username</label>
-                  <input id="username" type="text" name="username" class="input__input">
-                  <span class="input__error">Error message</span>
+                <div class="form__inputs">
+                  <div class="input form__input input_error">
+                    <label for="username" class="input__label">Username</label>
+                    <input id="username" type="text" name="username" class="input__input">
+                    <span class="input__error">Error message</span>
+                  </div>
+                  <div class="input form__input">
+                    <label for="username" class="input__label">Phone number</label>
+                    <input id="number" type="text" name="number" class="input__input">
+                  </div>
+                  <div class="input form__input input_w100">
+                    <label for="username" class="input__label">Email</label>
+                    <input id="email" type="text" name="email" class="input__input">
+                  </div>
+                  <div class="input form__input input_w100">
+                    <label for="username" class="input__label">Email</label>
+                    <input id="email" type="text" name="email" class="input__input input__input_withIcon">
+                    <SteamIcon class="input__icon" />
+                  </div>
                 </div>
-                <div class="input form__input">
-                  <label for="username" class="input__label">Phone number</label>
-                  <input id="number" type="text" name="number" class="input__input">
+              </form>
+            </keep-alive>
+            <keep-alive>
+              <form v-if="isShowSecurity" name="form2" method="POST" class="form">
+                <div class="form__top">
+                  <div @click="back" class="form__back" tag="div">
+                    <ArrowL class="icon" />
+                    <span>Back</span>
+                  </div>
+                  <h4>Security</h4>
+                  <button class="btn form__btn" type="submit">
+                    Done
+                  </button>
                 </div>
-                <div class="input form__input input_w100">
-                  <label for="username" class="input__label">Email</label>
-                  <input id="email" type="text" name="email" class="input__input">
+                <div class="form__inputs">
+                  <div class="input form__input input_error">
+                    <label for="username" class="input__label">Username</label>
+                    <input id="username" type="text" name="username" class="input__input">
+                    <span class="input__error">Error message</span>
+                  </div>
+                  <div class="input form__input">
+                    <label for="username" class="input__label">Phone number</label>
+                    <input id="number" type="text" name="number" class="input__input">
+                  </div>
+                  <div class="input form__input input_w100">
+                    <label for="username" class="input__label">Email</label>
+                    <input id="email" type="text" name="email" class="input__input">
+                  </div>
+                  <div class="input form__input input_w100">
+                    <label for="username" class="input__label">Email</label>
+                    <input id="email" type="text" name="email" class="input__input input__input_withIcon">
+                    <SteamIcon class="input__icon" />
+                  </div>
                 </div>
-                <div class="input form__input input_w100">
-                  <label for="username" class="input__label">Email</label>
-                  <input id="email" type="text" name="email" class="input__input input__input_withIcon">
-                  <SteamIcon class="input__icon" />
+              </form>
+            </keep-alive>
+            <keep-alive>
+              <form v-if="isShowVerification" name="form3" method="POST" class="form">
+                <div class="form__top">
+                  <div @click="back" class="form__back" tag="div">
+                    <ArrowL class="icon" />
+                    <span>Back</span>
+                  </div>
+                  <h4>Verification</h4>
+                  <button class="btn form__btn" type="submit">
+                    Done
+                  </button>
                 </div>
-              </div>
-            </form>
-            <form v-if="isShowSecurity" method="POST" class="form">
-              <div class="form__top">
-                <div @click="back" class="form__back" tag="div">
-                  <ArrowL class="icon" />
-                  <span>Back</span>
+                <div class="form__inputs">
+                  <div class="input form__input input_error">
+                    <label for="username" class="input__label">Username</label>
+                    <input id="username" type="text" name="username" class="input__input">
+                    <span class="input__error">Error message</span>
+                  </div>
+                  <div class="input form__input">
+                    <label for="username" class="input__label">Phone number</label>
+                    <input id="number" type="text" name="number" class="input__input">
+                  </div>
+                  <div class="input form__input input_w100">
+                    <label for="username" class="input__label">Email</label>
+                    <input id="email" type="text" name="email" class="input__input">
+                  </div>
+                  <div class="input form__input input_w100">
+                    <label for="username" class="input__label">Email</label>
+                    <input id="email" type="text" name="email" class="input__input input__input_withIcon">
+                    <SteamIcon class="input__icon" />
+                  </div>
                 </div>
-                <h4>Security</h4>
-                <button class="btn form__btn" type="submit">
-                  Done
-                </button>
-              </div>
-              <div class="form__inputs">
-                <div class="input form__input input_error">
-                  <label for="username" class="input__label">Username</label>
-                  <input id="username" type="text" name="username" class="input__input">
-                  <span class="input__error">Error message</span>
+              </form>
+            </keep-alive>
+            <keep-alive>
+              <form v-if="isShowLinks" name="form4" method="POST" class="form">
+                <div class="form__top">
+                  <div @click="back" class="form__back" tag="div">
+                    <ArrowL class="icon" />
+                    <span>Back</span>
+                  </div>
+                  <h4>Links</h4>
+                  <button class="btn form__btn" type="submit">
+                    Done
+                  </button>
                 </div>
-                <div class="input form__input">
-                  <label for="username" class="input__label">Phone number</label>
-                  <input id="number" type="text" name="number" class="input__input">
+                <div class="form__inputs">
+                  <div class="input form__input input_error">
+                    <label for="username" class="input__label">Username</label>
+                    <input id="username" type="text" name="username" class="input__input">
+                    <span class="input__error">Error message</span>
+                  </div>
+                  <div class="input form__input">
+                    <label for="username" class="input__label">Phone number</label>
+                    <input id="number" type="text" name="number" class="input__input">
+                  </div>
+                  <div class="input form__input input_w100">
+                    <label for="username" class="input__label">Email</label>
+                    <input id="email" type="text" name="email" class="input__input">
+                  </div>
+                  <div class="input form__input input_w100">
+                    <label for="username" class="input__label">Email</label>
+                    <input id="email" type="text" name="email" class="input__input input__input_withIcon">
+                    <SteamIcon class="input__icon" />
+                  </div>
                 </div>
-                <div class="input form__input input_w100">
-                  <label for="username" class="input__label">Email</label>
-                  <input id="email" type="text" name="email" class="input__input">
-                </div>
-                <div class="input form__input input_w100">
-                  <label for="username" class="input__label">Email</label>
-                  <input id="email" type="text" name="email" class="input__input input__input_withIcon">
-                  <SteamIcon class="input__icon" />
-                </div>
-              </div>
-            </form>
-            <form v-if="isShowVerification" method="POST" class="form">
-              <div class="form__top">
-                <div @click="back" class="form__back" tag="div">
-                  <ArrowL class="icon" />
-                  <span>Back</span>
-                </div>
-                <h4>Verification</h4>
-                <button class="btn form__btn" type="submit">
-                  Done
-                </button>
-              </div>
-              <div class="form__inputs">
-                <div class="input form__input input_error">
-                  <label for="username" class="input__label">Username</label>
-                  <input id="username" type="text" name="username" class="input__input">
-                  <span class="input__error">Error message</span>
-                </div>
-                <div class="input form__input">
-                  <label for="username" class="input__label">Phone number</label>
-                  <input id="number" type="text" name="number" class="input__input">
-                </div>
-                <div class="input form__input input_w100">
-                  <label for="username" class="input__label">Email</label>
-                  <input id="email" type="text" name="email" class="input__input">
-                </div>
-                <div class="input form__input input_w100">
-                  <label for="username" class="input__label">Email</label>
-                  <input id="email" type="text" name="email" class="input__input input__input_withIcon">
-                  <SteamIcon class="input__icon" />
-                </div>
-              </div>
-            </form>
-            <form v-if="isShowLinks" method="POST" class="form">
-              <div class="form__top">
-                <div @click="back" class="form__back" tag="div">
-                  <ArrowL class="icon" />
-                  <span>Back</span>
-                </div>
-                <h4>Links</h4>
-                <button class="btn form__btn" type="submit">
-                  Done
-                </button>
-              </div>
-              <div class="form__inputs">
-                <div class="input form__input input_error">
-                  <label for="username" class="input__label">Username</label>
-                  <input id="username" type="text" name="username" class="input__input">
-                  <span class="input__error">Error message</span>
-                </div>
-                <div class="input form__input">
-                  <label for="username" class="input__label">Phone number</label>
-                  <input id="number" type="text" name="number" class="input__input">
-                </div>
-                <div class="input form__input input_w100">
-                  <label for="username" class="input__label">Email</label>
-                  <input id="email" type="text" name="email" class="input__input">
-                </div>
-                <div class="input form__input input_w100">
-                  <label for="username" class="input__label">Email</label>
-                  <input id="email" type="text" name="email" class="input__input input__input_withIcon">
-                  <SteamIcon class="input__icon" />
-                </div>
-              </div>
-            </form>
+              </form>
+            </keep-alive>
           </b-col>
         </b-row>
       </b-container>
@@ -294,7 +302,6 @@ export default {
     ArrowL,
     SteamIcon,
     ArrowR
-    // PersonalSettings
   },
   data () {
     return {

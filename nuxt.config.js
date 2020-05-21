@@ -42,7 +42,9 @@ module.exports = {
       src: '@/plugins/slide-bar',
       ssr: false
     },
-    '@/plugins/multi-select'
+    '@/plugins/multi-select',
+    '@/plugins/circle-bar',
+    '@/plugins/my-components'
   ],
   /*
   ** Nuxt.js dev-modules

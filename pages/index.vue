@@ -26,7 +26,7 @@
                    "running":"Running",
                    "upcoming":"Future"
                   }}'
-              />
+            />
           </div>
           <div class="ice__btn">
             <button class="btn btn_primary btn-arrow">

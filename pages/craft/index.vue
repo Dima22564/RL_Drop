@@ -11,21 +11,30 @@
             lg="5"
           >
             <div class="craftProgress">
-              <!-- <div class="set-size charts-container craftProgress__bg">
-                <div class="pie-wrapper pie-wrapper--solid progress-25">
-                  <span class="label">25<span class="smaller">%</span></span>
-                </div>
-              </div> -->
-              <!-- <div class="craftProgress__border">
-                <div class="pie-wrapper progress-45 style-2">
-                  <span class="label">45<span class="smaller">%</span></span>
-                  <div class="pie">
-                    <div class="left-side half-circle" />
-                    <div class="right-side half-circle" />
-                  </div>
-                  <div class="shadow" />
-                </div>
-              </div> -->
+              <div>
+                <circleBar
+                  :dash-spacing="0"
+                  :stroke-width="2"
+                  :active-width="4"
+                  :active-count="25"
+                  size="10rem"
+                  active-stroke="#00bbff"
+                  stroke="transparent"
+                  class="craft__progressLine"
+                />
+              </div>
+              <div>
+                <circleBar
+                  :stroke-width="100"
+                  :active-width="100"
+                  :dash-spacing="0"
+                  :active-count="25"
+                  size="10rem"
+                  stroke="transparent"
+                  class="craft__progressLine"
+                  active-stroke="rgba(0, 187, 255, 0.08)"
+                />
+              </div>
               <div class="craftProgress__border">
                 <span class="main" />
                 <span class="center" />
@@ -69,13 +78,12 @@
         <div class="faq__title">
           <h2>Choose</h2>
           <div v-if="getWindowSize > 1200" class="faq__filter">
-            <span class="faq__filter_active">Restless</span>
-            <span>Advanced</span>
-            <span>Splash</span>
-            <span>Patience</span>
-            <span>Wisdom</span>
-            <span>Prisma</span>
-            <span>Gloves</span>
+            <span
+              v-for="(item) in options"
+              :key="item"
+              :class="filterItems === item ? 'faq__filter_active' : ''"
+              @click="filterItems = item"
+            >{{ item }}</span>
           </div>
           <multiselect
             v-model="filterItems"
@@ -195,6 +203,12 @@ export default {
     margin-top: 32px
   +md
     padding: 24px
+  &__progressLine
+    width: 100%
+    position: absolute
+    top: 0
+    left: 0
+    height: 100%
   &__title
     margin-bottom: 40px
   &__top
