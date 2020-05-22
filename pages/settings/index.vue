@@ -88,7 +88,7 @@
                     <span>Back</span>
                   </div>
                   <h4>Personal</h4>
-                  <button class="btn form__btn" type="submit">
+                  <button @click.prevent="sendPersonalSettings" class="btn form__btn" type="submit">
                     Done
                   </button>
                 </div>
@@ -217,6 +217,7 @@ import Verification from '../../components/Settings/Verification'
 import Security from '../../components/Settings/Security'
 import Personal from '../../components/Settings/Personal'
 import InventoryItem from '../../components/InventoryItem'
+import { eventBus } from '../../plugins/event-bus'
 export default {
   layout: 'default',
   components: {
@@ -255,6 +256,9 @@ export default {
     window.addEventListener('resize', this.checkMain)
   },
   methods: {
+    sendPersonalSettings () {
+      eventBus.$emit('sendPersonalSettings')
+    },
     checkMain () {
       if (screen.width > 768) {
         this.isShowMain = true

@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import { eventBus } from '../../plugins/event-bus'
 export default {
   data () {
     return {
@@ -38,6 +39,11 @@ export default {
       phoneNumber: '',
       email: ''
     }
+  },
+  mounted () {
+    eventBus.$on('sendPersonalSettings', () => {
+      this.$store.dispatch('personal/actionEmail', this.email)
+    })
   }
 }
 </script>
