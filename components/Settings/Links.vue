@@ -5,7 +5,7 @@
       :rightIcon="false"
       :leftIcon="true"
       name="link1"
-      label="Link 1"
+      label="Steam Link"
       type="text"
       class="form__input"
     >
@@ -18,12 +18,12 @@
       :rightIcon="false"
       :leftIcon="true"
       name="link2"
-      label="Link 2"
+      label="Nickname Xbox"
       type="text"
       class="form__input"
     >
       <template slot="leftIcon">
-        <SteamIcon />
+        <PlaystationIcon />
       </template>
     </MyInput>
     <MyInput
@@ -31,38 +31,12 @@
       :rightIcon="false"
       :leftIcon="true"
       name="link3"
-      label="Link 3"
+      label="Nickname PS4"
       type="text"
       class="form__input"
     >
       <template slot="leftIcon">
-        <SteamIcon />
-      </template>
-    </MyInput>
-    <MyInput
-      v-model="link4"
-      :rightIcon="false"
-      :leftIcon="true"
-      name="link4"
-      label="Link 4"
-      type="text"
-      class="form__input"
-    >
-      <template slot="leftIcon">
-        <SteamIcon />
-      </template>
-    </MyInput>
-    <MyInput
-      v-model="link5"
-      :rightIcon="false"
-      :leftIcon="true"
-      name="link5"
-      label="Link 5"
-      type="text"
-      class="form__input form__input_w100"
-    >
-      <template slot="leftIcon">
-        <SteamIcon />
+        <XboxIcon />
       </template>
     </MyInput>
   </div>
@@ -70,17 +44,19 @@
 
 <script>
 import SteamIcon from 'vue-material-design-icons/Steam.vue'
+import PlaystationIcon from 'vue-material-design-icons/SonyPlaystation.vue'
+import XboxIcon from 'vue-material-design-icons/MicrosoftXbox.vue'
 export default {
   components: {
-    SteamIcon
+    SteamIcon,
+    PlaystationIcon,
+    XboxIcon
   },
   data () {
     return {
       link1: '',
       link2: '',
-      link3: '',
-      link4: '',
-      link5: ''
+      link3: ''
     }
   }
 }

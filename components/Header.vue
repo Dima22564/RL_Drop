@@ -57,7 +57,7 @@
             </div>
           </b-col>
           <b-col xl="2" lg="2" md="6" class="d-sm-none d-md-block d-lg-block d-xl-block d-none">
-            <div class="case case_green">
+            <div class="case case_violet">
               <WifiIcon class="case__icon" />
               <div class="case__text">
                 <span class="emp">4,102,715</span>

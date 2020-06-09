@@ -11,10 +11,6 @@
                 Advanced
               </h2>
               <div class="open__btns">
-                <button class="btn btn_secondary btn-arrow">
-                  <span>Continue</span>
-                  <ArrowRightIcon class="btn__icon" />
-                </button>
                 <button class="btn btn_primary">
                   Open for $13.62
                 </button>
@@ -40,12 +36,10 @@
 </template>
 
 <script>
-import ArrowRightIcon from 'vue-material-design-icons/ArrowRight.vue'
 import Weapon from '../../components/Weapon'
 export default {
   layout: 'default',
   components: {
-    ArrowRightIcon,
     Weapon
   }
 }
@@ -70,6 +64,7 @@ export default {
   border-radius: 12px
   box-shadow: 0 8px 8px -4px rgba(20, 16, 41, 0.24), 0 2px 4px -1px rgba(20, 16, 41, 0.24), 0 0 1px 0 rgba(20, 16, 41, 0.4)
   background-color: #27273e
+  min-height: 200px
   +lg
     flex-direction: column
     background: url('/images/bg-3-mobile.png')

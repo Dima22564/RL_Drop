@@ -84,9 +84,5 @@ module.exports = {
     transpile: ['vue-agile'],
     extend (config, ctx) {
     }
-  },
-  server: {
-    port: 80, // default: 3000
-    host: '82.148.17.168' // default: localhost
   }
 }

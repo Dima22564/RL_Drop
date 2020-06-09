@@ -78,7 +78,7 @@
               </div>
               <div class="financial__btn">
                 <button class="btn btn_gray">
-                  Deposit / Withdraw
+                  Deposit
                 </button>
               </div>
             </div>

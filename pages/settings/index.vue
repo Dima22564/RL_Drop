@@ -68,7 +68,7 @@
                 </div>
                 <div class="setting__text">
                   <p class="setting__name">
-                    Links
+                    Game accounts
                   </p>
                   <p class="setting__desc">
                     Game accounts

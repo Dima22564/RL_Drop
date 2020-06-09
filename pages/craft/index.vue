@@ -99,28 +99,16 @@
 
         <b-row class="inventoryItem__row">
           <InventoryItemCheck
-            img="/images/weapon.png"
-            name="P90"
-            price="15"
-            desc="fdgfd"
+            v-for="(item) in inventoryItems"
+            :key="item.id"
+            v-model="craftItem"
+            :img="item.img"
+            :name="item.name"
+            :price="item.price"
+            :desc="item.desc"
+            :item-id="item.id"
+            :class="craftItem === item.id ? 'inventoryItem__col_checked' : ''"
             class="inventoryItem__col"
-            item-id="1"
-          />
-          <InventoryItemCheck
-            img="/images/weapon.png"
-            name="P90"
-            price="15"
-            desc="fdgfd"
-            class="inventoryItem__col"
-            item-id="2"
-          />
-          <InventoryItemCheck
-            img="/images/weapon.png"
-            name="P90"
-            price="15"
-            desc="fdgfd"
-            class="inventoryItem__col"
-            item-id="3"
           />
         </b-row>
       </b-container>
@@ -140,7 +128,24 @@ export default {
     return {
       filterItems: 'Restless',
       options: ['Restless', 'Advanced', 'Splash', 'Patience', 'Wisdom', 'Prisma', 'Gloves'],
-      progress: 0
+      progress: 0,
+      craftItem: '',
+      inventoryItems: [
+        {
+          img: '/images/weapon.png',
+          name: 'P90',
+          price: 15,
+          desc: 'dscvsd',
+          id: 'item1'
+        },
+        {
+          img: '/images/weapon.png',
+          name: 'P90',
+          price: 15,
+          desc: 'dscvsd',
+          id: 'item2'
+        }
+      ]
     }
   },
   computed: {

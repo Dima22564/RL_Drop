@@ -262,6 +262,7 @@ export default {
         top: 0
         transform: translateY(calc(-100% - 12px))
         z-index: 5
+        text-decoration: line-through
         +sm
           position: initial
           transform: translateY(0)

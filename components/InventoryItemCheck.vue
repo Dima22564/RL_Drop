@@ -1,24 +1,33 @@
 <template>
   <b-col xl="2" lg="2" md="3" sm="4" cols="6">
-    <input :value="itemId" type="hidden" name="">
-    <div @click="check" :class="checked ? 'inventoryItem_checked' : ''" class="inventoryItem">
-      <div v-if="checked" class="inventoryItem__check">
-        <CheckIcon class="icon" />
-      </div>
+    <input
+      :id="itemId"
+      :value="itemId"
+      @input="$emit('input', $event.target.value)"
+      class="inventoryItem__input"
+      type="radio"
+      name="inventoryItem"
+    >
+    <label :for="itemId" class="inventoryItem__label">
+      <div class="inventoryItem">
+        <div class="inventoryItem__check">
+          <CheckIcon class="icon" />
+        </div>
 
-      <img :src="img" alt="" class="inventoryItem__img">
-      <div class="inventoryItem__text">
-        <p class="inventoryItem__name">
-          {{ name }}
-        </p>
-        <p class="inventoryItem__desc">
-          {{ desc }}
-        </p>
-        <p class="inventoryItem__price">
-          ${{ price }}
-        </p>
+        <img :src="img" alt="" class="inventoryItem__img">
+        <div class="inventoryItem__text">
+          <p class="inventoryItem__name">
+            {{ name }}
+          </p>
+          <p class="inventoryItem__desc">
+            {{ desc }}
+          </p>
+          <p class="inventoryItem__price">
+            ${{ price }}
+          </p>
+        </div>
       </div>
-    </div>
+    </label>
   </b-col>
 </template>
 
@@ -42,25 +51,14 @@ export default {
       required: true
     },
     price: {
-      type: String,
+      type: Number,
       required: true
     },
     itemId: {
       type: String,
       required: true
     }
-  },
-  data () {
-    return {
-      checked: false
-    }
-  },
-  methods: {
-    check () {
-      this.checked ? this.checked = false : this.checked = true
-    }
   }
-
 }
 </script>
 
@@ -77,8 +75,7 @@ export default {
   border-radius: 12px
   max-height: 180px
   cursor: pointer
-  &_checked
-    background: rgba(0, 187, 255, 0.03)
+  width: 100%
   &::after
     content: ''
     background: #00bbff
@@ -87,6 +84,18 @@ export default {
     position: absolute
     bottom: 0
     left: 0
+  &__col
+    &_checked
+      .inventoryItem
+        background: rgba(0, 187, 255, 0.03)
+        &__check
+          display: block
+  &__input
+    display: none
+  &__label
+    width: 100%
+    position: relative
+    display: flex
   &__click
     position: absolute
     top: 0
@@ -167,6 +176,7 @@ export default {
     background: #00bbff
     color: white
     font-size: 20px
+    display: none
   .icon
     height: 15px
 </style>
