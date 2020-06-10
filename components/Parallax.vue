@@ -52,11 +52,14 @@ export default {
 </script>
 
 <style lang="sass">
+@import '@/theme/_mix.sass'
 .myParallax
   width: 100%
   position: absolute
   left: 0
   top: 70px
+  +lg
+    display: none
   .bubble
     border-radius: 50%
     background-image: linear-gradient(160deg, #00ffaa, #00bbff 53%, #4579f5)
