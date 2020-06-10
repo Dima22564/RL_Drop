@@ -1,9 +1,11 @@
 <template>
   <div>
-    <Menu />
-    <Header />
-    <nuxt />
-    <Footer />
+    <kinesis-container tag="div">
+      <Menu />
+      <Header />
+      <nuxt />
+      <Footer />
+    </kinesis-container>
   </div>
 </template>
 

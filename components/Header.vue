@@ -1,187 +1,185 @@
 <template>
-  <kinesis-container>
-    <header class="header">
-      <MyParallax />
-      <div class="header__part-1">
-        <b-container>
-          <b-row>
-            <b-col xl="4" lg="4">
-              <div class="platform">
-                <span
-                  :class="activeFilter === 1 ? 'platform__icon_active' : ''"
-                  @click="activeFilter = 1"
-                  class="platform__icon"
-                >
-                  <LaptopIcon />
-                </span>
-                <span
-                  :class="activeFilter === 2 ? 'platform__icon_active' : ''"
-                  @click="activeFilter = 2"
-                  class="platform__icon"
-                >
-                  <PlaystationIcon />
-                </span>
-                <span
-                  :class="activeFilter === 3 ? 'platform__icon_active' : ''"
-                  @click="activeFilter = 3"
-                  class="platform__icon"
-                >
-                  <XboxIcon />
-                </span>
-              </div>
-            </b-col>
+  <header class="header">
+    <MyParallax />
+    <div class="header__part-1">
+      <b-container>
+        <b-row>
+          <b-col xl="4" lg="4">
+            <div class="platform">
+              <span
+                :class="activeFilter === 1 ? 'platform__icon_active' : ''"
+                @click="activeFilter = 1"
+                class="platform__icon"
+              >
+                <LaptopIcon />
+              </span>
+              <span
+                :class="activeFilter === 2 ? 'platform__icon_active' : ''"
+                @click="activeFilter = 2"
+                class="platform__icon"
+              >
+                <PlaystationIcon />
+              </span>
+              <span
+                :class="activeFilter === 3 ? 'platform__icon_active' : ''"
+                @click="activeFilter = 3"
+                class="platform__icon"
+              >
+                <XboxIcon />
+              </span>
+            </div>
+          </b-col>
 
-            <b-col xl="2" lg="2" md="6" class="d-sm-none d-md-block d-lg-block d-xl-block d-none">
+          <b-col xl="2" lg="2" md="6" class="d-sm-none d-md-block d-lg-block d-xl-block d-none">
+            <div class="case case_green">
+              <LayersIcon class="case__icon" />
+              <div class="case__text">
+                <span class="emp">4,102,715</span>
+                <span class="name">cases</span>
+              </div>
+            </div>
+          </b-col>
+          <b-col xl="2" lg="2" md="6" class="d-sm-none d-md-block d-lg-block d-xl-block d-none">
+            <div class="case case_blue">
+              <EqualizerIcon class="case__icon" />
+              <div class="case__text">
+                <span class="emp">4,102,715</span>
+                <span class="name">CRAFT</span>
+              </div>
+            </div>
+          </b-col>
+          <b-col xl="2" lg="2" md="6" class="d-sm-none d-md-block d-lg-block d-xl-block d-none">
+            <div class="case case_d-blue">
+              <UserIcon class="case__icon" />
+              <div class="case__text">
+                <span class="emp">4,102,715</span>
+                <span class="name">users</span>
+              </div>
+            </div>
+          </b-col>
+          <b-col xl="2" lg="2" md="6" class="d-sm-none d-md-block d-lg-block d-xl-block d-none">
+            <div class="case case_violet">
+              <WifiIcon class="case__icon" />
+              <div class="case__text">
+                <span class="emp">4,102,715</span>
+                <span class="name">online</span>
+              </div>
+            </div>
+          </b-col>
+        </b-row>
+
+        <no-ssr>
+          <slick :options="caseOptions" v-if="getWindowSize < 768">
+            <div class="case__wrapper">
               <div class="case case_green">
-                <LayersIcon class="case__icon" />
-                <div class="case__text">
-                  <span class="emp">4,102,715</span>
-                  <span class="name">cases</span>
-                </div>
-              </div>
-            </b-col>
-            <b-col xl="2" lg="2" md="6" class="d-sm-none d-md-block d-lg-block d-xl-block d-none">
-              <div class="case case_blue">
-                <EqualizerIcon class="case__icon" />
-                <div class="case__text">
-                  <span class="emp">4,102,715</span>
-                  <span class="name">CRAFT</span>
-                </div>
-              </div>
-            </b-col>
-            <b-col xl="2" lg="2" md="6" class="d-sm-none d-md-block d-lg-block d-xl-block d-none">
-              <div class="case case_d-blue">
-                <UserIcon class="case__icon" />
-                <div class="case__text">
-                  <span class="emp">4,102,715</span>
-                  <span class="name">users</span>
-                </div>
-              </div>
-            </b-col>
-            <b-col xl="2" lg="2" md="6" class="d-sm-none d-md-block d-lg-block d-xl-block d-none">
-              <div class="case case_violet">
                 <WifiIcon class="case__icon" />
                 <div class="case__text">
                   <span class="emp">4,102,715</span>
                   <span class="name">online</span>
                 </div>
               </div>
-            </b-col>
-          </b-row>
-
-          <no-ssr>
-            <slick :options="caseOptions" v-if="getWindowSize < 768">
-              <div class="case__wrapper">
-                <div class="case case_green">
-                  <WifiIcon class="case__icon" />
-                  <div class="case__text">
-                    <span class="emp">4,102,715</span>
-                    <span class="name">online</span>
-                  </div>
+            </div>
+            <div class="case__wrapper">
+              <div class="case case_green">
+                <WifiIcon class="case__icon" />
+                <div class="case__text">
+                  <span class="emp">4,102,715</span>
+                  <span class="name">online</span>
                 </div>
               </div>
-              <div class="case__wrapper">
-                <div class="case case_green">
-                  <WifiIcon class="case__icon" />
-                  <div class="case__text">
-                    <span class="emp">4,102,715</span>
-                    <span class="name">online</span>
-                  </div>
+            </div>
+            <div class="case__wrapper">
+              <div class="case case_green">
+                <WifiIcon class="case__icon" />
+                <div class="case__text">
+                  <span class="emp">4,102,715</span>
+                  <span class="name">online</span>
                 </div>
               </div>
-              <div class="case__wrapper">
-                <div class="case case_green">
-                  <WifiIcon class="case__icon" />
-                  <div class="case__text">
-                    <span class="emp">4,102,715</span>
-                    <span class="name">online</span>
-                  </div>
+            </div>
+            <div class="case__wrapper">
+              <div class="case case_green">
+                <WifiIcon class="case__icon" />
+                <div class="case__text">
+                  <span class="emp">4,102,715</span>
+                  <span class="name">online</span>
                 </div>
-              </div>
-              <div class="case__wrapper">
-                <div class="case case_green">
-                  <WifiIcon class="case__icon" />
-                  <div class="case__text">
-                    <span class="emp">4,102,715</span>
-                    <span class="name">online</span>
-                  </div>
-                </div>
-              </div>
-            </slick>
-          </no-ssr>
-        </b-container>
-      </div>
-
-      <div class="header__slider">
-        <no-ssr>
-          <slick
-            :options="slickOptions"
-          >
-            <div class="weapon__wrapper">
-              <div class="weapon weapon_pink">
-                <img src="/images/weapon.png" alt="" class="weapon__img">
-                <span class="weapon__name">Decimato47r</span>
-              </div>
-            </div>
-            <div class="weapon__wrapper">
-              <div class="weapon weapon_red">
-                <img src="/images/weapon.png" alt="" class="weapon__img">
-                <span class="weapon__name">Decimator55</span>
-              </div>
-            </div>
-            <div class="weapon__wrapper">
-              <div class="weapon weapon_violet">
-                <img src="/images/weapon.png" alt="" class="weapon__img">
-                <span class="weapon__name">Decimator53</span>
-              </div>
-            </div>
-            <div class="weapon__wrapper">
-              <div class="weapon weapon_blue">
-                <img src="/images/weapon.png" alt="" class="weapon__img">
-                <span class="weapon__name">Decimator52</span>
-              </div>
-            </div>
-            <div class="weapon__wrapper">
-              <div class="weapon weapon_orange">
-                <img src="/images/weapon.png" alt="" class="weapon__img">
-                <span class="weapon__name">Decimator48</span>
-              </div>
-            </div>
-            <div class="weapon__wrapper">
-              <div class="weapon weapon_d-blue">
-                <img src="/images/weapon.png" alt="" class="weapon__img">
-                <span class="weapon__name">Decimator45</span>
-              </div>
-            </div>
-            <div class="weapon__wrapper">
-              <div class="weapon">
-                <img src="/images/weapon.png" alt="" class="weapon__img">
-                <span class="weapon__name">Decimator1</span>
-              </div>
-            </div>
-            <div class="weapon__wrapper">
-              <div class="weapon">
-                <img src="/images/weapon.png" alt="" class="weapon__img">
-                <span class="weapon__name">Decimato4r</span>
-              </div>
-            </div>
-            <div class="weapon__wrapper">
-              <div class="weapon">
-                <img src="/images/weapon.png" alt="" class="weapon__img">
-                <span class="weapon__name">Decimaadftor</span>
-              </div>
-            </div>
-            <div class="weapon__wrapper">
-              <div class="weapon">
-                <img src="/images/weapon.png" alt="" class="weapon__img">
-                <span class="weapon__name">Decimator2</span>
               </div>
             </div>
           </slick>
         </no-ssr>
-      </div>
-    </header>
-  </kinesis-container>
+      </b-container>
+    </div>
+
+    <div class="header__slider">
+      <no-ssr>
+        <slick
+          :options="slickOptions"
+        >
+          <div class="weapon__wrapper">
+            <div class="weapon weapon_pink">
+              <img src="/images/weapon.png" alt="" class="weapon__img">
+              <span class="weapon__name">Decimato47r</span>
+            </div>
+          </div>
+          <div class="weapon__wrapper">
+            <div class="weapon weapon_red">
+              <img src="/images/weapon.png" alt="" class="weapon__img">
+              <span class="weapon__name">Decimator55</span>
+            </div>
+          </div>
+          <div class="weapon__wrapper">
+            <div class="weapon weapon_violet">
+              <img src="/images/weapon.png" alt="" class="weapon__img">
+              <span class="weapon__name">Decimator53</span>
+            </div>
+          </div>
+          <div class="weapon__wrapper">
+            <div class="weapon weapon_blue">
+              <img src="/images/weapon.png" alt="" class="weapon__img">
+              <span class="weapon__name">Decimator52</span>
+            </div>
+          </div>
+          <div class="weapon__wrapper">
+            <div class="weapon weapon_orange">
+              <img src="/images/weapon.png" alt="" class="weapon__img">
+              <span class="weapon__name">Decimator48</span>
+            </div>
+          </div>
+          <div class="weapon__wrapper">
+            <div class="weapon weapon_d-blue">
+              <img src="/images/weapon.png" alt="" class="weapon__img">
+              <span class="weapon__name">Decimator45</span>
+            </div>
+          </div>
+          <div class="weapon__wrapper">
+            <div class="weapon">
+              <img src="/images/weapon.png" alt="" class="weapon__img">
+              <span class="weapon__name">Decimator1</span>
+            </div>
+          </div>
+          <div class="weapon__wrapper">
+            <div class="weapon">
+              <img src="/images/weapon.png" alt="" class="weapon__img">
+              <span class="weapon__name">Decimato4r</span>
+            </div>
+          </div>
+          <div class="weapon__wrapper">
+            <div class="weapon">
+              <img src="/images/weapon.png" alt="" class="weapon__img">
+              <span class="weapon__name">Decimaadftor</span>
+            </div>
+          </div>
+          <div class="weapon__wrapper">
+            <div class="weapon">
+              <img src="/images/weapon.png" alt="" class="weapon__img">
+              <span class="weapon__name">Decimator2</span>
+            </div>
+          </div>
+        </slick>
+      </no-ssr>
+    </div>
+  </header>
 </template>
 
 <script>
