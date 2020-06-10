@@ -97,7 +97,7 @@
                 <Dashboard class="icon" />
                 <span>Dashboard</span>
               </nuxt-link>
-              <nuxt-link class="account__link" to="/settings/personal" tag="div">
+              <nuxt-link class="account__link" to="/settings" tag="div">
                 <SettingsIcon class="icon" />
                 <span>Settings</span>
               </nuxt-link>
@@ -107,9 +107,9 @@
               </nuxt-link>
             </div>
           </div>
-          <button class="menu__btn btn btn_primary">
+          <!-- <button class="menu__btn btn btn_primary">
             Get Started
-          </button>
+          </button> -->
         </div>
       </b-container>
     </div>
