@@ -85,6 +85,10 @@ module.exports = {
     /*
     ** You can extend webpack config here
     */
+    extractCSS: true,
+    filenames: {
+      css: ({ isDev }) => isDev ? '[name].css' : '[name].css'
+    },
     transpile: ['vue-agile'],
     extend (config, ctx) {
     }

@@ -14,9 +14,10 @@
           </nuxt-link>
         </div>
         <div class="menu__content menu__content-2">
-          <div class="menu__icon">
+          <div @click="setSound" class="menu__icon">
             <span class="menu__volume">
-              <VolumeIcon />
+              <VolumeIcon v-if="sound" />
+              <VolumeOffIcon v-else />
             </span>
           </div>
           <div class="menu__icon">
@@ -28,18 +29,19 @@
               <p class="notifications__title">
                 notifications
               </p>
-              <Notification notification-type="success">
-                <p><span class="blue">jelena </span>sent you <span class="white"> request</span></p>
-              </Notification>
-              <Notification notification-type="message">
-                <p><span class="blue">jelena </span>sent you <span class="white"> request</span></p>
-              </Notification>
-              <Notification notification-type="financial">
-                <p><span class="blue">jelena </span>sent you <span class="white"> request</span></p>
-              </Notification>
-              <Notification notification-type="warning">
-                <p><span class="blue">jelena </span>sent you <span class="white"> request</span></p>
-              </Notification>
+              <p v-if="getNotifications.length == 0" class="notifications__none">
+                No notifications
+              </p>
+              <div v-else>
+                <Notification
+                  v-for="(item, index) in getNotifications"
+                  :key="index"
+                  :notification-type="item.type"
+                  :id="item.id"
+                >
+                  <p><span class="blue">{{ item.blueText }} </span>sent you <span class="white"> {{ item.whiteText }}</span></p>
+                </Notification>
+              </div>
             </div>
           </div>
           <div class="menu__langs">
@@ -167,7 +169,8 @@
               </div>
             </div>
             <div @click="setSound" class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_withIcon">
-              <VolumeIcon class="mobileMenu__icon mobileMenu__icon_dark" />
+              <VolumeIcon v-if="sound" class="mobileMenu__icon mobileMenu__icon_dark" />
+              <VolumeOffIcon v-else class="mobileMenu__icon mobileMenu__icon_dark" />
               <span>Sound</span>
               <div class="mobileMenu__go">
                 <div :class="sound ? 'toggler_active' : ''" @click="setSound" class="toggler">
@@ -205,7 +208,7 @@
           </div>
         </div>
         <button class="btn btn_gray mobileMenu__deposit">
-          Deposit / Withdraw
+          Deposit
         </button>
       </div>
 
@@ -370,6 +373,12 @@
   z-index: 55
   background-color: #27273e
   padding: 16px 0
+  &__none
+    color: rgba(224,224,255,.6)
+    font-weight: 600
+    font-size: 16px
+    width: 100%
+    text-align: center
   &__count
     font-size: 13px
     line-height: 16px
@@ -595,6 +604,7 @@
 
 <script>
 import VolumeIcon from 'vue-material-design-icons/VolumeHigh.vue'
+import VolumeOffIcon from 'vue-material-design-icons/VolumeOff.vue'
 import BellIcon from 'vue-material-design-icons/BellOutline.vue'
 import CheckIcon from 'vue-material-design-icons/Check.vue'
 import CardIcon from 'vue-material-design-icons/CreditCardOutline.vue'
@@ -608,6 +618,7 @@ import ArrowLIcon from 'vue-material-design-icons/ChevronLeft.vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 import { mapGetters } from 'vuex'
 import Notification from '../components/Notification'
+import { eventBus } from '../plugins/event-bus.js'
 export default {
   components: {
     VolumeIcon,
@@ -622,7 +633,8 @@ export default {
     MenuIcon,
     ArrowRIcon,
     CloseIcon,
-    ArrowLIcon
+    ArrowLIcon,
+    VolumeOffIcon
   },
   data () {
     return {
@@ -637,7 +649,13 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getWindowSize: 'common/getWindowSize'
+      getWindowSize: 'common/getWindowSize',
+      getNotifications: 'notifications/getNotifications'
+    })
+  },
+  created () {
+    eventBus.$on('closeNotification', (id) => {
+      this.$store.commit('notifications/deleteNotification', id)
     })
   },
   methods: {
@@ -648,6 +666,7 @@ export default {
         this.sound = true
       }
     },
+
     showLangs () {
       if (this.isLangsShow === true) {
         this.isLangsShow = false

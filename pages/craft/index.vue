@@ -58,7 +58,12 @@
                   <span class="craft__progress"> {{ progress }} %</span>
                 </div>
                 <client-only>
-                  <vue-slide-bar :lineHeight="8" v-model="progress" />
+                  <vue-slide-bar
+                    :lineHeight="8"
+                    v-model="progress"
+                    :min="5"
+                    :max="75"
+                  />
                 </client-only>
               </div>
               <div class="craft__bottom">

@@ -1,8 +1,8 @@
 <template>
   <b-col xl="6" lg="6">
     <div class="faqItem">
-      <div class="faqItem__block">
-        <p @click="showText === true ? showText = false : showText = true" class="faqItem__title">
+      <div @click="showText === true ? showText = false : showText = true" class="faqItem__block">
+        <p class="faqItem__title">
           {{ title }}
         </p>
         <PlusIcon v-if="showText === false" class="faqItem__icon" />
@@ -55,6 +55,8 @@ export default {
     display: flex
     align-items: flex-start
     justify-content: space-between
+    margin: -24px -24px 0 -24px
+    padding: 24px 24px 0 24px
   &__icon
     color: rgba(224, 224, 255, 0.4)
     font-size: 25px

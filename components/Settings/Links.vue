@@ -23,7 +23,7 @@
       class="form__input"
     >
       <template slot="leftIcon">
-        <PlaystationIcon />
+        <XboxIcon />
       </template>
     </MyInput>
     <MyInput
@@ -36,7 +36,7 @@
       class="form__input"
     >
       <template slot="leftIcon">
-        <XboxIcon />
+        <PlaystationIcon />
       </template>
     </MyInput>
   </div>

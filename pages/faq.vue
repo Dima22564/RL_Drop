@@ -4,10 +4,10 @@
       <div class="faq__title">
         <h2>FAQ</h2>
         <div v-if="getWindowSize > 991" class="faq__filter">
-          <span>General Questions</span>
-          <span>Balance Withdrawal</span>
-          <span>Premium</span>
-          <span>Case Battle</span>
+          <span @click="changeFilter('General Questions')">General Questions</span>
+          <span @click="changeFilter('Balance Withdrawal')">Balance Withdrawal</span>
+          <span @click="changeFilter('Premium')">Premium</span>
+          <span @click="changeFilter('Case Battle')">Case Battle</span>
         </div>
         <multiselect
           v-model="value"
@@ -22,14 +22,22 @@
       </div>
       <b-row>
         <Faq
-          title="Can I use Steam wallet funds to open cases on this site?"
+          v-if="value === 'General Questions'"
+          title="fdbgfdhgdfhg"
           text="Your payment might be delayed for 5-10 minutes. If money didn`t get transferred within an hour, please contact the support, write details of payment to RLDrop Support"
         />
         <Faq
-          title="Can I use Steam wallet funds to open cases on this site?"
+          v-if="value === 'Balance Withdrawal'"
+          title="rghtrhjntynjytjytj"
           text="Your payment might be delayed for 5-10 minutes. If money didn`t get transferred within an hour, please contact the support, write details of payment to RLDrop Support"
         />
         <Faq
+          v-if="value === 'Premium'"
+          title="efert4t34t5"
+          text="Your payment might be delayed for 5-10 minutes. If money didn`t get transferred within an hour, please contact the support, write details of payment to RLDrop Support"
+        />
+        <Faq
+          v-if="value === 'Case Battle'"
           title="Can I use Steam wallet funds to open cases on this site?"
           text="Your payment might be delayed for 5-10 minutes. If money didn`t get transferred within an hour, please contact the support, write details of payment to RLDrop Support"
         />
@@ -56,6 +64,11 @@ export default {
     ...mapGetters({
       getWindowSize: 'common/getWindowSize'
     })
+  },
+  methods: {
+    changeFilter (filter) {
+      this.value = filter
+    }
   }
 }
 </script>

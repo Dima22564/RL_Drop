@@ -8,21 +8,21 @@
             <div class="platform">
               <span
                 :class="activeFilter === 1 ? 'platform__icon_active' : ''"
-                @click="activeFilter = 1"
+                @click="changeItems(1)"
                 class="platform__icon"
               >
                 <LaptopIcon />
               </span>
               <span
                 :class="activeFilter === 2 ? 'platform__icon_active' : ''"
-                @click="activeFilter = 2"
+                @click="changeItems(2)"
                 class="platform__icon"
               >
                 <PlaystationIcon />
               </span>
               <span
                 :class="activeFilter === 3 ? 'platform__icon_active' : ''"
-                @click="activeFilter = 3"
+                @click="changeItems(3)"
                 class="platform__icon"
               >
                 <XboxIcon />
@@ -68,37 +68,40 @@
           </b-col>
         </b-row>
 
-        <no-ssr>
-          <slick :options="caseOptions" v-if="getWindowSize < 768">
+        <client-only>
+          <slick
+            :options="caseOptions"
+            v-if="getWindowSize < 768"
+          >
             <div class="case__wrapper">
               <div class="case case_green">
                 <WifiIcon class="case__icon" />
                 <div class="case__text">
                   <span class="emp">4,102,715</span>
-                  <span class="name">online</span>
+                  <span class="name">cases</span>
                 </div>
               </div>
             </div>
             <div class="case__wrapper">
-              <div class="case case_green">
+              <div class="case case_blue">
                 <WifiIcon class="case__icon" />
                 <div class="case__text">
                   <span class="emp">4,102,715</span>
-                  <span class="name">online</span>
+                  <span class="name">CRAFT</span>
                 </div>
               </div>
             </div>
             <div class="case__wrapper">
-              <div class="case case_green">
+              <div class="case case_d-blue">
                 <WifiIcon class="case__icon" />
                 <div class="case__text">
                   <span class="emp">4,102,715</span>
-                  <span class="name">online</span>
+                  <span class="name">users</span>
                 </div>
               </div>
             </div>
             <div class="case__wrapper">
-              <div class="case case_green">
+              <div class="case case_violet">
                 <WifiIcon class="case__icon" />
                 <div class="case__text">
                   <span class="emp">4,102,715</span>
@@ -107,77 +110,79 @@
               </div>
             </div>
           </slick>
-        </no-ssr>
+        </client-only>
       </b-container>
     </div>
 
     <div class="header__slider">
-      <no-ssr>
+      <client-only>
         <slick
+          ref="slick"
           :options="slickOptions"
+          @reInit="reinitSlider"
         >
-          <div class="weapon__wrapper">
+          <div v-show="activeFilter === 1" class="weapon__wrapper">
             <div class="weapon weapon_pink">
               <img src="/images/weapon.png" alt="" class="weapon__img">
               <span class="weapon__name">Decimato47r</span>
             </div>
           </div>
-          <div class="weapon__wrapper">
+          <div v-show="activeFilter === 2" class="weapon__wrapper">
             <div class="weapon weapon_red">
               <img src="/images/weapon.png" alt="" class="weapon__img">
               <span class="weapon__name">Decimator55</span>
             </div>
           </div>
-          <div class="weapon__wrapper">
+          <div v-show="activeFilter === 3" class="weapon__wrapper">
             <div class="weapon weapon_violet">
               <img src="/images/weapon.png" alt="" class="weapon__img">
               <span class="weapon__name">Decimator53</span>
             </div>
           </div>
-          <div class="weapon__wrapper">
+          <div v-show="activeFilter === 1" class="weapon__wrapper">
             <div class="weapon weapon_blue">
               <img src="/images/weapon.png" alt="" class="weapon__img">
               <span class="weapon__name">Decimator52</span>
             </div>
           </div>
-          <div class="weapon__wrapper">
+          <div v-show="activeFilter === 2" class="weapon__wrapper">
             <div class="weapon weapon_orange">
               <img src="/images/weapon.png" alt="" class="weapon__img">
               <span class="weapon__name">Decimator48</span>
             </div>
           </div>
-          <div class="weapon__wrapper">
+          <div v-show="activeFilter === 3" class="weapon__wrapper">
             <div class="weapon weapon_d-blue">
               <img src="/images/weapon.png" alt="" class="weapon__img">
               <span class="weapon__name">Decimator45</span>
             </div>
           </div>
-          <div class="weapon__wrapper">
+          <div v-show="activeFilter === 1" class="weapon__wrapper">
             <div class="weapon">
               <img src="/images/weapon.png" alt="" class="weapon__img">
               <span class="weapon__name">Decimator1</span>
             </div>
           </div>
-          <div class="weapon__wrapper">
+          <div v-show="activeFilter === 2" class="weapon__wrapper">
             <div class="weapon">
               <img src="/images/weapon.png" alt="" class="weapon__img">
               <span class="weapon__name">Decimato4r</span>
             </div>
           </div>
-          <div class="weapon__wrapper">
+          <div v-show="activeFilter === 3" class="weapon__wrapper">
             <div class="weapon">
               <img src="/images/weapon.png" alt="" class="weapon__img">
               <span class="weapon__name">Decimaadftor</span>
             </div>
           </div>
-          <div class="weapon__wrapper">
+          <div v-show="activeFilter === 1" class="weapon__wrapper">
             <div class="weapon">
               <img src="/images/weapon.png" alt="" class="weapon__img">
               <span class="weapon__name">Decimator2</span>
             </div>
           </div>
         </slick>
-      </no-ssr>
+      </client-only>
     </div>
   </header>
 </template>
@@ -243,7 +248,15 @@ export default {
   methods: {
     ...mapMutations({
       setWindowSize: 'common/setWindowSize'
-    })
+    }),
+    reinitSlider () {
+      this.$nextTick(() => {
+        this.$refs.slick.reSlick()
+      })
+    },
+    changeItems (filter) {
+      this.activeFilter = filter
+    }
   }
 }
 </script>

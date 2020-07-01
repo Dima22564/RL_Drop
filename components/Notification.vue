@@ -1,5 +1,5 @@
 <template>
-  <div :class="'notification_' + notificationType" v-if="showNotification" class="notification">
+  <div :class="'notification_' + notificationType" class="notification">
     <div v-if="notificationType === 'success'" class="notification__icon">
       <CheckIcon class="icon" />
     </div>
@@ -15,7 +15,7 @@
     <div class="notification__text">
       <slot />
     </div>
-    <div @click="showNotification = false" class="notification__close">
+    <div @click="closeNotification" class="notification__close">
       <CloseIcon />
     </div>
   </div>
@@ -27,6 +27,7 @@ import CloseIcon from 'vue-material-design-icons/Close.vue'
 import MessageIcon from 'vue-material-design-icons/MessageOutline.vue'
 import CardIcon from 'vue-material-design-icons/CreditCardOutline.vue'
 import AlertIcon from 'vue-material-design-icons/Alert.vue'
+import { eventBus } from '../plugins/event-bus.js'
 export default {
   components: {
     CheckIcon,
@@ -39,11 +40,15 @@ export default {
     notificationType: {
       type: String,
       required: true
+    },
+    id: {
+      type: String,
+      required: true
     }
   },
-  data () {
-    return {
-      showNotification: true
+  methods: {
+    closeNotification () {
+      eventBus.$emit('closeNotification', this.id)
     }
   }
 }
