@@ -16,7 +16,7 @@
                   :dash-spacing="0"
                   :stroke-width="2"
                   :active-width="4"
-                  :active-count="25"
+                  :active-count="progress * 0.799999"
                   size="10rem"
                   active-stroke="#00bbff"
                   stroke="transparent"
@@ -28,7 +28,7 @@
                   :stroke-width="100"
                   :active-width="100"
                   :dash-spacing="0"
-                  :active-count="25"
+                  :active-count="progress * 0.79999"
                   size="10rem"
                   stroke="transparent"
                   class="craft__progressLine"
@@ -40,7 +40,7 @@
                 <span class="center" />
               </div>
               <div class="craftProgress__progress">
-                25 <span>%</span>
+                {{ progress }} <span> %</span>
               </div>
               <div class="craftProgress__circle">
                 <img src="/images/craft.png" alt="" class="craftProgress__img">
@@ -133,7 +133,7 @@ export default {
     return {
       filterItems: 'Restless',
       options: ['Restless', 'Advanced', 'Splash', 'Patience', 'Wisdom', 'Prisma', 'Gloves'],
-      progress: 0,
+      progress: 5,
       craftItem: '',
       inventoryItems: [
         {
