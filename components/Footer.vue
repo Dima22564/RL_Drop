@@ -14,16 +14,42 @@
             <TwitterIcon />
           </a>
         </div>
-        <div class="footer__social-link">
-          <img src="/images/china.svg" alt="">
+        <div class="menu__langs">
+          <div @click="showLangs" class="menu__langs-link">
+            <img src="/images/china.svg" alt="" class="menu__langs-img">
+            <span class="munu__langs-lang">CH</span>
+          </div>
+          <div v-if="isLangsShow" @mouseleave="isLangsShow = false" @mouseover="isLangsShow = true" class="menu__langs-drop menu__langs-drop--footer">
+            <nuxt-link to="/" tag="div" class="menu__langs-dropLink">
+              <img src="/images/china.svg" alt="" class="menu__langs-img">
+              <span class="menu__langs-dropLang">English</span>
+              <CheckIcon class="icon" />
+            </nuxt-link>
+            <nuxt-link to="/" tag="div" class="menu__langs-dropLink">
+              <img src="/images/china.svg" alt="" class="menu__langs-img">
+              <span class="menu__langs-dropLang">English</span>
+              <CheckIcon class="icon" />
+            </nuxt-link>
+            <nuxt-link to="/" tag="div" class="menu__langs-dropLink">
+              <img src="/images/china.svg" alt="" class="menu__langs-img">
+              <span class="menu__langs-dropLang">English</span>
+              <CheckIcon class="icon" />
+            </nuxt-link>
+          </div>
         </div>
       </div>
 
       <div class="footer__part-2">
         <span class="footer__link-2">© RLDrop 2020, All rights reserved.</span>
-        <nuxt-link to="" class="footer__link-2">Partnership</nuxt-link>
-        <nuxt-link to="" class="footer__link-2">Terms & Conditions</nuxt-link>
-        <nuxt-link to="" class="footer__link-2">Privacy Policy</nuxt-link>
+        <nuxt-link to="" class="footer__link-2">
+          Partnership
+        </nuxt-link>
+        <nuxt-link to="" class="footer__link-2">
+          Terms & Conditions
+        </nuxt-link>
+        <nuxt-link to="" class="footer__link-2">
+          Privacy Policy
+        </nuxt-link>
         <span class="footer__link-2">made by <span class="made">roobinium</span></span>
       </div>
     </b-container>
@@ -32,17 +58,35 @@
 
 <script>
 import VkIcon from 'vue-material-design-icons/Vk.vue'
+import CheckIcon from 'vue-material-design-icons/Check.vue'
 import TwitterIcon from 'vue-material-design-icons/Twitter.vue'
 export default {
   components: {
     VkIcon,
-    TwitterIcon
+    TwitterIcon,
+    CheckIcon
+  },
+  data () {
+    return {
+      isLangsShow: false
+    }
+  },
+  methods: {
+    showLangs () {
+      if (this.isLangsShow === true) {
+        this.isLangsShow = false
+      } else {
+        this.isLangsShow = true
+      }
+    }
   }
 }
 </script>
 
 <style lang="sass">
 @import '@/theme/_mix.sass'
+.menu__langs-drop--footer
+  transform: translateY(-50px)
 .footer
   &__part
     &-1

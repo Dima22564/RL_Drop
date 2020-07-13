@@ -10,6 +10,9 @@
             offset-xl="1"
             lg="5"
           >
+            <TriangleIcon class="craftProgress__triangle" />
+            <TriangleIcon class="craftProgress__triangle craftProgress__triangle_danger" />
+            <TriangleIcon class="craftProgress__triangle craftProgress__triangle_success" />
             <div class="craftProgress">
               <div>
                 <circleBar
@@ -123,11 +126,13 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import TriangleIcon from 'vue-material-design-icons/Triangle.vue'
 import InventoryItemCheck from '../../components/InventoryItemCheck'
 export default {
   layout: 'default',
   components: {
-    InventoryItemCheck
+    InventoryItemCheck,
+    TriangleIcon
   },
   data () {
     return {
@@ -266,13 +271,24 @@ export default {
   align-items: center
   justify-content: center
   position: relative
+  flex-direction: column
   +sm
     width: 276px
     height: 276px
+  &__triangle
+    color: #33334b
+    transform: rotate(180deg)
+    font-size: 50px
+    margin-bottom: 8px
+    &_danger
+      color: #ff00aa
+    &_success
+      color: #00ffaa
   &__col
-    +lg
-      display: flex
-      justify-content: center
+    display: flex
+    justify-content: center
+    flex-direction: column
+    align-items: center
   &__progress
     width: 72px
     height: 72px
