@@ -17,7 +17,7 @@
           <p class="regForm__text regForm__text_big">
             Enter the email address you used and we’ll send you instructions to reset your password.
           </p>
-          <form action="" class="regForm">
+          <form action="" class="regForm" @submit.prevent="onSubmit">
             <MyInput
               v-model="email"
               :rightIcon="false"
@@ -34,7 +34,7 @@
                   Sign Up Now
                 </nuxt-link>
               </p>
-              <button class="btn btn_primary">
+              <button type="submit" class="btn btn_primary">
                 Send Instructions
               </button>
             </div>
@@ -51,6 +51,17 @@ export default {
   data () {
     return {
       email: ''
+    }
+  },
+  methods: {
+    onSubmit () {
+      try {
+        const formData = new FormData()
+        formData.append('email', this.email)
+        this.$store.dispatch('password/sendEmailForPasswordReset', formData)
+      } catch (e) {
+        console.log(e)
+      }
     }
   }
 }

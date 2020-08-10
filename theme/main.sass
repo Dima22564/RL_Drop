@@ -1,4 +1,7 @@
 @import './_mix'
+@import './_scroll'
+.scrollContainer
+  height: 100vh
 a
   font-size: inherit
   color: inherit
@@ -90,10 +93,10 @@ button, input, textarea, div, span, a
       color: rgba(224, 224, 255, 0.6)
       background: rgba(224, 224, 255, 0.05)
 .btn_primary_disabled
-  color: rgba(224, 224, 255, 0.24)
-  cursor: initial
-  box-shadow: 0 0 8px -4px rgba(0, 187, 255, 0.12), 0 0 24px 0 rgba(0, 187, 255, 0.24), 0 0 4px -1px rgba(10, 70, 82, 0.12), 0 0 1px 0 rgba(0, 187, 255, 0.24)
-  background-image: linear-gradient(114deg, #00ffaa, #00bbff 53%, #4579f5 100%)
+  color: rgba(224, 224, 255, 0.24) !important
+  cursor: initial !important
+  box-shadow: 0 0 8px -4px rgba(0, 187, 255, 0.12), 0 0 24px 0 rgba(0, 187, 255, 0.24), 0 0 4px -1px rgba(10, 70, 82, 0.12), 0 0 1px 0 rgba(0, 187, 255, 0.24) !important
+  background-image: linear-gradient(114deg, #00ffaa, #00bbff 53%, #4579f5 100%) !important
 
 .btn_primary
   color: white

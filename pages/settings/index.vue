@@ -81,14 +81,14 @@
 
           <b-col xl="9" lg="9" md="8">
             <keep-alive>
-              <form v-if="isShowPersonal" name="form1" method="POST" class="form">
+              <form @submit.prevent="update" v-show="isShowPersonal" name="form1" method="POST" class="form">
                 <div class="form__top">
                   <div @click="back" class="form__back" tag="div">
                     <ArrowL class="icon" />
                     <span>Back</span>
                   </div>
                   <h4>Personal</h4>
-                  <button @click.prevent="sendPersonalSettings" class="btn form__btn" type="submit">
+                  <button :disabled="getButtonState" class="btn form__btn" type="submit">
                     Done
                   </button>
                 </div>
@@ -97,14 +97,14 @@
             </keep-alive>
 
             <keep-alive>
-              <form v-if="isShowSecurity" name="form2" method="POST" class="form">
+              <form v-show="isShowSecurity" name="form2" method="POST" class="form">
                 <div class="form__top">
                   <div @click="back" class="form__back" tag="div">
                     <ArrowL class="icon" />
                     <span>Back</span>
                   </div>
                   <h4>Security</h4>
-                  <button class="btn form__btn" type="submit">
+                  <button :disabled="getButtonState" class="btn form__btn" type="submit">
                     Done
                   </button>
                 </div>
@@ -113,23 +113,26 @@
             </keep-alive>
 
             <keep-alive>
-              <form v-if="isShowVerification" name="form3" method="POST" class="form">
+              <form v-show="isShowVerification" name="form3" method="POST" class="form">
                 <div class="form__top">
                   <div @click="back" class="form__back" tag="div">
                     <ArrowL class="icon" />
                     <span>Activate</span>
                   </div>
                   <h4>Verification</h4>
-                  <button class="btn form__btn" type="submit">
-                    Done
+                  <button @click.prevent="enable2fa" v-if="!get2fa" class="btn form__btn" type="submit">
+                    Activate
+                  </button>
+                  <button v-else class="btn form__btn" type="button" @click.prevent="disable2fa">
+                    Deactivate
                   </button>
                 </div>
-                <Verification />
+                <Verification :twoFaSecret="get2faSecret" :verification-img="get2faImg" :twoFaCode="get2faCode" />
               </form>
             </keep-alive>
 
             <keep-alive>
-              <form v-if="isShowLinks" name="form4" method="POST" class="form">
+              <form v-show="isShowLinks" name="form4" method="POST" class="form">
                 <div class="form__top">
                   <div @click="back" class="form__back" tag="div">
                     <ArrowL class="icon" />
@@ -218,6 +221,7 @@ import Security from '../../components/Settings/Security'
 import Personal from '../../components/Settings/Personal'
 import InventoryItem from '../../components/InventoryItem'
 import { eventBus } from '../../plugins/event-bus'
+import { showModal } from '../../utils/_showModal'
 export default {
   layout: 'default',
   components: {
@@ -243,12 +247,18 @@ export default {
       isShowLinks: false,
       isShowMain: true,
       filterItems: 'vdfbv',
-      options: ['vdfbv', 'brtdgbrb', 'brtbrtdbrt']
+      options: ['vdfbv', 'brtdgbrb', 'brtbrtdbrt'],
+      disabled: false
     }
   },
   computed: {
     ...mapGetters({
-      getWindowSize: 'common/getWindowSize'
+      getWindowSize: 'common/getWindowSize',
+      getButtonState: 'settings/getButtonState',
+      get2fa: '2fa/get2fa',
+      get2faImg: '2fa/get2faImg',
+      get2faSecret: '2fa/get2faSecret',
+      get2faCode: '2fa/get2faCode'
     })
   },
   mounted () {
@@ -256,8 +266,24 @@ export default {
     window.addEventListener('resize', this.checkMain)
   },
   methods: {
-    sendPersonalSettings () {
+    update () {
       eventBus.$emit('sendPersonalSettings')
+    },
+    async disable2fa () {
+      const result = await this.$store.dispatch('2fa/disable2fa')
+      if (result.success) {
+        showModal('2fa deactivated successfully!', 'primary')
+      } else {
+        showModal('Sorry, something went wrong!(', 'danger')
+      }
+    },
+    async enable2fa () {
+      const result = await this.$store.dispatch('2fa/generateSecret2fa')
+      if (result.success) {
+        showModal('2fa activated successfully!', 'primary')
+      } else {
+        showModal('Sorry, something went wrong!(', 'danger')
+      }
     },
     checkMain () {
       if (screen.width > 768) {

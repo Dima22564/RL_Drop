@@ -14,7 +14,7 @@
           <h1 class="registerPage__title">
             Sign Up
           </h1>
-          <form action="" class="regForm">
+          <form @submit.prevent="register" action="" class="regForm">
             <MyInput
               v-model="userName"
               :rightIcon="false"
@@ -53,7 +53,7 @@
             />
 
             <div class="checkbox regForm__checkbox">
-              <input id="privacy" type="checkbox" name="privacy" class="checkbox__input">
+              <input id="privacy" v-model="acceptPolicy" type="checkbox" name="privacy" class="checkbox__input">
               <label for="privacy" class="checkbox__label">
                 <span>
                   By checking this checkbox I confirm that I agree to the <nuxt-link to="/privacy" tag="span" class="emp">Terms of Service, Privacy Policy </nuxt-link> and <nuxt-link to="/privacy" tag="span" class="emp">Legal</nuxt-link>.
@@ -67,7 +67,7 @@
                   Sign In
                 </nuxt-link>
               </p>
-              <button class="btn btn_primary">
+              <button type="submit" class="btn btn_primary" :class="disabled ? 'btn_primary_disabled' : ''" :disabled="disabled">
                 Sign Up
               </button>
             </div>
@@ -86,7 +86,35 @@ export default {
       userName: '',
       email: '',
       password: '',
-      confirmPassword: ''
+      confirmPassword: '',
+      acceptPolicy: false,
+      disabled: false
+    }
+  },
+  methods: {
+    async register () {
+      try {
+        this.disabled = true
+        const data = new FormData()
+        data.append('name', this.userName)
+        data.append('email', this.email)
+        data.append('password', this.password)
+        data.append('confirm_password', this.confirmPassword)
+        data.append('accept_policy', this.acceptPolicy)
+        const result = await this.$store.dispatch('register', data)
+        if (result.success) {
+          this.userName = ''
+          this.email = ''
+          this.password = ''
+          this.confirmPassword = ''
+          this.acceptPolicy = false
+          await this.$router.push('/sign-in')
+        }
+      } catch (e) {
+        console.log(e.data)
+      } finally {
+        this.disabled = false
+      }
     }
   }
 }

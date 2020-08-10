@@ -1,5 +1,5 @@
 <template>
-  <div :class="{'input_error': hasError}" class="input">
+  <div :class="{'input_error': error}" class="input">
     <div class="input__icon">
       <slot name="leftIcon" class="" />
     </div>
@@ -13,14 +13,16 @@
       :placeholder="label"
       :type="type"
       :name="name"
+      :readonly="readOnly"
       :class="{
         'input__input_withIconR': detectIcon.type === 'right',
         'input__input_withIconL': detectIcon.type === 'left',
-        'input__input_withIconR input__input_withIconL': detectIcon.type === 'both'
+        'input__input_withIconR input__input_withIconL': detectIcon.type === 'both',
+        'input__input_readonly': readOnly
       }"
       class="input__input"
     >
-    <span class="input__error">{{ error ? error : '' }}</span>
+    <span class="input__error"><slot name="error"></slot></span>
     <div class="input__icon_r input__icon">
       <slot name="rightIcon" class="" />
     </div>
@@ -48,9 +50,9 @@ export default {
       required: true
     },
     error: {
-      type: String,
+      type: Boolean,
       required: false,
-      default: ''
+      default: false
     },
     rightIcon: {
       type: Boolean,
@@ -58,6 +60,11 @@ export default {
       default: false
     },
     leftIcon: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    readOnly: {
       type: Boolean,
       required: false,
       default: false
@@ -136,6 +143,7 @@ export default {
     line-height: 25px
     font-weight: 500
     width: 100%
+
     &_withIconL
       padding-left: 38px
     &_withIconR
@@ -146,6 +154,10 @@ export default {
       color: rgba(224, 224, 255, 0.6)
     &:focus
       border: solid 2px rgba(224, 224, 255, 0.06)
+    &_readonly
+      &:focus
+        border: 2px solid transparent !important
+        cursor: initial !important
   &__error
     font-size: 13px
     line-height: 16px

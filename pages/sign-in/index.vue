@@ -14,28 +14,42 @@
           <h1 class="registerPage__title">
             Sign In
           </h1>
-          <form class="regForm">
+          <form @submit.prevent="login" class="regForm">
             <MyInput
-              v-model="userName"
+              v-model.trim="$v.email.$model"
               :rightIcon="false"
               :leftIcon="false"
-              name="Name"
-              label="User name"
+              name="Email"
+              label="Email"
               type="text"
               class="regForm__input"
-            />
+              @input="errorMessages.invalidCredentials = false"
+              :error="$v.email.$error || errorMessages.invalidCredentials"
+            >
+              <template slot="error">
+                <span v-if="errorMessages.email[0] || errorMessages.invalidCredentials">{{ errorMessages.email[0] || 'Invalid Credentials' }}</span>
+                <span v-if="!$v.email.required && $v.$error">Email required</span>
+                <span v-if="!$v.email.email && $v.$error">Email should be valid</span>
+              </template>
+            </MyInput>
             <MyInput
-              v-model="password"
+              v-model.trim="$v.password.$model"
               :rightIcon="true"
               :leftIcon="false"
-              :type="showPasswod ? 'text' : 'password'"
+              :type="showPassword ? 'text' : 'password'"
               name="password"
               label="Password"
               class="regForm__input"
+              @input="errorMessages.invalidCredentials = false"
+              :error="$v.password.$error || errorMessages.invalidCredentials"
             >
+              <template slot="error">
+                <span v-if="errorMessages.password[0] || errorMessages.invalidCredentials">{{ errorMessages.password[0] || 'Invalid Credentials' }}</span>
+                <span v-if="!$v.password.required && $v.$error">Password required</span>
+              </template>
               <template slot="rightIcon">
-                <EyeIcon v-if="!showPasswod" @click="showPasswod = true" />
-                <EyeOffIcon v-if="showPasswod" @click="showPasswod = false" />
+                <EyeIcon v-if="!showPassword" @click="showPassword = true" />
+                <EyeOffIcon v-if="showPassword" @click="showPassword = false" />
               </template>
               <template slot="label">
                 <div class="input__label input__custom-label">
@@ -46,14 +60,20 @@
             </MyInput>
 
             <MyInput
-              v-model="TwoFA"
+              v-model="$v.twoFA.$model"
               :rightIcon="false"
               :leftIcon="false"
               name="TwoFA"
               label="2FA Code"
               type="text"
               class="regForm__input"
-            />
+              v-if="get2fa"
+              :error="errorMessages.invalidCode"
+            >
+              <template slot="error">
+                <span v-if="errorMessages.invalidCode">{{ 'Invalid code! Please try again.' }}</span>
+              </template>
+            </MyInput>
 
             <div class="regForm__bottom">
               <p class="regForm__text">
@@ -61,7 +81,7 @@
                   Sign Up Now
                 </nuxt-link>
               </p>
-              <button class="btn btn_primary" type="submit">
+              <button :class="disabled || $v.$invalid ? 'btn_primary_disabled' : ''" :disabled="disabled || $v.$invalid" class="btn btn_primary" type="submit">
                 Sign In
               </button>
             </div>
@@ -72,21 +92,86 @@
   </div>
 </template>
 
-<script>
+<script>import { required, email } from 'vuelidate/lib/validators'
 import EyeIcon from 'vue-material-design-icons/EyeOutline.vue'
 import EyeOffIcon from 'vue-material-design-icons/EyeOffOutline.vue'
+import { mapGetters } from 'vuex'
 export default {
   layout: 'register',
   components: {
     EyeIcon,
     EyeOffIcon
   },
+  computed: {
+    ...mapGetters({
+      get2fa: '2fa/get2fa'
+    })
+  },
   data () {
     return {
-      showPasswod: false,
-      userName: '',
-      'TwoFA': '',
-      password: ''
+      showPassword: false,
+      email: '',
+      twoFA: '',
+      password: '',
+      disabled: false,
+      errorMessages: {
+        email: '',
+        password: '',
+        invalidCredentials: null,
+        invalidCode: false
+      }
+    }
+  },
+  validations: {
+    email: {
+      required,
+      email
+    },
+    password: {
+      required
+    },
+    twoFA: {}
+  },
+  methods: {
+    async login () {
+      if (!this.$v.$invalid) {
+        try {
+          this.disabled = true
+          const data = new FormData()
+          data.append('email', this.email)
+          data.append('password', this.password)
+          if (this.twoFA) {
+            data.append('one_time_password', this.twoFA)
+          }
+          let result = {}
+          if (!this.get2fa) {
+            result = await this.$store.dispatch('preLogin', data)
+          } else {
+            result = await this.$store.dispatch('loginWith2fa', data)
+            if (!result.success) {
+              this.errorMessages.invalidCode = true
+            } else {
+              this.errorMessages.invalidCode = true
+            }
+          }
+          if (result.data.loggedIn) {
+            await this.$router.push('/')
+            this.errorMessages.invalidCode = false
+          }
+        } catch (e) {
+          if (e.status === 401 || e.status === 400) {
+            this.errorMessages.invalidCredentials = true
+            this.errorMessages.invalidCode = false
+          } else if (e.data.invalidCode) {
+            this.errorMessages.invalidCode = true
+          } else {
+            this.errorMessages.email = e.data.error.messages.email
+            this.errorMessages.password = e.data.error.messages.password
+          }
+        } finally {
+          this.disabled = false
+        }
+      }
     }
   }
 }

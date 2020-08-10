@@ -68,7 +68,7 @@
             </div>
           </div>
 
-          <div class="menu__langs">
+          <div v-if="getToken && getUser" class="menu__langs">
             <div @click="showFinancial" class="menu__langs-link">
               <CardIcon class="menu__langs-icon" />
               <span class="munu__langs-lang">$58,960</span>
@@ -86,14 +86,14 @@
             </div>
           </div>
 
-          <div class="account">
+          <div v-if="getToken && getUser" class="account">
             <div @click="showAccount" class="account__icon">
               <img src="/images/avatar.jpg" alt="" class="account__img">
               <ArrowDownIcon :class="isAccountShow ? 'account__arrow_rotate' : ''" class="account__arrow" />
             </div>
             <div v-if="isAccountShow" @mouseleave="isAccountShow = false" class="account__drop">
               <p class="account__name">
-                vino_costa
+                {{ getUser.name }}
               </p>
               <nuxt-link class="account__link" to="/dashboard" tag="div">
                 <Dashboard class="icon" />
@@ -103,15 +103,15 @@
                 <SettingsIcon class="icon" />
                 <span>Settings</span>
               </nuxt-link>
-              <nuxt-link class="account__link account__link_logout" to="/signout" tag="div">
+              <button @click.prevent="logout" class="account__link account__link_logout">
                 <LogoutIcon class="icon" />
                 <span>Sign Out</span>
-              </nuxt-link>
+              </button>
             </div>
           </div>
-          <!-- <button class="menu__btn btn btn_primary">
+          <button v-if="!getToken" class="menu__btn btn btn_primary">
             Get Started
-          </button> -->
+          </button>
         </div>
       </b-container>
     </div>
@@ -133,7 +133,7 @@
               </nuxt-link>
             </div>
             <div class="mobileMenu__item mobileMenu__item_right">
-              <span class="mobileMenu__btn">Get Started</span>
+              <span v-if="!getToken" class="mobileMenu__btn">Get Started</span>
             </div>
           </div>
 
@@ -152,7 +152,7 @@
                 <ArrowRIcon class="arrow" />
               </div>
             </div>
-            <div @click="showFinancial" class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_withIcon">
+            <div v-if="getToken" @click="showFinancial" class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_withIcon">
               <CardIcon class="mobileMenu__icon mobileMenu__icon_dark" />
               <span>Balance</span>
               <div class="mobileMenu__go">
@@ -182,15 +182,15 @@
                 </div>
               </div>
             </div>
-            <div @click="showAccount" class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_withIcon">
+            <div v-if="getToken" @click="showAccount" class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_withIcon">
               <img src="/images/avatar.jpg" alt="" class="mobileMenu__icon mobileMenu__img">
               <span>Account</span>
               <div class="mobileMenu__go">
-                <span>name</span>
+                <span>{{ getUser.name }}</span>
                 <ArrowRIcon class="arrow" />
               </div>
             </div>
-            <button class="btn btn_primary mobileMenu__start">
+            <button v-if="!getToken" class="btn btn_primary mobileMenu__start">
               Get Started
             </button>
           </div>
@@ -475,6 +475,12 @@
     user-select: none
     &_logout
       margin-top: 16px
+      background: none
+      border: none
+      width: 100%
+      justify-content: flex-start
+      display: flex
+      align-items: center
     &:hover
       background: rgba(224, 224, 255, 0.02)
     .icon
@@ -650,7 +656,9 @@ export default {
   computed: {
     ...mapGetters({
       getWindowSize: 'common/getWindowSize',
-      getNotifications: 'notifications/getNotifications'
+      getNotifications: 'notifications/getNotifications',
+      getToken: 'getToken',
+      getUser: 'getUser'
     })
   },
   created () {
@@ -666,7 +674,13 @@ export default {
         this.sound = true
       }
     },
-
+    async logout () {
+      try {
+        await this.$store.dispatch('logOut')
+      } catch (e) {
+        console.log(e)
+      }
+    },
     showLangs () {
       if (this.isLangsShow === true) {
         this.isLangsShow = false

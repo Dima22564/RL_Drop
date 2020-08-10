@@ -1,11 +1,13 @@
 <template>
-  <div>
-    <kinesis-container tag="div">
-      <Menu />
-      <Header />
-      <nuxt />
-      <Footer />
-    </kinesis-container>
+  <div class="scrollContainer" v-bar>
+    <div>
+      <kinesis-container tag="div">
+        <Menu />
+        <Header />
+        <nuxt />
+        <Footer />
+      </kinesis-container>
+    </div>
   </div>
 </template>
 
@@ -20,6 +22,7 @@
 </style>
 
 <script>
+
 import Menu from '../components/Menu'
 import Header from '../components/Header'
 import Footer from '../components/Footer'

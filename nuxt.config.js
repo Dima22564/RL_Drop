@@ -48,7 +48,9 @@ module.exports = {
     },
     '@/plugins/multi-select',
     '@/plugins/circle-bar',
-    '@/plugins/my-components'
+    '@/plugins/my-components',
+    '@/plugins/vuebar',
+    '@/plugins/vuelidate'
   ],
   /*
   ** Nuxt.js dev-modules
@@ -77,6 +79,8 @@ module.exports = {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
+    // baseURL: 'http://localhost/rl-drop/public/api'
+    baseURL: 'https://laravel-drlw.frb.io/api'
   },
   /*
   ** Build configuration
