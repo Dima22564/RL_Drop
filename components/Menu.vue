@@ -109,9 +109,9 @@
               </button>
             </div>
           </div>
-          <button v-if="!getToken" class="menu__btn btn btn_primary">
+          <nuxt-link to="/sign-up" tag="button" v-if="!getToken" class="menu__btn btn btn_primary">
             Get Started
-          </button>
+          </nuxt-link>
         </div>
       </b-container>
     </div>
@@ -132,9 +132,9 @@
                 <img src="/images/logo-sm.svg" alt="">
               </nuxt-link>
             </div>
-            <div class="mobileMenu__item mobileMenu__item_right">
+            <nuxt-link tag="div" to="/sign-up" class="mobileMenu__item mobileMenu__item_right">
               <span v-if="!getToken" class="mobileMenu__btn">Get Started</span>
-            </div>
+            </nuxt-link>
           </div>
 
           <div v-if="showDropMenu" class="mobileMenu__invisible">
@@ -190,9 +190,9 @@
                 <ArrowRIcon class="arrow" />
               </div>
             </div>
-            <button v-if="!getToken" class="btn btn_primary mobileMenu__start">
+            <nuxt-link tag="button" to="/sign-up" v-if="!getToken" class="btn btn_primary mobileMenu__start">
               Get Started
-            </button>
+            </nuxt-link>
           </div>
         </div>
       </div>
@@ -230,10 +230,10 @@
           <SettingsIcon class="mobileMenu__icon mobileMenu__icon_dark" />
           <span>Settings</span>
         </nuxt-link>
-        <nuxt-link tag="div" to="/Dashboard" class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_withIcon mobileMenu__link_logOut">
+        <div @click.prevent="logout" class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_withIcon mobileMenu__link_logOut">
           <LogoutIcon class="mobileMenu__icon mobileMenu__icon_dark" />
           <span>Sign Out</span>
-        </nuxt-link>
+        </div>
       </div>
 
       <div v-if="isLangsShow" class="mobileMenu__wrapper">
@@ -498,7 +498,7 @@
   z-index: 555
   &_empty
     position: initial
-    opacity: 0
+    opacity: 0 !important
   &__wrapper
     background-color: #27273e
     border-radius: 12px
@@ -668,25 +668,21 @@ export default {
   },
   methods: {
     setSound () {
-      if (this.sound === true) {
-        this.sound = false
-      } else {
-        this.sound = true
-      }
+      this.sound = this.sound !== true
     },
     async logout () {
       try {
         await this.$store.dispatch('logOut')
+        this.isLangsShow = false
+        this.isNotificationShow = false
+        this.isAccountShow = false
+        this.isFinancialShow = false
       } catch (e) {
         console.log(e)
       }
     },
     showLangs () {
-      if (this.isLangsShow === true) {
-        this.isLangsShow = false
-      } else {
-        this.isLangsShow = true
-      }
+      this.isLangsShow = this.isLangsShow !== true
       this.isNotificationShow = false
       this.isAccountShow = false
       this.isFinancialShow = false
@@ -694,11 +690,7 @@ export default {
     },
     showNotifications () {
       this.isLangsShow = false
-      if (this.isNotificationShow === true) {
-        this.isNotificationShow = false
-      } else {
-        this.isNotificationShow = true
-      }
+      this.isNotificationShow = this.isNotificationShow !== true
       this.isAccountShow = false
       this.isFinancialShow = false
       this.isMobileMainMenuShow = false
@@ -706,11 +698,7 @@ export default {
     showAccount () {
       this.isLangsShow = false
       this.isNotificationShow = false
-      if (this.isAccountShow === true) {
-        this.isAccountShow = false
-      } else {
-        this.isAccountShow = true
-      }
+      this.isAccountShow = this.isAccountShow !== true
       this.isFinancialShow = false
       this.isMobileMainMenuShow = false
     },
@@ -719,11 +707,7 @@ export default {
       this.isNotificationShow = false
       this.isAccountShow = false
       this.isMobileMainMenuShow = false
-      if (this.isFinancialShow === true) {
-        this.isFinancialShow = false
-      } else {
-        this.isFinancialShow = true
-      }
+      this.isFinancialShow = this.isFinancialShow !== true
     },
     goBack () {
       this.isLangsShow = false
