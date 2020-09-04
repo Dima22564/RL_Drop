@@ -29,46 +29,46 @@
                     Personal
                   </p>
                   <p class="setting__desc">
-                    Game accounts
+                    {{ getUser.name }}
                   </p>
                 </div>
                 <ArrowR class="setting__next" />
               </div>
               <div @click="showSecurity" :class="isShowSecurity ? 'setting_active' : ''" class="setting">
                 <div class="setting__icon setting__icon_violet">
-                  <LayerIcon class="icon" />
+                  <SecurityIcon class="icon" />
                 </div>
                 <div class="setting__text">
                   <p class="setting__name">
                     Security
                   </p>
                   <p class="setting__desc">
-                    Game accounts
+                    Change password
                   </p>
                 </div>
                 <ArrowR class="setting__next" />
               </div>
               <div @click="showVerification" :class="isShowVerification ? 'setting_active' : ''" class="setting">
                 <div class="setting__icon setting__icon_d-blue">
-                  <SecurityIcon class="icon" />
+                  <WifiIcon class="icon" />
                 </div>
                 <div class="setting__text">
                   <p class="setting__name">
                     Verification
                   </p>
                   <p class="setting__desc">
-                    Game accounts
+                    Google 2FA
                   </p>
                 </div>
                 <ArrowR class="setting__next" />
               </div>
               <div @click="showLinks" :class="isShowLinks ? 'setting_active' : ''" class="setting">
                 <div class="setting__icon setting__icon_dd-blue">
-                  <WifiIcon class="icon" />
+                  <LayerIcon class="icon" />
                 </div>
                 <div class="setting__text">
                   <p class="setting__name">
-                    Game accounts
+                    Links
                   </p>
                   <p class="setting__desc">
                     Game accounts
@@ -97,7 +97,7 @@
             </keep-alive>
 
             <keep-alive>
-              <form v-show="isShowSecurity" name="form2" method="POST" class="form">
+              <form @submit.prevent="changePassword" v-show="isShowSecurity" name="form2" method="POST" class="form">
                 <div class="form__top">
                   <div @click="back" class="form__back" tag="div">
                     <ArrowL class="icon" />
@@ -221,7 +221,6 @@ import Security from '../../components/Settings/Security'
 import Personal from '../../components/Settings/Personal'
 import InventoryItem from '../../components/InventoryItem'
 import { eventBus } from '../../plugins/event-bus'
-import { showModal } from '../../utils/_showModal'
 export default {
   layout: 'default',
   components: {
@@ -258,7 +257,8 @@ export default {
       get2fa: '2fa/get2fa',
       get2faImg: '2fa/get2faImg',
       get2faSecret: '2fa/get2faSecret',
-      get2faCode: '2fa/get2faCode'
+      get2faCode: '2fa/get2faCode',
+      getUser: 'getUser'
     })
   },
   mounted () {
@@ -269,20 +269,49 @@ export default {
     update () {
       eventBus.$emit('sendPersonalSettings')
     },
+    changePassword () {
+      eventBus.$emit('changePassword')
+    },
     async disable2fa () {
-      const result = await this.$store.dispatch('2fa/disable2fa')
-      if (result.success) {
-        showModal('2fa deactivated successfully!', 'primary')
-      } else {
-        showModal('Sorry, something went wrong!(', 'danger')
+      try {
+        const result = await this.$store.dispatch('2fa/disable2fa')
+        if (result.success) {
+          this.$bvToast.toast('2fa deactivated successfully!', {
+            title: `Notification`,
+            variant: 'primary',
+            solid: true
+          })
+        } else {
+          this.$bvToast.toast('Sorry, something went wrong!(', {
+            title: `Notification`,
+            variant: 'danger',
+            solid: true
+          })
+        }
+      } catch (e) {
+        console.log(e)
+        // TODO remove console statement
       }
     },
     async enable2fa () {
-      const result = await this.$store.dispatch('2fa/generateSecret2fa')
-      if (result.success) {
-        showModal('2fa activated successfully!', 'primary')
-      } else {
-        showModal('Sorry, something went wrong!(', 'danger')
+      try {
+        const result = await this.$store.dispatch('2fa/generateSecret2fa')
+        if (result.success) {
+          this.$bvToast.toast('2fa activated successfully!', {
+            title: `Notification`,
+            variant: 'primary',
+            solid: true
+          })
+        } else {
+          this.$bvToast.toast('Sorry, something went wrong!(', {
+            title: `Notification`,
+            variant: 'danger',
+            solid: true
+          })
+        }
+      } catch (e) {
+        // TODO remove console statement
+        console.log(e)
       }
     },
     checkMain () {

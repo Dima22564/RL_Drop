@@ -27,8 +27,8 @@
     >
       <template slot="error">
         <span v-if="errorMessages.email">{{ errorMessages.email }}</span>
-        <span v-if="!$v.email.required && $v.$error">Password required</span>
-        <span v-if="!$v.email.email && $v.$error">Field email should be a valid email</span>
+        <span v-if="!$v.email.required && $v.email.$error">Password required</span>
+        <span v-if="!$v.email.email && $v.email.$error">Field email should be a valid email</span>
       </template>
     </MyInput>
     <MyInput

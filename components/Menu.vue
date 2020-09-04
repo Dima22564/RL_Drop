@@ -71,7 +71,7 @@
           <div v-if="getToken && getUser" class="menu__langs">
             <div @click="showFinancial" class="menu__langs-link">
               <CardIcon class="menu__langs-icon" />
-              <span class="munu__langs-lang">$58,960</span>
+              <span class="munu__langs-lang">${{ getUser.balance }}</span>
             </div>
             <div v-if="isFinancialShow" @mouseleave="isFinancialShow = false" class="financial">
               <div class="financial__top">
@@ -156,7 +156,7 @@
               <CardIcon class="mobileMenu__icon mobileMenu__icon_dark" />
               <span>Balance</span>
               <div class="mobileMenu__go">
-                <span>55555</span>
+                <span>{{ getUser.balance }}</span>
                 <ArrowRIcon class="arrow" />
               </div>
             </div>

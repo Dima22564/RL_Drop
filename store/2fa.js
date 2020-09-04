@@ -39,6 +39,7 @@ export const actions = {
       return result
     } catch (e) {
       console.log(e.response)
+      //  TODO remove console statement
     }
   },
   async verify2fa (ctx, formData) {
@@ -61,6 +62,7 @@ export const actions = {
       return result
     } catch (e) {
       console.log(e.response)
+      //  TODO remove console statement
     }
   },
   generateOneTimePassword ({ getters, commit }) {

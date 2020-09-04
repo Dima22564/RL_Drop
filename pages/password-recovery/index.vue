@@ -26,7 +26,12 @@
               name="email"
               label="Email"
               class="regForm__input"
-            />
+              :error="Boolean(errorMessage)"
+            >
+              <template slot="error">
+                <span v-if="errorMessage">{{ errorMessage }}</span>
+              </template>
+            </MyInput>
 
             <div class="regForm__bottom">
               <p class="regForm__text">
@@ -45,22 +50,33 @@
   </div>
 </template>
 
-<script>
+<script>/* eslint-disable */
+  import { showModal } from '../../utils/_showModal'
+
 export default {
   layout: 'register',
   data () {
     return {
-      email: ''
+      email: '',
+      errorMessage: null
     }
   },
   methods: {
-    onSubmit () {
+    async onSubmit () {
       try {
         const formData = new FormData()
         formData.append('email', this.email)
-        this.$store.dispatch('password/sendEmailForPasswordReset', formData)
+        const result = await this.$store.dispatch('password/sendEmailForPasswordReset', formData)
+        if (result.success) {
+          this.$bvToast.toast('Email sent!', {
+            title: `Notification`,
+            variant: 'primary',
+            solid: true
+          })
+          this.errorMessage = null
+        }
       } catch (e) {
-        console.log(e)
+        this.errorMessage = e.data.message || e.data.error.messages[0]
       }
     }
   }

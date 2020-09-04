@@ -28,7 +28,10 @@ module.exports = {
     '@/theme/main.sass',
     '@/theme/_mix.sass',
     'node_modules/slick-carousel/slick/slick.css',
-    'vue-multiselect/dist/vue-multiselect.min.css'
+    'vue-multiselect/dist/vue-multiselect.min.css',
+    'bootstrap/dist/css/bootstrap.css',
+    'bootstrap-vue/dist/bootstrap-vue.css',
+    'vue2-dropzone/dist/vue2Dropzone.min.css'
   ],
   /*
   ** Plugins to load before mounting the App
@@ -46,11 +49,20 @@ module.exports = {
       src: '@/plugins/kinesis',
       ssr: false
     },
+    {
+      src: '@/plugins/dropzone',
+      ssr: false
+    },
     '@/plugins/multi-select',
     '@/plugins/circle-bar',
     '@/plugins/my-components',
     '@/plugins/vuebar',
-    '@/plugins/vuelidate'
+    '@/plugins/vuelidate',
+    '@/plugins/axios',
+    {
+      src: '@/plugins/socket',
+      ssr: false
+    }
   ],
   /*
   ** Nuxt.js dev-modules
@@ -69,18 +81,20 @@ module.exports = {
     '@nuxtjs/axios',
     '@nuxtjs/pwa'
   ],
-  'bootstrapVue': {
-    componentPlugins: [
-      'LayoutPlugin'
-    ]
-  },
+  // 'bootstrapVue': {
+  //   componentPlugins: [
+  //     'LayoutPlugin',
+  //     'SidebarPlugin'
+  //   ]
+  // },
   /*
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
     // baseURL: 'http://localhost/rl-drop/public/api'
-    baseURL: 'https://laravel-drlw.frb.io/api'
+    // baseURL: 'https://laravel-drlw.frb.io/api'
+    baseURL: 'http://127.0.0.1:8000/api'
   },
   /*
   ** Build configuration

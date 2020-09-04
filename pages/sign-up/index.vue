@@ -77,7 +77,7 @@
     </b-container>
   </div>
 </template>
-
+<!--TODO Make validation-->
 <script>
 export default {
   layout: 'register',
@@ -111,6 +111,7 @@ export default {
           await this.$router.push('/sign-in')
         }
       } catch (e) {
+        // TODO remove console statement
         console.log(e.data)
       } finally {
         this.disabled = false

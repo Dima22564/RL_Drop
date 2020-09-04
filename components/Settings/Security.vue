@@ -1,43 +1,126 @@
 <template>
   <div class="form__inputs">
     <MyInput
-      v-model="currentPassword"
+      v-model="$v.currentPassword.$model"
       :rightIcon="false"
       :leftIcon="false"
       name="currentPassword"
       label="Current Password"
-      type="text"
+      type="password"
       class="form__input"
-    />
+      :error="Boolean(errorMessages.currentPassword) || $v.currentPassword.$error"
+    >
+      <template slot="error">
+        <span v-if="errorMessages.currentPassword">{{ errorMessages.currentPassword }}</span>
+        <span v-if="!$v.currentPassword.required && $v.currentPassword.$error">Password required</span>
+      </template>
+    </MyInput>
     <MyInput
-      v-model="newPassword"
+      v-model="$v.newPassword.$model"
       :rightIcon="false"
       :leftIcon="false"
       name="newPassword"
       label="New Password"
-      type="text"
+      type="password"
       class="form__input"
-    />
+      :error="Boolean(errorMessages.newPassword) || $v.newPassword.$error"
+    >
+      <template slot="error">
+        <span v-if="errorMessages.newPassword">{{ errorMessages.newPassword[0] }}</span>
+        <span v-if="!$v.newPassword.required && $v.newPassword.$error">New Password required</span>
+        <span v-if="!$v.newPassword.minLength && $v.newPassword.$error">Password min length is {{ $v.newPassword.$params.minLength.min }}</span>
+      </template>
+    </MyInput>
     <MyInput
-      v-model="confirmPassword"
+      v-model="$v.confirmPassword.$model"
       :rightIcon="false"
       :leftIcon="false"
       name="confirmPassword"
       label="Confirm Password"
-      type="text"
+      type="password"
       class="form__input form__input_w100"
-    />
+      :error="Boolean(errorMessages.confirmPassword) || $v.confirmPassword.$error"
+    >
+      <template slot="error">
+        <span v-if="errorMessages.confirmPassword">{{ errorMessages.confirmPassword[0] }}</span>
+        <span v-if="!$v.confirmPassword.required && $v.confirmPassword.$error">Confirm your password</span>
+      </template>
+    </MyInput>
   </div>
 </template>
 
-<script>
+<script>import { required, minLength } from 'vuelidate/lib/validators'
+import { eventBus } from '~/plugins/event-bus'
 export default {
   data () {
     return {
       currentPassword: '',
       newPassword: '',
-      confirmPassword: ''
+      confirmPassword: '',
+      errorMessages: {
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+      }
     }
+  },
+  validations: {
+    currentPassword: {
+      required
+    },
+    newPassword: {
+      required,
+      minLength: minLength(6)
+    },
+    confirmPassword: {
+      required
+    }
+  },
+  created () {
+    eventBus.$on('changePassword', async () => {
+      this.$store.commit('settings/toggleButtonState', true)
+      this.$v.$touch()
+      if (!this.$v.$invalid) {
+        const formData = new FormData()
+        formData.append('currentPassword', this.currentPassword)
+        formData.append('newPassword', this.newPassword)
+        formData.append('confirmPassword', this.confirmPassword)
+
+        try {
+          const result = await this.$store.dispatch('password/changePassword', formData)
+          if (result.success) {
+            this.$bvToast.toast('Password successfully saved!', {
+              title: `Notification`,
+              variant: 'primary',
+              solid: true
+            })
+            this.errorMessages.currentPassword = null
+            this.errorMessages.newPassword = null
+            this.errorMessages.confirmPassword = null
+            this.currentPassword = ''
+            this.newPassword = ''
+            this.confirmPassword = ''
+            this.$v.$reset()
+          } else {
+            this.$bvToast.toast('Something goes wrong!', {
+              title: `Notification`,
+              variant: 'danger',
+              solid: true
+            })
+          }
+        } catch (e) {
+          if (e.status === 404) {
+            this.errorMessages.currentPassword = 'Invalid password'
+          } else if (e.status === 400) {
+            this.errorMessages.currentPassword = e.data.error.messages.currentPassword || ''
+            this.errorMessages.newPassword = e.data.error.messages.newPassword || ''
+            this.errorMessages.confirmPassword = e.data.error.messages.confirmPassword || ''
+          }
+        } finally {
+          this.$store.commit('settings/toggleButtonState', false)
+        }
+      }
+    })
   }
 }
 </script>

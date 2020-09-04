@@ -28,8 +28,8 @@
             >
               <template slot="error">
                 <span v-if="errorMessages.email[0] || errorMessages.invalidCredentials">{{ errorMessages.email[0] || 'Invalid Credentials' }}</span>
-                <span v-if="!$v.email.required && $v.$error">Email required</span>
-                <span v-if="!$v.email.email && $v.$error">Email should be valid</span>
+                <span v-if="!$v.email.required && $v.email.$error">Email required</span>
+                <span v-if="!$v.email.email && $v.email.$error">Email should be valid</span>
               </template>
             </MyInput>
             <MyInput
@@ -45,7 +45,7 @@
             >
               <template slot="error">
                 <span v-if="errorMessages.password[0] || errorMessages.invalidCredentials">{{ errorMessages.password[0] || 'Invalid Credentials' }}</span>
-                <span v-if="!$v.password.required && $v.$error">Password required</span>
+                <span v-if="!$v.password.required && $v.password.$error">Password required</span>
               </template>
               <template slot="rightIcon">
                 <EyeIcon v-if="!showPassword" @click="showPassword = true" />
@@ -132,6 +132,40 @@ export default {
     },
     twoFA: {}
   },
+  mounted () {
+    /* eslint-disable */
+    // this.$echo.private(`room.1`).listen('CustomNotification', (payload) => {
+    //   console.log(payload)
+    // })
+    // console.log(this.$echo)
+    Array.prototype.shuffle = function ( b ) {
+      let i = this.length
+      let j
+      let t
+      while ( i ) {
+        j = Math.floor( ( i-- ) * Math.random() )
+        t = b && typeof this[i].shuffle !== 'undefined' ? this[i].shuffle() : this[i]
+        this[i] = this[j]
+        this[j] = t
+      }
+      return this
+    }
+    const arrf = [1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    let plus = 0
+    let minus = 0
+    for (let i = 0; i < 1000; i++) {
+      arrf.shuffle()
+      const num = Math.floor(Math.random() * 20)
+      const catched = arrf[num]
+      if (catched === 1) {
+        plus += 1
+      } else {
+        minus += 1
+      }
+    }
+    console.log(plus)
+    console.log(minus)
+  },
   methods: {
     async login () {
       if (!this.$v.$invalid) {
@@ -155,7 +189,7 @@ export default {
             }
           }
           if (result.data.loggedIn) {
-            await this.$router.push('/')
+            // await this.$router.push('/')
             this.errorMessages.invalidCode = false
           }
         } catch (e) {

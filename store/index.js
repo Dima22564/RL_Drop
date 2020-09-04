@@ -50,6 +50,7 @@ export const actions = {
       }
     } catch (e) {
       console.log(e)
+      //  TODO remove console statement
     }
   },
   setToken ({ commit }, token) {
@@ -58,16 +59,21 @@ export const actions = {
     Cookies.set('token', token)
   },
   async logOut ({ commit, getters }) {
-    this.$axios.setToken(getters.getToken, 'Bearer')
-    const result = await this.$axios.$post(`${this.$axios.defaults.baseURL}/logout`)
-    commit('deleteToken')
-    commit('2fa/delete2faImg')
-    commit('deleteUser')
-    commit('2fa/toggle2fa', null)
-    commit('2fa/set2faCode', null)
-    commit('2fa/set2faSecret', null)
-    Cookies.remove('token')
-    return result
+    try {
+      this.$axios.setToken(getters.getToken, 'Bearer')
+      const result = await this.$axios.$post(`${this.$axios.defaults.baseURL}/logout`)
+      commit('deleteToken')
+      commit('2fa/delete2faImg')
+      commit('deleteUser')
+      commit('2fa/toggle2fa', null)
+      commit('2fa/set2faCode', null)
+      commit('2fa/set2faSecret', null)
+      Cookies.remove('token')
+      return result
+    } catch (e) {
+      console.log(e)
+    //  TODO remove console statement
+    }
   },
   async getUser ({ commit, dispatch }, token) {
     try {
@@ -83,20 +89,21 @@ export const actions = {
       }
     } catch (e) {
       console.log(e.response.data)
+      //  TODO remove console statement
     }
   },
-  autoLogin ({ dispatch }) {
+  autoLogin ({ dispatch, commit }) {
     const cookieStr = process.browser
       ? document.cookie
       : this.app.context.req.headers.cookie
 
     const cookies = Cookie.parse(cookieStr || '') || {}
     const token = cookies.token
-
     if (isJWTValid(token)) {
       dispatch('setToken', token)
     } else {
-      dispatch('logOut')
+      // dispatch('logOut')
+      commit('deleteToken')
     }
   },
   async register ({ dispatch }, data) {
@@ -123,15 +130,20 @@ export const actions = {
     }
   },
   async loginWith2fa ({ dispatch, commit, getters }, formData) {
-    const result = await dispatch('2fa/verify2fa', formData)
-    if (result.success && result.data.loggedIn) {
-      dispatch('setToken', result.data.access_token)
-      commit('setUser', result.data.user)
-      commit('2fa/set2faImg', result.data.twofaImg)
-      commit('2fa/set2faSecret', result.data.user.passwordSecurity.google2fa_secret)
-      dispatch('2fa/generateOneTimePassword', getters['2fa/get2faSecret'])
+    try {
+      const result = await dispatch('2fa/verify2fa', formData)
+      if (result.success && result.data.loggedIn) {
+        dispatch('setToken', result.data.access_token)
+        commit('setUser', result.data.user)
+        commit('2fa/set2faImg', result.data.twofaImg)
+        commit('2fa/set2faSecret', result.data.user.passwordSecurity.google2fa_secret)
+        dispatch('2fa/generateOneTimePassword', getters['2fa/get2faSecret'])
+      }
+      return result
+    } catch (e) {
+      console.log(e)
+      //  TODO remove console statement
     }
-    return result
   }
 }
 
