@@ -76,7 +76,7 @@
             <div v-if="isFinancialShow" @mouseleave="isFinancialShow = false" class="financial">
               <div class="financial__top">
                 <span class="financial__title">balance</span>
-                <span class="financial__number">844.65 <span>USD</span></span>
+                <span class="financial__number">{{ getUser.balance.toFixed(2) }} <span>USD</span></span>
               </div>
               <div class="financial__btn">
                 <button class="btn btn_gray">
@@ -92,7 +92,7 @@
               <ArrowDownIcon :class="isAccountShow ? 'account__arrow_rotate' : ''" class="account__arrow" />
             </div>
             <div v-if="isAccountShow" @mouseleave="isAccountShow = false" class="account__drop">
-              <p class="account__name">
+              <p v-if="getToken && getUser" class="account__name">
                 {{ getUser.name }}
               </p>
               <nuxt-link class="account__link" to="/dashboard" tag="div">
@@ -152,7 +152,7 @@
                 <ArrowRIcon class="arrow" />
               </div>
             </div>
-            <div v-if="getToken" @click="showFinancial" class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_withIcon">
+            <div v-if="getToken && getUser" @click="showFinancial" class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_withIcon">
               <CardIcon class="mobileMenu__icon mobileMenu__icon_dark" />
               <span>Balance</span>
               <div class="mobileMenu__go">
@@ -182,7 +182,7 @@
                 </div>
               </div>
             </div>
-            <div v-if="getToken" @click="showAccount" class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_withIcon">
+            <div v-if="getToken && getUser" @click="showAccount" class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_withIcon">
               <img src="/images/avatar.jpg" alt="" class="mobileMenu__icon mobileMenu__img">
               <span>Account</span>
               <div class="mobileMenu__go">
@@ -658,7 +658,7 @@ export default {
       getWindowSize: 'common/getWindowSize',
       getNotifications: 'notifications/getNotifications',
       getToken: 'getToken',
-      getUser: 'getUser'
+      getUser: 'user/getUser'
     })
   },
   created () {

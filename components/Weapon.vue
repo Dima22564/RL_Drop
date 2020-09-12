@@ -7,7 +7,8 @@
     cols="6"
     class="drop__col"
   >
-    <div :class="'drop_' + color" class="drop">
+    <div :class="'drop_'" class="drop">
+      <span class="drop__line" :style="{ 'background': color }"></span>
       <img :src="imgUrl" alt="" class="drop__img">
       <div class="drop__text">
         <p class="drop__name">
@@ -61,24 +62,12 @@ export default {
   margin-bottom: 32px
   +lg
     margin-bottom: 16px
-  &::after
-    content: ''
+  &__line
     width: 100%
     height: 4px
     bottom: 0
     left: 0
-  &_blue
-    &::after
-      background: #00bbff
-  &_pink
-    &::after
-      background: #ff00aa
-  &_red
-    &::after
-      background: #f54562
-  &_orange
-    &::after
-      background: #ff5e00
+    position: absolute
   &__col
     +lg
       padding: 0 7px
@@ -87,6 +76,8 @@ export default {
       margin: 0 -7px
   &__img
     align-self: center
+    width: 90px
+    height: 68px
   &__text
     padding: 0 16px 16px 16px
     font-size: 13px

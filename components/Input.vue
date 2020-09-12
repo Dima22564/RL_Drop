@@ -33,7 +33,7 @@
 export default {
   props: {
     value: {
-      type: String,
+      type: null,
       required: true
     },
     label: {

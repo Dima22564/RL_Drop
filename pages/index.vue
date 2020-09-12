@@ -41,26 +41,31 @@
     <!-- Chests adapted = true -->
     <section class="chests">
       <b-container>
-        <b-row>
-          <b-col
-            xl="3"
-            lg="4"
-            md="6"
-            sm="6"
-            cols="6"
-          >
-            <nuxt-link to="/case/1" class="chest" tag="div">
-              <img src="/images/chest-1.png" alt="" class="chest__img">
-              <div class="chest__text">
-                <span class="name">Melting</span>
-                <div class="chest__discount">
-                  <span class="discount">$5.22</span>
-                  <span class="discount-old">$7.45</span>
-                </div>
-              </div>
-            </nuxt-link>
-          </b-col>
-        </b-row>
+          <transition-group class="row" name="fade" tag="div" mode="out-in">
+            <b-col
+              xl="3"
+              lg="4"
+              md="6"
+              sm="6"
+              cols="6"
+              v-for="chest in getAllChests"
+              :key="chest.id"
+              v-show="chest[`${getPlatform}Price`]"
+            >
+<!--              <transition name="fade">-->
+                <nuxt-link :to="`/case/${chest.id}`" class="chest" tag="div">
+                  <img :src="chest.image" alt="" class="chest__img">
+                  <div class="chest__text">
+                    <span class="name">{{ chest.name }}</span>
+                    <div class="chest__discount">
+                      <span class="discount">${{ chest[`${getPlatform}Price`] }}</span>
+                      <span v-show="chest.oldPrice" class="discount-old">${{ chest.oldPrice }}</span>
+                    </div>
+                  </div>
+                </nuxt-link>
+<!--              </transition>-->
+            </b-col>
+          </transition-group>
       </b-container>
     </section>
 
@@ -100,9 +105,18 @@ export default {
     ArrowRightIcon,
     Timer
   },
+  async created () {
+    try {
+      await this.$store.dispatch('chest/loadAllIndexPage')
+    } catch (e) {
+      console.log(e)
+    }
+  },
   computed: {
     ...mapGetters({
-      getWindowSize: 'common/getWindowSize'
+      getWindowSize: 'common/getWindowSize',
+      getAllChests: 'chest/getAllChests',
+      getPlatform: 'common/getPlatform'
     })
   }
 }
@@ -209,6 +223,7 @@ export default {
     width: 100%
     position: relative
     z-index: 5
+    height: 216px
   &__discount
     position: relative
     z-index: 10

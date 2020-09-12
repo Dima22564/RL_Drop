@@ -3,7 +3,6 @@ import Cookies from 'js-cookie'
 import jwt from 'jsonwebtoken'
 
 export const state = () => ({
-  user: null,
   token: null,
   tokenExpireDate: '',
   lang: 'en',
@@ -19,16 +18,8 @@ export const mutations = {
   deleteToken (state) {
     state.token = null
   },
-  setUser (state, user) {
-    state.user = user
-  },
   deleteUser (state) {
     state.user = null
-  },
-  changeUser (state, data) {
-    state.user.email = data.email
-    state.user.name = data.name
-    state.user.phoneNumber = data.phoneNumber
   },
   setErrors (state, errors) {
     state.errors = errors
@@ -39,14 +30,14 @@ export const mutations = {
 }
 
 export const actions = {
-  async nuxtServerInit ({ dispatch, getters, commit }) {
+  async nuxtServerInit ({ dispatch, getters, commit, rootGetters }) {
     try {
       dispatch('autoLogin')
+      dispatch('common/initCookie')
       if (getters.getToken) {
-        await dispatch('getUser', getters.getToken)
-        commit('2fa/set2faSecret', getters.getUser.passwordSecurity
-          .google2fa_secret)
-        dispatch('2fa/generateOneTimePassword', getters['2fa/get2faSecret'])
+        await dispatch('user/getUser', getters.getToken)
+        commit('2fa/set2faSecret', rootGetters['user/getUser'].passwordSecurity.google2fa_secret)
+        dispatch('2fa/generateOneTimePassword', rootGetters['2fa/get2faSecret'])
       }
     } catch (e) {
       console.log(e)
@@ -64,32 +55,16 @@ export const actions = {
       const result = await this.$axios.$post(`${this.$axios.defaults.baseURL}/logout`)
       commit('deleteToken')
       commit('2fa/delete2faImg')
-      commit('deleteUser')
+      commit('user/deleteUser')
       commit('2fa/toggle2fa', null)
       commit('2fa/set2faCode', null)
       commit('2fa/set2faSecret', null)
       Cookies.remove('token')
+      await this.$router.replace({ path: '/' })
       return result
     } catch (e) {
       console.log(e)
     //  TODO remove console statement
-    }
-  },
-  async getUser ({ commit, dispatch }, token) {
-    try {
-      this.$axios.setToken(token, 'Bearer')
-      const result = await this.$axios.$post(`${this.$axios.defaults.baseURL}/user`, { token })
-      commit('setUser', result.data.user)
-      if (result.success) {
-        commit('setUser', result.data.user)
-        if (result.data.user.passwordSecurity.google2fa_enable) {
-          commit('2fa/toggle2fa', result.data.user.passwordSecurity.google2fa_enable)
-          commit('2fa/set2faImg', result.data.google2fa_url)
-        }
-      }
-    } catch (e) {
-      console.log(e.response.data)
-      //  TODO remove console statement
     }
   },
   autoLogin ({ dispatch, commit }) {
@@ -122,7 +97,7 @@ export const actions = {
         commit('2fa/toggle2fa', true)
       } else if (result.success && !result.data.user.passwordSecurity.google2faEnable) {
         dispatch('setToken', result.data.access_token)
-        commit('setUser', result.data.user)
+        commit('user/setUser', result.data.user)
       }
       return result
     } catch (e) {
@@ -134,7 +109,7 @@ export const actions = {
       const result = await dispatch('2fa/verify2fa', formData)
       if (result.success && result.data.loggedIn) {
         dispatch('setToken', result.data.access_token)
-        commit('setUser', result.data.user)
+        commit('user/setUser', result.data.user)
         commit('2fa/set2faImg', result.data.twofaImg)
         commit('2fa/set2faSecret', result.data.user.passwordSecurity.google2fa_secret)
         dispatch('2fa/generateOneTimePassword', getters['2fa/get2faSecret'])
@@ -150,7 +125,6 @@ export const actions = {
 export const getters = {
   getToken: state => state.token,
   getExpireDate: state => state.tokenExpireDate,
-  getUser: state => state.user,
   getErrors: state => state.errors,
   getBtnState: state => state.disabledBtn
 }

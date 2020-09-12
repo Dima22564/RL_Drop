@@ -223,6 +223,7 @@ import InventoryItem from '../../components/InventoryItem'
 import { eventBus } from '../../plugins/event-bus'
 export default {
   layout: 'default',
+  middleware: 'authenticated',
   components: {
     DashboardIcon,
     SettingsIcon,
@@ -258,7 +259,7 @@ export default {
       get2faImg: '2fa/get2faImg',
       get2faSecret: '2fa/get2faSecret',
       get2faCode: '2fa/get2faCode',
-      getUser: 'getUser'
+      getUser: 'user/getUser'
     })
   },
   mounted () {

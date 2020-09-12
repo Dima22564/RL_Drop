@@ -20,7 +20,7 @@ export const actions = {
           email: data.get('email'),
           phoneNumber: data.get('phone_number')
         }
-        commit('changeUser', newUser, { root: true })
+        commit('user/changeUser', newUser, { root: true })
       }
       return result
     } catch (e) {

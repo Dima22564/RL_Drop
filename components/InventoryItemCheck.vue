@@ -3,7 +3,7 @@
     <input
       :id="itemId"
       :value="itemId"
-      @input="$emit('input', $event.target.value)"
+      @input="$emit('input', Number($event.target.value))"
       class="inventoryItem__input"
       type="radio"
       name="inventoryItem"
@@ -55,7 +55,7 @@ export default {
       required: true
     },
     itemId: {
-      type: String,
+      type: Number,
       required: true
     }
   }
@@ -122,6 +122,8 @@ export default {
       margin: 0 -7px
   &__img
     margin-bottom: 16px
+    width: 96px
+    height: 52px
   &__text
     display: flex
     flex-direction: column

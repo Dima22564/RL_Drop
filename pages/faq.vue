@@ -74,7 +74,7 @@ export default {
 </script>
 
 <style lang="sass">
-@import '@/theme/_mix.sass'
+@import '../theme/_mix.sass'
 .faq
   padding: 16px 0 32px
   .multiselect

@@ -40,14 +40,32 @@
 
       <div class="admin">
         <div class="admin__sidebar">
-          <nuxt-link tag="div" class="admin__link" to="/admin/add-item">
+          <nuxt-link active-class="admin__link_active" tag="div" class="admin__link" to="/admin/items">
+            Items
+          </nuxt-link>
+          <nuxt-link active-class="admin__link_active" tag="div" class="admin__link" to="/admin/add-item">
             Add Item
           </nuxt-link>
-          <nuxt-link tag="div" class="admin__link" to="/admin/add-type">
+          <nuxt-link active-class="admin__link_active" tag="div" class="admin__link" to="/admin/add-type">
             Add Item Type
           </nuxt-link>
-          <nuxt-link tag="div" class="admin__link" to="/admin/create-case">
+          <nuxt-link active-class="admin__link_active" tag="div" class="admin__link" to="/admin/create-case">
             Create Case
+          </nuxt-link>
+          <nuxt-link active-class="admin__link_active" tag="div" class="admin__link" to="/admin/cases">
+            Cases
+          </nuxt-link>
+          <nuxt-link active-class="admin__link_active" tag="div" class="admin__link" to="/admin/stats/chests">
+            Cases Stats
+          </nuxt-link>
+          <nuxt-link active-class="admin__link_active" tag="div" class="admin__link" to="/admin/stats/item-types">
+            Item Types Stats
+          </nuxt-link>
+          <nuxt-link active-class="admin__link_active" tag="div" class="admin__link" to="/admin/stats/craft">
+            Craft stats
+          </nuxt-link>
+          <nuxt-link active-class="admin__link_active" tag="div" class="admin__link" to="/admin/stats/sales">
+            Sales
           </nuxt-link>
         </div>
 
@@ -61,7 +79,10 @@
 
 <script>
 export default {
-  components: {}
+  components: {},
+  async created () {
+    await this.$store.dispatch('admin/itemTypes/loadTypes')
+  }
 }
 </script>
 
@@ -71,7 +92,9 @@ export default {
 *:after
   box-sizing: border-box
   margin: 0
-
+.navbar
+  background: #202036 !important
+  z-index: 5
 .admin
   display: flex
   margin-top: 75px
@@ -85,6 +108,10 @@ export default {
     cursor: pointer
     margin-bottom: 10px
     font-weight: 600
+    &:hover
+      color: rgba(224, 224, 255, 0.6)
+    &_active
+      color: rgba(224, 224, 255, 0.6)
   &__content
     padding-right: 20px
     width: 100%

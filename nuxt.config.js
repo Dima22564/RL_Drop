@@ -60,7 +60,7 @@ module.exports = {
     '@/plugins/vuelidate',
     '@/plugins/axios',
     {
-      src: '@/plugins/socket',
+      src: '@/plugins/apexCharts',
       ssr: false
     }
   ],
@@ -107,7 +107,7 @@ module.exports = {
     filenames: {
       css: ({ isDev }) => isDev ? '[name].css' : '[name].css'
     },
-    transpile: ['vue-agile'],
+    transpile: ['vue-agile', 'vue-echarts', 'resize-detector'],
     extend (config, ctx) {
     }
   }

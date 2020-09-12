@@ -7,22 +7,22 @@
           <b-col xl="4" lg="4">
             <div class="platform">
               <span
-                :class="activeFilter === 1 ? 'platform__icon_active' : ''"
-                @click="changeItems(1)"
+                :class="getPlatform === 'pc' ? 'platform__icon_active' : ''"
+                @click="changeItems('pc')"
                 class="platform__icon"
               >
                 <LaptopIcon />
               </span>
               <span
-                :class="activeFilter === 2 ? 'platform__icon_active' : ''"
-                @click="changeItems(2)"
+                :class="getPlatform === 'ps4' ? 'platform__icon_active' : ''"
+                @click="changeItems('ps4')"
                 class="platform__icon"
               >
                 <PlaystationIcon />
               </span>
               <span
-                :class="activeFilter === 3 ? 'platform__icon_active' : ''"
-                @click="changeItems(3)"
+                :class="getPlatform === 'xbox' ? 'platform__icon_active' : ''"
+                @click="changeItems('xbox')"
                 class="platform__icon"
               >
                 <XboxIcon />
@@ -120,65 +120,19 @@
           ref="slick"
           :options="slickOptions"
           @reInit="reinitSlider"
+          v-if="dataReady"
         >
-          <div v-show="activeFilter === 1" class="weapon__wrapper">
+          <div
+            v-show="item[`${getPlatform}Price`]"
+            v-for="item in getCraftItems"
+            :key="item.id"
+            @click.prevent="setCraftItem(`/craft?itemId=${item.id}&itemName=${item.name}&platform=${getPlatform}`, item.id)"
+            class="weapon__wrapper"
+          >
             <div class="weapon weapon_pink">
-              <img src="/images/weapon.png" alt="" class="weapon__img">
-              <span class="weapon__name">Decimato47r</span>
-            </div>
-          </div>
-          <div v-show="activeFilter === 2" class="weapon__wrapper">
-            <div class="weapon weapon_red">
-              <img src="/images/weapon.png" alt="" class="weapon__img">
-              <span class="weapon__name">Decimator55</span>
-            </div>
-          </div>
-          <div v-show="activeFilter === 3" class="weapon__wrapper">
-            <div class="weapon weapon_violet">
-              <img src="/images/weapon.png" alt="" class="weapon__img">
-              <span class="weapon__name">Decimator53</span>
-            </div>
-          </div>
-          <div v-show="activeFilter === 1" class="weapon__wrapper">
-            <div class="weapon weapon_blue">
-              <img src="/images/weapon.png" alt="" class="weapon__img">
-              <span class="weapon__name">Decimator52</span>
-            </div>
-          </div>
-          <div v-show="activeFilter === 2" class="weapon__wrapper">
-            <div class="weapon weapon_orange">
-              <img src="/images/weapon.png" alt="" class="weapon__img">
-              <span class="weapon__name">Decimator48</span>
-            </div>
-          </div>
-          <div v-show="activeFilter === 3" class="weapon__wrapper">
-            <div class="weapon weapon_d-blue">
-              <img src="/images/weapon.png" alt="" class="weapon__img">
-              <span class="weapon__name">Decimator45</span>
-            </div>
-          </div>
-          <div v-show="activeFilter === 1" class="weapon__wrapper">
-            <div class="weapon">
-              <img src="/images/weapon.png" alt="" class="weapon__img">
-              <span class="weapon__name">Decimator1</span>
-            </div>
-          </div>
-          <div v-show="activeFilter === 2" class="weapon__wrapper">
-            <div class="weapon">
-              <img src="/images/weapon.png" alt="" class="weapon__img">
-              <span class="weapon__name">Decimato4r</span>
-            </div>
-          </div>
-          <div v-show="activeFilter === 3" class="weapon__wrapper">
-            <div class="weapon">
-              <img src="/images/weapon.png" alt="" class="weapon__img">
-              <span class="weapon__name">Decimaadftor</span>
-            </div>
-          </div>
-          <div v-show="activeFilter === 1" class="weapon__wrapper">
-            <div class="weapon">
-              <img src="/images/weapon.png" alt="" class="weapon__img">
-              <span class="weapon__name">Decimator2</span>
+              <span class="weapon__line" :style="{ 'background': item.type.color }"></span>
+              <img :data-lazy="item.image" alt="" class="weapon__img">
+              <span class="weapon__name">{{ item.name }}</span>
             </div>
           </div>
         </slick>
@@ -197,6 +151,7 @@ import WifiIcon from 'vue-material-design-icons/Wifi.vue'
 import EqualizerIcon from 'vue-material-design-icons/Equalizer.vue'
 import { mapGetters, mapMutations } from 'vuex'
 import MyParallax from '../components/Parallax'
+import { eventBus } from '../plugins/event-bus'
 export default {
   components: {
     LaptopIcon,
@@ -210,15 +165,32 @@ export default {
   },
   data () {
     return {
-      activeFilter: 1,
+      dataReady: false,
       slickOptions: {
         slidesToShow: 6,
         centerMode: true,
-        slidesToScroll: 1,
+        slidesToScroll: 4,
         dots: false,
         arrows: false,
         variableWidth: true,
-        autoPlay: true
+        autoplay: true,
+        infinite: false,
+        initialSlide: 10,
+        autoplaySpeed: 4000,
+        responsive: [
+          {
+            breakpoint: 1100,
+            settings: {
+              slidesToShow: 2
+            }
+          },
+          {
+            breakpoint: 768,
+            settings: {
+              slidesToShow: 1
+            }
+          }
+        ]
       },
       caseOptions: {
         slidesToShow: 2,
@@ -233,8 +205,17 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getWindowSize: 'common/getWindowSize'
+      getWindowSize: 'common/getWindowSize',
+      getPlatform: 'common/getPlatform',
+      getCraftItems: 'item/getCraftItems'
     })
+  },
+  async created () {
+    try {
+      await this.$store.dispatch('item/loadCraftItems')
+    } catch (e) {
+      console.log(e)
+    }
   },
   mounted () {
     const that = this
@@ -244,10 +225,19 @@ export default {
       const windowSize = window.innerWidth
       that.setWindowSize(windowSize)
     })
+    eventBus.$off('loadSlider')
+    eventBus.$on('loadSlider', (arg) => {
+      if (arg) {
+        this.dataReady = arg
+        this.reinitSlider()
+      }
+    })
+    this.$store.dispatch('common/initCookie')
   },
   methods: {
     ...mapMutations({
-      setWindowSize: 'common/setWindowSize'
+      setWindowSize: 'common/setWindowSize',
+      setPlatform: 'common/setPlatform'
     }),
     reinitSlider () {
       this.$nextTick(() => {
@@ -255,7 +245,14 @@ export default {
       })
     },
     changeItems (filter) {
-      this.activeFilter = filter
+      this.setPlatform(filter)
+      this.$store.dispatch('common/setCookiePlatform', filter)
+      this.reinitSlider()
+    },
+    setCraftItem (s, id) {
+      this.reinitSlider()
+      this.$router.push(s)
+      eventBus.$emit('selectCraftItem', [s, id])
     }
   }
 }
@@ -286,13 +283,15 @@ export default {
   justify-content: center
   position: relative
   overflow: hidden
-  &::before
-    content: ''
+  &__line
     height: 4px
     position: absolute
     bottom: 0
     left: 0
     width: 100%
+  &__img
+    width: 96px
+    height: 52px
   &_pink
     &::before
       background: #ff00aa
@@ -312,6 +311,7 @@ export default {
     &::before
       background: #4579f5
   &__wrapper
+    cursor: pointer
     max-width: 160px
     margin-right: 30px
     box-shadow: 0 8px 8px -4px rgba(20, 16, 41, 0.24), 0 2px 4px -1px rgba(20, 16, 41, 0.24), 0 0 1px 0 rgba(20, 16, 41, 0.4)

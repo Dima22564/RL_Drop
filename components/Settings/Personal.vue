@@ -70,7 +70,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getUser: 'getUser'
+      getUser: 'user/getUser'
     })
   },
   created () {

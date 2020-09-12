@@ -159,6 +159,7 @@ import { mapGetters } from 'vuex'
 import InventoryItem from '../../components/InventoryItem'
 export default {
   layout: 'default',
+  middleware: 'authenticated',
   components: {
     DashboardIcon,
     SettingsIcon,

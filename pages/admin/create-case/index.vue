@@ -1,36 +1,70 @@
 <template>
   <div>
-    <b-form>
+    <b-form @submit.prevent="submit">
       <b-form-group
         label="Prices"
         label-for="Prices "
-        description="Enter prices for all platforms"
       >
         <div class="admin__prices">
-          <b-form-input
-            id="input-2"
-            required
-            placeholder="Actual price"
-          ></b-form-input>
+          <b-form-group
+            description="Xbox price"
+            class="admin__group mr-3"
+          >
+            <b-form-input
+              id="input-3"
+              required
+              placeholder="Old price"
+              v-model.trim="form.oldPrice"
+            ></b-form-input>
+          </b-form-group>
 
-          <b-form-input
-            id="input-3"
-            required
-            placeholder="Old price"
-          ></b-form-input>
+          <b-form-group
+            description="Xbox price"
+            class="admin__group mr-3"
+          >
+            <b-form-input
+              id="input-2"
+              placeholder="Xbox"
+              v-model.trim="form.xboxPrice"
+            ></b-form-input>
+          </b-form-group>
+
+          <b-form-group
+            description="PS4 price"
+            class="admin__group mr-3"
+          >
+            <b-form-input
+              id="input-3"
+              placeholder="PS4"
+              v-model.trim="form.ps4Price"
+            ></b-form-input>
+          </b-form-group>
+
+          <b-form-group
+            description="PC price"
+            class="admin__group"
+          >
+            <b-form-input
+              id="input-3"
+              placeholder="PC"
+              v-model.trim="form.pcPrice"
+            ></b-form-input>
+          </b-form-group>
+
         </div>
       </b-form-group>
 
       <b-form-group
-        id="input-group-3"
-        label="Item Type"
-        label-for="input-3"
-        description="Enter item type">
-        <b-form-select
-          id="input-3"
-          :options="types"
+        label="Name"
+        label-for="name "
+        description="Enter case name"
+      >
+        <b-form-input
+          id="name"
           required
-        ></b-form-select>
+          placeholder="Name"
+          v-model.trim="form.name"
+        ></b-form-input>
       </b-form-group>
 
       <b-form-group id="input-group-4">
@@ -49,36 +83,37 @@
           :close-on-select="false"
           :clear-on-select="false"
           :preserve-search="true"
-          v-model="form.items"
+          v-model.trim="form.items"
           placeholder="Select items"
-          label="title"
-          track-by="title"
-          :options="options"
+          label="name"
+          track-by="name"
+          :options="getAllItems"
           :option-height="104"
-          :show-labels="false">
+          :show-labels="false"
+          @remove="removeItem"
+        >
 
           <template
             slot="singleLabel"
             slot-scope="props">
             <img
               class="option__image"
-              :src="props.option.img"
+              :src="props.option.image"
               alt="No Man’s Sky"
             >
             <span class="option__desc">
-              <span class="option__title">{{ props.option.title }}</span>
+              <span class="option__title">{{ props.option.name }}</span>
             </span>
           </template>
           <template slot="option" slot-scope="props">
             <div class="option">
               <img
                 class="option__image"
-                :src="props.option.img"
+                :src="props.option.image"
                 alt="No Man’s Sky"
               >
               <div class="option__desc">
-                <span class="option__title">{{ props.option.title }}</span>
-                <span class="option__small">{{ props.option.desc }}</span>
+                <span class="option__title">{{ props.option.name }}</span>
               </div>
             </div>
           </template>
@@ -87,13 +122,13 @@
 
       <b-list-group v-if="form.items.length > 0" class="mt-3 mb-3">
         <b-list-group-item
-          v-for="item in form.items"
-          :key="item.title"
+          v-for="(item, index) in form.items"
+          :key="index"
           class="d-flex flex-row"
         >
           <div>
-            <h5 class="mb-1">{{ item.title }}</h5>
-            <img class="option__image" :src="item.img" alt="">
+            <h5 class="mb-1">{{ item.name }}</h5>
+            <img class="option__image" :src="item.image" alt="">
           </div>
 
           <b-form-group
@@ -107,36 +142,34 @@
                 id="input-7"
                 required
                 placeholder="Weight"
+                v-model.trim.number="form.itemsWeights[index].weight"
               ></b-form-input>
             </div>
           </b-form-group>
         </b-list-group-item>
       </b-list-group>
 
-      <b-button type="submit" variant="primary">Submit</b-button>
+      <b-form-group
+        label="Visibility"
+        label-for="visibility"
+        description="Case visibility"
+        class="mt-3 mb-3"
+      >
+        <b-form-checkbox v-model="form.isChestVisible" :value="true">Is this case visible for user</b-form-checkbox>
+      </b-form-group>
+
+      <b-button type="submit" variant="primary">Create</b-button>
       <b-button type="reset" variant="danger">Reset</b-button>
     </b-form>
   </div>
 </template>
 
 <script>
-
+import { mapGetters } from 'vuex'
 export default {
   layout: 'admin',
   data () {
     return {
-      selected: null,
-      types: [
-        { value: null, text: 'Please select an option' },
-        { value: 'a', text: 'This is First option' },
-        { value: 'b', text: 'Selected Option' },
-        { value: 'd', text: 'This one is disabled', disabled: true }
-      ],
-      options: [
-        { title: 'Space Pirate', desc: 'More space battles!', img: 'https://schastievkadre.ru/wp-content/uploads/2018/11/blog-1-2000x1125.jpg' },
-        { title: 'Merchant', desc: 'PROFIT!', img: 'https://schastievkadre.ru/wp-content/uploads/2018/11/blog-1-2000x1125.jpg' },
-        { title: 'Explorer', desc: 'Discovering new species!', img: 'https://schastievkadre.ru/wp-content/uploads/2018/11/blog-1-2000x1125.jpg' }
-      ],
       dropzoneOptions: {
         url: '/',
         addRemoveLinks: true,
@@ -144,9 +177,92 @@ export default {
         maxFiles: 1
       },
       form: {
-        checked: false,
-        items: []
+        pcPrice: null,
+        xboxPrice: null,
+        ps4Price: null,
+        items: [],
+        itemsWeights: [],
+        isChestVisible: true,
+        name: null
+      },
+      removedItem: null
+    }
+  },
+  watch: {
+    'form.items' (val, oldVal) {
+      if (val.length > oldVal.length) {
+        this.form.itemsWeights.push({
+          id: val[val.length - 1].id,
+          weight: null
+        })
+      } else {
+        this.form.itemsWeights = this.form.itemsWeights.filter((item) => {
+          return item.id !== this.removedItem.id
+        })
       }
+    }
+  },
+  computed: {
+    ...mapGetters({
+      getAllItems: 'admin/item/getAllItems'
+    })
+  },
+  async created () {
+    await this.$store.dispatch('admin/item/loadChestsItems')
+  },
+  methods: {
+    removeItem (removedOption) {
+      this.removedItem = removedOption
+    },
+    async submit () {
+      const data = new FormData()
+      const visibility = this.form.isChestVisible ? 1 : 0
+      data.append('name', this.form.name)
+      data.append('price', this.form.price)
+      data.append('xbox_price', this.form.xboxPrice)
+      data.append('pc_price', this.form.pcPrice)
+      data.append('ps4_price', this.form.ps4Price)
+      data.append('items', JSON.stringify(this.form.itemsWeights))
+      data.append('image', this.$refs.myVueDropzone.getAcceptedFiles()[0])
+      data.append('is_case_visible_for_user', visibility)
+      try {
+        const result = await this.$store.dispatch('admin/chest/creteChest', data)
+        console.log(result)
+        if (result.success) {
+          this.$bvToast.toast('Case created', {
+            title: `Notification`,
+            variant: 'success',
+            solid: true
+          })
+          this.reset()
+        }
+      } catch (e) {
+        // if (typeof e.error.messages.type !== 'undefined') {
+        //   this.$bvToast.toast(e.error.messages.type[0], {
+        //     title: `Notification`,
+        //     variant: 'danger',
+        //     solid: true
+        //   })
+        //   return 0
+        // }
+        this.$bvToast.toast('Something went wrong(', {
+          title: `Notification`,
+          variant: 'danger',
+          solid: true
+        })
+      }
+    },
+    reset () {
+      this.form.oldPrice = null
+      this.form.items = []
+      this.form.itemsWeights = []
+      this.removedItem = null
+      this.form.name = null
+      this.form.xboxPrice = null
+      this.form.pcPrice = null
+      this.form.ps4Price = null
+      this.$refs.myVueDropzone.removeAllFiles()
+      this.$nextTick()
     }
   }
 }

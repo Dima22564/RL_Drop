@@ -52,7 +52,7 @@ export const actions = {
   async disable2fa ({ rootGetters, commit }) {
     try {
       this.$axios.setToken(rootGetters.getToken, 'Bearer')
-      const result = await this.$axios.$post(`${this.$axios.defaults.baseURL}/disable2fa/${rootGetters.getUser.id}`)
+      const result = await this.$axios.$post(`${this.$axios.defaults.baseURL}/disable2fa/${rootGetters['user/getUser'].id}`)
       if (result.success) {
         commit('toggle2fa', false)
         commit('set2faSecret', '')
@@ -61,7 +61,7 @@ export const actions = {
       }
       return result
     } catch (e) {
-      console.log(e.response)
+      console.log(e)
       //  TODO remove console statement
     }
   },

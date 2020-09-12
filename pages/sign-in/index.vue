@@ -138,33 +138,6 @@ export default {
     //   console.log(payload)
     // })
     // console.log(this.$echo)
-    Array.prototype.shuffle = function ( b ) {
-      let i = this.length
-      let j
-      let t
-      while ( i ) {
-        j = Math.floor( ( i-- ) * Math.random() )
-        t = b && typeof this[i].shuffle !== 'undefined' ? this[i].shuffle() : this[i]
-        this[i] = this[j]
-        this[j] = t
-      }
-      return this
-    }
-    const arrf = [1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    let plus = 0
-    let minus = 0
-    for (let i = 0; i < 1000; i++) {
-      arrf.shuffle()
-      const num = Math.floor(Math.random() * 20)
-      const catched = arrf[num]
-      if (catched === 1) {
-        plus += 1
-      } else {
-        minus += 1
-      }
-    }
-    console.log(plus)
-    console.log(minus)
   },
   methods: {
     async login () {
@@ -189,7 +162,7 @@ export default {
             }
           }
           if (result.data.loggedIn) {
-            // await this.$router.push('/')
+            await this.$router.replace({ path: '/' })
             this.errorMessages.invalidCode = false
           }
         } catch (e) {

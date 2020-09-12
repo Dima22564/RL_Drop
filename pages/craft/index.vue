@@ -10,28 +10,28 @@
             offset-xl="1"
             lg="5"
           >
-            <TriangleIcon class="craftProgress__triangle" />
-            <TriangleIcon class="craftProgress__triangle craftProgress__triangle_danger" />
-            <TriangleIcon class="craftProgress__triangle craftProgress__triangle_success" />
+            <TriangleIcon v-if="!craftStatus || craftStatus === 1 || craftStatus === 2" class="craftProgress__triangle" />
+            <TriangleIcon v-if="craftStatus === 4" class="craftProgress__triangle craftProgress__triangle_danger" />
+            <TriangleIcon v-if="craftStatus === 3" class="craftProgress__triangle craftProgress__triangle_success" />
             <div class="craftProgress">
-              <div>
+              <div v-if="craftStatus === 2 || craftStatus === 3 || craftStatus === 4">
                 <circleBar
                   :dash-spacing="0"
                   :stroke-width="2"
                   :active-width="4"
-                  :active-count="progress * 0.6"
+                  :active-count="progressBar * 0.799999"
                   size="10rem"
                   active-stroke="#00bbff"
                   stroke="transparent"
                   class="craft__progressLine"
                 />
               </div>
-              <div>
+              <div v-if="craftStatus === 2 || craftStatus === 3 || craftStatus === 4">
                 <circleBar
                   :stroke-width="100"
                   :active-width="100"
                   :dash-spacing="0"
-                  :active-count="progress * 0.6"
+                  :active-count="progressBar * 0.799999"
                   size="10rem"
                   stroke="transparent"
                   class="craft__progressLine"
@@ -43,10 +43,14 @@
                 <span class="center" />
               </div>
               <div class="craftProgress__progress">
-                {{ progress }} <span> %</span>
+                {{ progressBar }} <span> %</span>
               </div>
-              <div class="craftProgress__circle">
-                <img src="/images/craft.png" alt="" class="craftProgress__img">
+              <div v-if="getCurrentCraftItem" class="craftProgress__circle">
+                <img :src="getCurrentCraftItem.image" alt="" class="craftProgress__img">
+              </div>
+              <div v-else class="craftProgress__empty">
+                <p>Choose an</p>
+                <p>item below</p>
               </div>
             </div>
           </b-col>
@@ -66,12 +70,46 @@
                     v-model="progress"
                     :min="5"
                     :max="75"
+                    :is-disabled="true"
+                    :draggable="(craftStatus === 1 || craftStatus === 3 || craftStatus === 4) && typeof getToken !== 'undefined'"
+                    @input="input"
                   />
                 </client-only>
               </div>
               <div class="craft__bottom">
-                <button class="btn btn_primary">
-                  Play $13.62
+                <button
+                  @click.prevent="play"
+                  :disabled="getBtnState"
+                  :class="getBtnState ? 'btn_primary_disabled' : ''"
+                  v-if="craftStatus === 1 || craftStatus === 0 || craftStatus === 2"
+                  class="btn btn_primary"
+                >
+                  Play ${{ price * progress / 100 }}
+                </button>
+                <button
+                  @click.prevent="play"
+                  :disabled="getBtnState"
+                  :class="getBtnState ? 'btn_primary_disabled' : ''"
+                  v-if="craftStatus === 4"
+                  class="btn btn_primary"
+                >
+                  Play again
+                </button>
+                <button
+                  :disabled="getBtnState"
+                  :class="getBtnState ? 'btn_secondary_disabled' : ''"
+                  v-if="craftStatus === 3"
+                  class="btn btn_secondary craft__btn"
+                >
+                  Sell $13.62
+                </button>
+                <button
+                  :disabled="getBtnState"
+                  :class="getBtnState ? 'btn_primary_disabled' : ''"
+                  v-if="craftStatus === 3"
+                  class="btn btn_primary"
+                >
+                  Continue
                 </button>
               </div>
             </div>
@@ -87,35 +125,40 @@
           <h2>Choose</h2>
           <div v-if="getWindowSize > 1200" class="faq__filter">
             <span
-              v-for="(item) in options"
-              :key="item"
-              :class="filterItems === item ? 'faq__filter_active' : ''"
+              v-for="(item) in getTypes"
+              :key="item.id"
+              :class="filterItems.type === item.type ? 'faq__filter_active' : ''"
               @click="filterItems = item"
-            >{{ item }}</span>
+            >{{ item.type }}</span>
           </div>
-          <multiselect
-            v-model="filterItems"
-            v-else
-            :options="options"
-            :searchable="false"
-            :allowEmpty="false"
-            :showLabels="false"
-            :hideSelected="true"
-            class="inventory__select"
-          />
+          <client-only v-else-if="getWindowSize <= 1200 && getTypes.length > 0">
+            <multiselect
+              v-model="filterItems"
+              :options="getTypes"
+              :searchable="false"
+              :allowEmpty="false"
+              :showLabels="false"
+              :hideSelected="true"
+              track-by="type"
+              label="type"
+              class="inventory__select"
+            />
+          </client-only>
         </div>
 
         <b-row class="inventoryItem__row">
           <InventoryItemCheck
-            v-for="(item) in inventoryItems"
+            v-for="(item) in getCraftItems"
+            v-show="item.type.type === filterItems.type"
             :key="item.id"
             v-model="craftItem"
-            :img="item.img"
+            :img="item.image"
             :name="item.name"
-            :price="item.price"
-            :desc="item.desc"
+            :price="item[`${getPlatform}Price`]"
+            :desc="item.name"
             :item-id="item.id"
             :class="craftItem === item.id ? 'inventoryItem__col_checked' : ''"
+            @click.prevent.native="setCraftItem(`/craft?itemId=${item.id}&itemName=${item.name}&platform=${getPlatform}`, item.id)"
             class="inventoryItem__col"
           />
         </b-row>
@@ -126,6 +169,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { eventBus } from '@/plugins/event-bus'
 import TriangleIcon from 'vue-material-design-icons/Triangle.vue'
 import InventoryItemCheck from '../../components/InventoryItemCheck'
 export default {
@@ -136,10 +180,13 @@ export default {
   },
   data () {
     return {
-      filterItems: 'Restless',
-      options: ['Restless', 'Advanced', 'Splash', 'Patience', 'Wisdom', 'Prisma', 'Gloves'],
+      filterItems: { type: 'common' },
       progress: 5,
-      craftItem: '',
+      progressBar: 0,
+      craftItem: null,
+      price: null,
+      craftStatus: 0,
+      craftResult: null,
       inventoryItems: [
         {
           img: '/images/weapon.png',
@@ -160,8 +207,105 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getWindowSize: 'common/getWindowSize'
+      getWindowSize: 'common/getWindowSize',
+      getCurrentCraftItem: 'item/getCurrentCraftItem',
+      getToken: 'getToken',
+      getBtnState: 'item/getBtnState',
+      getCraftItems: 'item/getCraftItems',
+      getPlatform: 'common/getPlatform',
+      getTypes: 'item/getTypes'
     })
+  },
+  mounted () {
+    // this.$router.push('/craft')
+    if ('itemId' in this.$route.query) {
+      try {
+        this.queryReact(this.$route.query.itemId, true)
+        this.craftStatus = 1
+        this.progress = 5
+      } catch (e) {
+        console.log(e)
+      }
+    } else {
+      this.$router.push('/craft')
+      this.$store.commit('item/setCurrentCraftItem', null)
+    }
+    eventBus.$off('selectCraftItem')
+    eventBus.$on('selectCraftItem', (s) => {
+      this.$router.push(s[0])
+      this.craftStatus = 1
+      this.progress = 5
+      this.queryReact(s[1], true)
+    })
+  },
+  methods: {
+    setCraftItem (s, id) {
+      this.$router.push(s)
+      eventBus.$emit('selectCraftItem', [s, id])
+    },
+    async queryReact (id, doGet) {
+      if (doGet) {
+        await this.getItemForCraft(id)
+        this.craftItem = id
+      }
+      const platform = this.$route.query.platform
+      if (this.$route.query.itemId && this.getCurrentCraftItem) {
+        this.price = this.getCurrentCraftItem[`${platform}Price`]
+        this.craftItem = this.getCurrentCraftItem.id
+      } else {
+        this.$store.commit('item/setCurrentCraftItem', null)
+        this.craftItem = null
+      }
+      this.$store.commit('item/setBtnState', !((this.getToken && this.getCurrentCraftItem)))
+    },
+    async getItemForCraft (id) {
+      try {
+        await this.$store.dispatch('item/getItemForCraft', id)
+      } catch (e) {
+        throw e
+      }
+    },
+    craftAnimation () {
+      const randomNum = Math.floor(Math.random() * 75)
+      const interval = setInterval(() => {
+        if (this.craftResult === false) {
+          if (this.progressBar < randomNum) {
+            this.progressBar += 1
+          } else {
+            clearInterval(interval)
+            this.craftStatus = 4
+            this.$store.commit('item/setBtnState', false)
+          }
+        } else if (this.progressBar < 75) {
+          this.progressBar += 1
+        } else {
+          clearInterval(interval)
+          this.craftStatus = 3
+          this.$store.commit('item/setBtnState', false)
+        }
+      }, 150)
+      console.log(1)
+      // this.$store.commit('item/setBtnState', false)
+    },
+    input (e) {
+      // console.log(e)
+      if (this.craftStatus !== 1) {
+      }
+    },
+    async play () {
+      try {
+        this.progressBar = 0
+        this.craftStatus = 2
+        this.$store.commit('user/changeUserBalance', this.price * this.progress / 100 * -1)
+        this.$store.commit('user/beautifyBalance', '')
+        this.$store.commit('item/setBtnState', true)
+        const result = await this.$store.dispatch('item/play', this.progress)
+        this.craftResult = result.data
+        await this.craftAnimation()
+      } catch (e) {
+        console.log(e)
+      }
+    }
   }
 }
 </script>
@@ -218,6 +362,8 @@ export default {
     margin-top: 32px
   +md
     padding: 24px
+  &__btn
+    margin-right: 24px
   &__progressLine
     width: 100%
     position: absolute
@@ -275,6 +421,21 @@ export default {
   +sm
     width: 276px
     height: 276px
+  &__empty
+    width: 200px
+    height: 200px
+    border-radius: 50%
+    background-image: linear-gradient(138deg, rgba(0, 187, 255, 0.8) 17%, rgba(0, 187, 255, 0.06) 69%)
+    color: white
+    letter-spacing: 1px
+    font-size: 14px
+    line-height: 24px
+    display: flex
+    align-items: center
+    justify-content: center
+    font-weight: 600
+    flex-direction: column
+    text-transform: uppercase
   &__triangle
     color: #33334b
     transform: rotate(180deg)
