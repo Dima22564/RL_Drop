@@ -6,9 +6,9 @@ export const mutations = {
 }
 
 export const actions = {
-  async loadChestStats () {
+  async loadChestStats (ctx, craft) {
     try {
-      const result = await this.$axios.$get(`${this.$axios.defaults.baseURL}/admin/stats/chest`)
+      const result = await this.$axios.$get(`${this.$axios.defaults.baseURL}/admin/stats/chest/${craft}`)
       return result.data
     } catch (e) {
       throw e.response

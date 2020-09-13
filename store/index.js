@@ -56,6 +56,7 @@ export const actions = {
       commit('deleteToken')
       commit('2fa/delete2faImg')
       commit('user/deleteUser')
+      commit('user/setInventory', [])
       commit('2fa/toggle2fa', null)
       commit('2fa/set2faCode', null)
       commit('2fa/set2faSecret', null)

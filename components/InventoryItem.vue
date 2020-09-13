@@ -63,7 +63,7 @@ export default {
       required: true
     },
     price: {
-      type: String,
+      type: Number,
       required: true
     }
   },
@@ -130,6 +130,8 @@ export default {
       margin: 0 -7px
   &__img
     margin-bottom: 16px
+    width: 96px
+    height: 52px
   &__text
     display: flex
     flex-direction: column

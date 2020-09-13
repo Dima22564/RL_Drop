@@ -1,5 +1,6 @@
 export const state = () => ({
-  user: null
+  user: null,
+  inventory: []
 })
 
 // noinspection SpellCheckingInspection
@@ -20,6 +21,9 @@ export const mutations = {
   },
   beautifyBalance (state, id) {
     state.user.balance = Number(state.user.balance.toFixed(2))
+  },
+  setInventory (state, inventory) {
+    state.inventory = inventory
   }
 }
 
@@ -44,9 +48,22 @@ export const actions = {
       console.log(e.response.data)
       //  TODO remove console statement
     }
+  },
+  async loadInventory ({ commit, rootGetters }) {
+    try {
+      this.$axios.setToken(rootGetters.getToken, 'Bearer')
+      const result = await this.$axios.$get(`${this.$axios.defaults.baseURL}/inventory`)
+      commit('setInventory', result.data.inventory)
+      return result
+    } catch (e) {
+      console.log(e.response)
+      throw e.response
+      //  TODO remove console statement
+    }
   }
 }
 
 export const getters = {
-  getUser: state => state.user
+  getUser: state => state.user,
+  getInventory: state => state.inventory
 }

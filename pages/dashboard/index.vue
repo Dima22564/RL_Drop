@@ -98,56 +98,7 @@
     </section>
 
     <!-- Inventory  adapted = true -->
-    <section class="inventory">
-      <b-container>
-        <div class="inventory__top">
-          <h3>Inventory</h3>
-          <div v-if="getWindowSize >= 991" class="inventory__filter">
-            <div class="inventory__filterItem inventory__filterItem_active">
-              <span>PC</span>
-              <span class="quantity">320+</span>
-            </div>
-            <div class="inventory__filterItem">
-              <span>PC</span>
-              <span class="quantity">320+</span>
-            </div>
-            <div class="inventory__filterItem">
-              <span>PC</span>
-              <span class="quantity">320+</span>
-            </div>
-          </div>
-          <multiselect
-            v-model="filterItems"
-            v-else
-            :options="options"
-            :searchable="false"
-            :allowEmpty="false"
-            :showLabels="false"
-            :hideSelected="true"
-            class="inventory__select"
-          >
-            <template slot="singleLabel" slot-scope="props">
-              <div class="customLabel">
-                <span class="customLabel__name">{{ props.option }}</span>
-                <span class="customLabel__num">45+</span>
-              </div>
-            </template>
-            <template slot="option" slot-scope="props">
-              <div class="customLabel">
-                <span class="customLabel__name">{{ props.option }}</span>
-                <span class="customLabel__num">45+</span>
-              </div>
-            </template>
-          </multiselect>
-        </div>
-
-        <b-row class="inventoryItem__row">
-          <InventoryItem img="/images/weapon.png" name="P90" price="15" desc="fdgfd" class="inventoryItem__col" />
-          <InventoryItem img="/images/weapon.png" name="P90" price="15" desc="fdgfd" class="inventoryItem__col" />
-          <InventoryItem img="/images/weapon.png" name="P90" price="15" desc="fdgfd" class="inventoryItem__col" />
-        </b-row>
-      </b-container>
-    </section>
+    <Inventory />
   </div>
 </template>
 
@@ -156,7 +107,7 @@ import DashboardIcon from 'vue-material-design-icons/ViewDashboardOutline.vue'
 import SettingsIcon from 'vue-material-design-icons/CogOutline.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import { mapGetters } from 'vuex'
-import InventoryItem from '../../components/InventoryItem'
+import Inventory from '@/components/Inventory'
 export default {
   layout: 'default',
   middleware: 'authenticated',
@@ -164,13 +115,7 @@ export default {
     DashboardIcon,
     SettingsIcon,
     PlusIcon,
-    InventoryItem
-  },
-  data () {
-    return {
-      filterItems: 'vdfbv',
-      options: ['vdfbv', 'brtdgbrb', 'brtbrtdbrt']
-    }
+    Inventory
   },
   computed: {
     ...mapGetters({

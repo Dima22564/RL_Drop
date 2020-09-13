@@ -61,6 +61,7 @@
 
 <script>
 import showNotification from '@/mixins/showNotification'
+import updateChart from '@/mixins/updateChart'
 import ECharts from 'vue-echarts'
 import 'echarts/lib/chart/pie'
 import 'echarts/lib/component/tooltip'
@@ -72,7 +73,7 @@ export default {
   components: {
     'v-chart': ECharts
   },
-  mixins: [showNotification],
+  mixins: [showNotification, updateChart],
   data () {
     return {
       btnDisabled: false,
@@ -298,16 +299,6 @@ export default {
         }])
       }
     },
-    mergeChartOptions (legend, series, chart) {
-      chart.mergeOptions({
-        legend: {
-          data: legend
-        },
-        series: {
-          data: series
-        }
-      })
-    },
     async loadOpenedChestsBetweenTime () {
       this.btnDisabled = true
       const data = new FormData()
@@ -325,7 +316,7 @@ export default {
   },
   async mounted () {
     try {
-      const result = await this.$store.dispatch('admin/stat/chest/loadChestStats')
+      const result = await this.$store.dispatch('admin/stat/chest/loadChestStats', 0)
       this.openedChestsBar.series[0].data = result.quantity
       this.openedChestsBar.chartOptions.xaxis.categories = result.dates
       await this.updateChart(result.quantity, result.dates, this.$refs.chart)

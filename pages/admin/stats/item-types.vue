@@ -10,6 +10,7 @@
 
 <script>
 import showNotification from '@/mixins/showNotification'
+import updateChart from '@/mixins/updateChart'
 import ECharts from 'vue-echarts'
 import 'echarts/lib/chart/pie'
 import 'echarts/lib/component/tooltip'
@@ -21,7 +22,7 @@ export default {
   components: {
     'v-chart': ECharts
   },
-  mixins: [showNotification],
+  mixins: [showNotification, updateChart],
   data () {
     return {
       pie: {
@@ -79,7 +80,7 @@ export default {
   },
   async created () {
     try {
-      const result = await this.$store.dispatch('admin/stat/itemTypes')
+      const result = await this.$store.dispatch('admin/stat/itemTypes/itemTypes')
       console.log()
       this.$refs.pie.resize({
         width: 700,

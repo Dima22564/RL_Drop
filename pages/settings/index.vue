@@ -152,56 +152,7 @@
     </section>
 
     <!-- Inventory  adapted = true -->
-    <section class="inventory">
-      <b-container>
-        <div class="inventory__top">
-          <h3>Inventory</h3>
-          <div v-if="getWindowSize >= 991" class="inventory__filter">
-            <div class="inventory__filterItem inventory__filterItem_active">
-              <span>PC</span>
-              <span class="quantity">320+</span>
-            </div>
-            <div class="inventory__filterItem">
-              <span>PC</span>
-              <span class="quantity">320+</span>
-            </div>
-            <div class="inventory__filterItem">
-              <span>PC</span>
-              <span class="quantity">320+</span>
-            </div>
-          </div>
-          <multiselect
-            v-model="filterItems"
-            v-else
-            :options="options"
-            :searchable="false"
-            :allowEmpty="false"
-            :showLabels="false"
-            :hideSelected="true"
-            class="inventory__select"
-          >
-            <template slot="singleLabel" slot-scope="props">
-              <div class="customLabel">
-                <span class="customLabel__name">{{ props.option }}</span>
-                <span class="customLabel__num">45+</span>
-              </div>
-            </template>
-            <template slot="option" slot-scope="props">
-              <div class="customLabel">
-                <span class="customLabel__name">{{ props.option }}</span>
-                <span class="customLabel__num">45+</span>
-              </div>
-            </template>
-          </multiselect>
-        </div>
-
-        <b-row class="inventoryItem__row">
-          <InventoryItem img="/images/weapon.png" name="P90" price="15" desc="fdgfd" class="inventoryItem__col" />
-          <InventoryItem img="/images/weapon.png" name="P90" price="15" desc="fdgfd" class="inventoryItem__col" />
-          <InventoryItem img="/images/weapon.png" name="P90" price="15" desc="fdgfd" class="inventoryItem__col" />
-        </b-row>
-      </b-container>
-    </section>
+    <Inventory />
   </div>
 </template>
 
@@ -215,11 +166,11 @@ import WifiIcon from 'vue-material-design-icons/Wifi.vue'
 import ArrowL from 'vue-material-design-icons/ChevronLeft.vue'
 import ArrowR from 'vue-material-design-icons/ChevronRight.vue'
 import { mapGetters } from 'vuex'
+import Inventory from '@/components/Inventory'
 import Links from '../../components/Settings/Links'
 import Verification from '../../components/Settings/Verification'
 import Security from '../../components/Settings/Security'
 import Personal from '../../components/Settings/Personal'
-import InventoryItem from '../../components/InventoryItem'
 import { eventBus } from '../../plugins/event-bus'
 export default {
   layout: 'default',
@@ -227,7 +178,6 @@ export default {
   components: {
     DashboardIcon,
     SettingsIcon,
-    InventoryItem,
     UserIcon,
     LayerIcon,
     SecurityIcon,
@@ -237,7 +187,8 @@ export default {
     Links,
     Verification,
     Security,
-    Personal
+    Personal,
+    Inventory
   },
   data () {
     return {
@@ -246,8 +197,6 @@ export default {
       isShowVerification: false,
       isShowLinks: false,
       isShowMain: true,
-      filterItems: 'vdfbv',
-      options: ['vdfbv', 'brtdgbrb', 'brtbrtdbrt'],
       disabled: false
     }
   },

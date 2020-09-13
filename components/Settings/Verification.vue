@@ -22,7 +22,7 @@
         :readOnly="true"
       />
     </div>
-    <img :src="verificationImg" alt="" class="verification__img">
+    <img v-if="verificationImg" :src="verificationImg" alt="" class="verification__img">
   </div>
 </template>
 
