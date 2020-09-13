@@ -6,11 +6,23 @@
         <b-row>
           <b-col xl="12" lg="12" md="8" sm="8" class="m-auto">
             <div class="open" >
-              <img src="/images/bg-3.png" alt="" class="open__bg">
+              <transition name="fade" mode="out-in">
+                <img src="/images/bg-3.png" alt="" class="open__bg" key="image">
+              </transition>
               <h2 class="open__title" v-if="getCurrentChest">
                 {{ getCurrentChest.chest.name }}
               </h2>
               <img v-if="getCurrentChest && !getWinItem" :src="getCurrentChest.chest.image" alt="" class="open__chestImage">
+              <transition name="fade" mode="out-in">
+                <WinItem
+                  v-if="getWinItem"
+                  :color="getWinItem.type.color"
+                  :img-url="getWinItem.image"
+                  :name="getWinItem.name"
+                  desc="Astral"
+                  key="winItem"
+                />
+              </transition>
               <div class="open__btns">
                 <button
                   v-if="getCurrentChest && !getWinItem"
@@ -46,7 +58,7 @@
             :key="item.id"
             v-for="item in getCurrentChest.items"
             :color="item.type.color"
-            img-url="/images/weapon-s.png"
+            :img-url="item.image"
             :name="item.name"
             desc="Astral"
           />
@@ -63,14 +75,15 @@
 import { mapGetters } from 'vuex'
 import showNotification from '@/mixins/showNotification'
 import ArrowRightIcon from 'vue-material-design-icons/ArrowRight.vue'
-import Weapon from '../../components/Weapon'
-
+import WinItem from '@/components/WinItem'
+import Weapon from '@/components/Weapon'
 export default {
   layout: 'default',
   mixins: [showNotification],
   components: {
     Weapon,
-    ArrowRightIcon
+    ArrowRightIcon,
+    WinItem
   },
   data () {
     return {
@@ -78,6 +91,7 @@ export default {
     }
   },
   async created () {
+    this.$store.commit('chest/setWinItem', null)
     try {
       await this.$store.dispatch('chest/loadItemsForChest', this.$route.params.id)
     } catch (e) {
@@ -150,7 +164,7 @@ export default {
     position: relative
     z-index: 5
     +lg
-      margin-bottom: 208px
+      margin-bottom: 20px
   &__chestImage
     max-width: 350px
     width: 100%
@@ -158,6 +172,11 @@ export default {
     height: 261px
     margin-top: -82px
     margin-bottom: -59px
+    +lg
+      width: 100%
+      height: 204px
+      margin-top: 0
+      margin-bottom: 65px
   &__bg
     position: absolute
     top: 0

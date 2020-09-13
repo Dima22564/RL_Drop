@@ -48,6 +48,7 @@
         <b-row class="inventoryItem__row" v-if="getInventory.length > 0">
           <InventoryItem
             v-for="item in getInventory"
+            :key="item.id"
             :img="item.image"
             :name="item.name"
             :price="Number(item[`${item.platform}Price`])"

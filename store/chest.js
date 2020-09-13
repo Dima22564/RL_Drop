@@ -50,9 +50,11 @@ export const actions = {
     try {
       this.$axios.setToken(rootGetters.getToken, 'Bearer')
       const result = await this.$axios.$post(`${this.$axios.defaults.baseURL}/open-chest`, data)
-      commit('setWinItem', result.data)
-      commit('user/changeUserBalance', getters.getCurrentChest.chest[`${rootGetters['common/getPlatform']}Price`] * -1, { root: true })
-      commit('user/beautifyBalance', '', { root: true })
+      if (result.success) {
+        commit('setWinItem', result.data)
+        commit('user/changeUserBalance', getters.getCurrentChest.chest[`${rootGetters['common/getPlatform']}Price`] * -1, { root: true })
+        commit('user/beautifyBalance', '', { root: true })
+      }
       return result
     } catch (e) {
       throw e.response
