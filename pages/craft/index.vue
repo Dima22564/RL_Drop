@@ -19,7 +19,7 @@
                   :dash-spacing="0"
                   :stroke-width="2"
                   :active-width="4"
-                  :active-count="progressBar * 0.799999"
+                  :active-count="this.progressBar / 100 * 60"
                   size="10rem"
                   active-stroke="#00bbff"
                   stroke="transparent"
@@ -31,7 +31,7 @@
                   :stroke-width="100"
                   :active-width="100"
                   :dash-spacing="0"
-                  :active-count="progressBar * 0.799999"
+                  :active-count="this.progressBar / 100 * 60"
                   size="10rem"
                   stroke="transparent"
                   class="craft__progressLine"
@@ -154,6 +154,7 @@
             v-model="craftItem"
             :img="item.image"
             :name="item.name"
+            :color="item.type.color"
             :price="item[`${getPlatform}Price`]"
             :desc="item.name"
             :item-id="item.id"
@@ -170,6 +171,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { eventBus } from '@/plugins/event-bus'
+import showNotification from '@/mixins/showNotification'
 import TriangleIcon from 'vue-material-design-icons/Triangle.vue'
 import InventoryItemCheck from '../../components/InventoryItemCheck'
 export default {
@@ -178,6 +180,7 @@ export default {
     InventoryItemCheck,
     TriangleIcon
   },
+  mixins: [showNotification],
   data () {
     return {
       filterItems: { type: 'common' },
@@ -186,23 +189,7 @@ export default {
       craftItem: null,
       price: null,
       craftStatus: 0,
-      craftResult: null,
-      inventoryItems: [
-        {
-          img: '/images/weapon.png',
-          name: 'P90',
-          price: 15,
-          desc: 'dscvsd',
-          id: 'item1'
-        },
-        {
-          img: '/images/weapon.png',
-          name: 'P90',
-          price: 15,
-          desc: 'dscvsd',
-          id: 'item2'
-        }
-      ]
+      craftResult: null
     }
   },
   computed: {
@@ -213,8 +200,12 @@ export default {
       getBtnState: 'item/getBtnState',
       getCraftItems: 'item/getCraftItems',
       getPlatform: 'common/getPlatform',
-      getTypes: 'item/getTypes'
-    })
+      getTypes: 'item/getTypes',
+      getUser: 'user/getUser'
+    }),
+    checkBalance () {
+      return !this.getToken || (this.getUser.balance < this.getCurrentCraftItem[`${this.getPlatform}Price`])
+    }
   },
   mounted () {
     // this.$router.push('/craft')
@@ -266,21 +257,25 @@ export default {
       }
     },
     craftAnimation () {
-      const randomNum = Math.floor(Math.random() * 75)
+      // const randomNum = Math.floor(Math.random() * this.progress)
       const interval = setInterval(() => {
         if (this.craftResult === false) {
-          if (this.progressBar < randomNum) {
+          if (Math.floor(this.progress) !== this.progressBar) {
             this.progressBar += 1
+            // this.progressBar *= 0.799999
           } else {
             clearInterval(interval)
             this.craftStatus = 4
+            this.showNotification(`Item craft failed!`, 'danger')
             this.$store.commit('item/setBtnState', false)
           }
-        } else if (this.progressBar < 75) {
+        } else if (Math.floor(this.progress) !== this.progressBar) {
           this.progressBar += 1
+          // this.progressBar *= 0.799999
         } else {
           clearInterval(interval)
           this.craftStatus = 3
+          this.showNotification(`Item crafted successfully!`, 'success')
           this.$store.commit('item/setBtnState', false)
         }
       }, 150)
@@ -293,6 +288,9 @@ export default {
       }
     },
     async play () {
+      if (this.checkBalance) {
+        return this.showNotification('You have not enough money!', 'danger')
+      }
       try {
         this.progressBar = 0
         this.craftStatus = 2
@@ -301,9 +299,11 @@ export default {
         this.$store.commit('item/setBtnState', true)
         const result = await this.$store.dispatch('item/play', this.progress)
         this.craftResult = result.data
-        await this.craftAnimation()
+        if (result.success) {
+          await this.craftAnimation()
+        }
       } catch (e) {
-        console.log(e)
+        return this.showNotification(`${e.data.message}`, 'danger')
       }
     }
   }

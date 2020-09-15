@@ -3,24 +3,28 @@ export const state = () => ({
 })
 
 export const actions = {
-  async createItem ({ commit }, data) {
+  async createItem ({ commit, rootGetters }, data) {
     try {
+      this.$axios.setToken(rootGetters.getToken, 'Bearer')
       const result = await this.$axios.$post(`${this.$axios.defaults.baseURL}/admin/create-item`, data)
       return result
     } catch (e) {
       throw e.response.data
     }
   },
-  async loadChestsItems ({ commit }) {
+  async loadChestsItems ({ commit, rootGetters }) {
+    this.$axios.setToken(rootGetters.getToken, 'Bearer')
     const items = await this.$axios.$get(`${this.$axios.defaults.baseURL}/admin/items-for-chests`)
     commit('setItems', items.data)
   },
-  async loadAllItems ({ commit }) {
+  async loadAllItems ({ commit, rootGetters }) {
+    this.$axios.setToken(rootGetters.getToken, 'Bearer')
     const items = await this.$axios.$get(`${this.$axios.defaults.baseURL}/admin/items-all`)
     commit('setItems', items.data)
   },
-  async deleteItem ({ commit }, id) {
+  async deleteItem ({ commit, rootGetters }, id) {
     try {
+      this.$axios.setToken(rootGetters.getToken, 'Bearer')
       const result = await this.$axios.$delete(`${this.$axios.defaults.baseURL}/admin/delete-item/${id}`)
       if (result.success) {
         commit('deleteItemById', id)

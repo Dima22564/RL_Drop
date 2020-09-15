@@ -28,8 +28,8 @@
                   v-if="getCurrentChest && !getWinItem"
                   @click.prevent="openChest(getCurrentChest.chest.id)"
                   class="btn btn_primary"
-                  :disabled="!getToken"
-                  :class="getToken ? '' : 'btn_primary_disabled'"
+                  :disabled="checkBalance"
+                  :class="checkBalance ? 'btn_primary_disabled' : ''"
                 >
                   Open for ${{ getCurrentChest.chest[`${getPlatform}Price`] }}
                 </button>
@@ -40,6 +40,8 @@
                   v-if="getWinItem"
                   @click.prevent="sellItem(getWinItem.id)"
                   class="btn btn_primary"
+                  :class="!getToken ? 'btn_primary_disabled' : ''"
+                  :disabled="!getToken"
                 >
                   Sell for ${{ getWinItem[`${getPlatform}Price`] }}
                 </button>
@@ -103,8 +105,12 @@ export default {
       getCurrentChest: 'chest/getCurrentChest',
       getWinItem: 'chest/getWinItem',
       getPlatform: 'common/getPlatform',
-      getToken: 'getToken'
-    })
+      getToken: 'getToken',
+      getUser: 'user/getUser'
+    }),
+    checkBalance () {
+      return !this.getToken || (this.getUser.balance < this.getCurrentChest.chest[`${this.getPlatform}Price`])
+    }
   },
   methods: {
     async openChest (id) {
@@ -117,7 +123,7 @@ export default {
           this.showNotification('Chest opened!', 'success')
         }
       } catch (e) {
-        this.showNotification('Something went wrong(', 'danger')
+        this.showNotification(e.data.message, 'danger')
       }
     },
     async sellItem (id) {
@@ -156,7 +162,7 @@ export default {
   min-height: 200px
   +lg
     flex-direction: column
-    background: url('/images/bg-3-mobile.png')
+    background: url('/images/chest-bg.png')
     background-repeat: no-repeat
     background-size: cover
     background-position: center top
@@ -177,6 +183,7 @@ export default {
       height: 204px
       margin-top: 0
       margin-bottom: 65px
+      max-width: 100%
   &__bg
     position: absolute
     top: 0

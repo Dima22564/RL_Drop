@@ -1,5 +1,6 @@
 <template>
   <b-col xl="2" lg="2" md="3" sm="4" cols="6">
+    <div class="inventoryItem__line" :style="{ 'background': color }"></div>
     <input
       :id="itemId"
       :value="itemId"
@@ -50,6 +51,10 @@ export default {
       type: String,
       required: true
     },
+    color: {
+      type: String,
+      required: true
+    },
     price: {
       type: Number,
       required: true
@@ -76,14 +81,15 @@ export default {
   max-height: 180px
   cursor: pointer
   width: 100%
-  &::after
-    content: ''
-    background: #00bbff
+  overflow: hidden
+  &__line
     height: 4px
-    width: 100%
+    width: calc(100% - 30px)
     position: absolute
     bottom: 0
-    left: 0
+    left: 15px
+    z-index: 55
+    border-radius: 0 0 24px 24px
   &__col
     &_checked
       .inventoryItem

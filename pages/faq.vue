@@ -20,26 +20,12 @@
           class="faq__select"
         />
       </div>
-      <b-row>
+      <b-row v-if="getFaqs.length > 0">
         <Faq
-          v-if="value === 'General Questions'"
-          title="fdbgfdhgdfhg"
-          text="Your payment might be delayed for 5-10 minutes. If money didn`t get transferred within an hour, please contact the support, write details of payment to RLDrop Support"
-        />
-        <Faq
-          v-if="value === 'Balance Withdrawal'"
-          title="rghtrhjntynjytjytj"
-          text="Your payment might be delayed for 5-10 minutes. If money didn`t get transferred within an hour, please contact the support, write details of payment to RLDrop Support"
-        />
-        <Faq
-          v-if="value === 'Premium'"
-          title="efert4t34t5"
-          text="Your payment might be delayed for 5-10 minutes. If money didn`t get transferred within an hour, please contact the support, write details of payment to RLDrop Support"
-        />
-        <Faq
-          v-if="value === 'Case Battle'"
-          title="Can I use Steam wallet funds to open cases on this site?"
-          text="Your payment might be delayed for 5-10 minutes. If money didn`t get transferred within an hour, please contact the support, write details of payment to RLDrop Support"
+          v-for="faq in getFaqs"
+          :key="faq.id"
+          :title="faq.title"
+          :text="faq.text"
         />
       </b-row>
     </b-container>
@@ -60,9 +46,17 @@ export default {
       options: ['General Questions', 'Balance Withdrawal', 'Premium', 'Case Battle']
     }
   },
+  async mounted () {
+    try {
+      await this.$store.dispatch('faq/getFaqs')
+    } catch (e) {
+      this.showNotification('Unable to load faqs!', 'danger')
+    }
+  },
   computed: {
     ...mapGetters({
-      getWindowSize: 'common/getWindowSize'
+      getWindowSize: 'common/getWindowSize',
+      getFaqs: 'faq/getFaqs'
     })
   },
   methods: {

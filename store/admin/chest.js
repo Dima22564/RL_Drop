@@ -22,7 +22,8 @@ export const actions = {
       throw e.response
     }
   },
-  async loadAllChests ({ commit }) {
+  async loadAllChests ({ commit, rootGetters }) {
+    this.$axios.setToken(rootGetters.getToken, 'Bearer')
     const result = await this.$axios.$get(`${this.$axios.defaults.baseURL}/admin/chests-list`)
     commit('setChests', result.data)
   },

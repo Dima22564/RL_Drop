@@ -58,6 +58,9 @@
           <nuxt-link active-class="admin__link_active" tag="div" class="admin__link" to="/admin/stats/chests">
             Cases Stats
           </nuxt-link>
+          <nuxt-link active-class="admin__link_active" tag="div" class="admin__link" to="/admin/create-faq">
+            Create faq
+          </nuxt-link>
           <nuxt-link active-class="admin__link_active" tag="div" class="admin__link" to="/admin/stats/item-types">
             Item Types Stats
           </nuxt-link>

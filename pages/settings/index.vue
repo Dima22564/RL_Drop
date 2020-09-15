@@ -152,7 +152,11 @@
     </section>
 
     <!-- Inventory  adapted = true -->
-    <Inventory />
+    <Inventory v-if="getInventory.length > 0" />
+    <div v-else class="container mt-5">
+      <h2>Inventory</h2>
+      <h2 class="mt-3">You have not items!:(</h2>
+    </div>
   </div>
 </template>
 
@@ -208,7 +212,8 @@ export default {
       get2faImg: '2fa/get2faImg',
       get2faSecret: '2fa/get2faSecret',
       get2faCode: '2fa/get2faCode',
-      getUser: 'user/getUser'
+      getUser: 'user/getUser',
+      getInventory: 'user/getInventory'
     })
   },
   mounted () {

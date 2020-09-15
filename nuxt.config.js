@@ -94,8 +94,8 @@ module.exports = {
   axios: {
     // baseURL: 'http://localhost/rl-drop/public/api'
     // baseURL: 'https://laravel-drlw.frb.io/api'
-    // baseURL: 'http://127.0.0.1:8000/api'
-    baseURL: 'http://91.247.36.216/api'
+    baseURL: 'http://127.0.0.1:8000/api'
+    // baseURL: 'http://91.247.36.216/api'
   },
   /*
   ** Build configuration

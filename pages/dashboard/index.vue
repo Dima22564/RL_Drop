@@ -19,16 +19,35 @@
 
         <b-row>
           <b-col xl="4" lg="4" md="6" class="dash__col">
-            <div class="dash__item">
-              <img src="/images/avatar.jpg" alt="" class="dash__img">
-              <div class="dash__text">
-                <p class="dash__title">
-                  vino_costa
-                </p>
-                <p class="dash__desc">
-                  Change Photo
-                </p>
+            <div class="dash__item dash__item_wrap">
+              <div class="dash__block">
+                <label v-if="getUser.photo" for="photo">
+                  <img :src="getUser.photo" alt="" class="dash__img">
+                </label>
+                <label v-else for="photo">
+                  <img :src="getUser.photo" alt="" class="dash__img">
+                </label>
+                <img v-else src="/images/avatar.jpg" alt="" class="dash__img">
+                <div class="dash__text">
+                  <p class="dash__title">
+                    {{ getUser.name }}
+                  </p>
+                  <button :disabled="!Boolean(photo) && disabled" @click="changePhoto" class="btn dash__desc">
+                    Change Photo
+                  </button>
+                  <input
+                    ref="photo"
+                    @change="handleFileUpload"
+                    type="file"
+                    class="dash__photo"
+                    name=""
+                    id="photo"
+                  >
+                </div>
               </div>
+              <p v-if="photo" for="photo" class="dash__desc dash__desc_w100 mt-1 dash__desc_photo">
+                {{ photo.name }}
+              </p>
             </div>
           </b-col>
           <b-col xl="4" lg="4" md="6" class="dash__col">
@@ -38,7 +57,7 @@
                   balance
                 </p>
                 <p class="dash__num">
-                  <span>$ </span>220,000
+                  <span>$ </span>{{ Number(getUser.balance.toFixed(2)) }}
                 </p>
               </div>
               <button class="btn btn-arrow btn_primary">
@@ -51,7 +70,7 @@
             <div class="dash__item">
               <img src="/images/avatar.jpg" alt="" class="dash__img">
               <div class="dash__text">
-                <p class="dash__title">
+                <p class="dash__title dash__title_block">
                   Best Drop
                 </p>
                 <p class="dash__desc">
@@ -66,7 +85,7 @@
           <b-col xl="4" lg="4" md="6" sm="6" cols="6">
             <div class="dashInfo dashInfo_green">
               <p class="dashInfo__num">
-                344,028
+                {{ cases }}
               </p>
               <p class="dashInfo__text">
                 cases
@@ -76,20 +95,20 @@
           <b-col xl="4" lg="4" md="6" sm="6" cols="6">
             <div class="dashInfo dashInfo_blue">
               <p class="dashInfo__num">
-                344,028
+                {{ crafts }}
               </p>
               <p class="dashInfo__text">
-                cases
+                crafts
               </p>
             </div>
           </b-col>
           <b-col xl="4" lg="4">
             <div class="dashInfo dashInfo_d-blue">
               <p class="dashInfo__num">
-                344,028
+                {{ items }}
               </p>
               <p class="dashInfo__text">
-                cases
+                items
               </p>
             </div>
           </b-col>
@@ -99,10 +118,14 @@
 
     <!-- Inventory  adapted = true -->
     <Inventory />
+    <div v-if="getInventory.length === 0" class="container mt-5">
+      <h3 class="mt-3">You have not items! :(</h3>
+    </div>
   </div>
 </template>
 
 <script>
+import showNotification from '@/mixins/showNotification'
 import DashboardIcon from 'vue-material-design-icons/ViewDashboardOutline.vue'
 import SettingsIcon from 'vue-material-design-icons/CogOutline.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
@@ -117,9 +140,49 @@ export default {
     PlusIcon,
     Inventory
   },
+  mixins: [showNotification],
+  data () {
+    return {
+      photo: null,
+      disabled: true,
+      cases: 0,
+      crafts: 0,
+      items: 0
+    }
+  },
+  async mounted () {
+    try {
+      const result = await this.$store.dispatch('user/loadStats')
+      this.cases = result.data.crafts
+      this.crafts = result.data.cases
+      this.items = result.data.items
+    } catch (e) {
+      this.showNotification('Unable to load statistics!', 'danger')
+    }
+  },
+  methods: {
+    handleFileUpload () {
+      this.photo = this.$refs.photo.files[0]
+      console.log(Boolean(this.photo))
+    },
+    async changePhoto () {
+      const data = new FormData()
+      data.append('photo', this.photo)
+      this.disabled = true
+      try {
+        await this.$store.dispatch('user/changePhoto', data)
+      } catch (e) {
+        this.showNotification('Something went wrong(', 'danger')
+      } finally {
+        this.disabled = false
+      }
+    }
+  },
   computed: {
     ...mapGetters({
-      getWindowSize: 'common/getWindowSize'
+      getWindowSize: 'common/getWindowSize',
+      getUser: 'user/getUser',
+      getInventory: 'user/getInventory'
     })
   }
 }
@@ -182,7 +245,10 @@ export default {
   &__col
     +lg
       margin-bottom: 16px
+  &__photo
+    display: none
   &__item
+    min-height: 160px
     +item_dark
     padding: 32px
     display: flex
@@ -193,6 +259,11 @@ export default {
       padding: 20px
     &_between
       justify-content: space-between
+    &_wrap
+      flex-wrap: wrap
+  &__block
+    display: flex
+    align-items: center
   &__balance
     text-transform: uppercase
     font-weight: 600
@@ -213,6 +284,7 @@ export default {
     width: 64px
     height: 64px
     border-radius: 50%
+    cursor: pointer
     flex-shrink: 0
   &__title
     font-size: 20px
@@ -221,11 +293,26 @@ export default {
     color: white
     font-weight: 600
     margin-bottom: 4px
+    white-space: nowrap
+    overflow: hidden
+    text-overflow: ellipsis
+    display: table-caption
+    &_block
+      display: block
   &__desc
     font-size: 13px
     line-height: 16px
     color: rgba(224, 224, 255, 0.6)
     font-weight: 500
+    padding: 0
+    &:hover
+      color: white
+    &_w100
+      width: 100%
+    &_photo
+      white-space: nowrap
+      overflow: hidden
+      text-overflow: ellipsis
 .dashInfo
   padding: 16px
   color: white

@@ -24,6 +24,12 @@ export const mutations = {
   },
   setInventory (state, inventory) {
     state.inventory = inventory
+  },
+  deleteInventoryItemById (state, id) {
+    state.inventory = state.inventory.filter(item => item.pivot.id !== id)
+  },
+  changeUserPhoto (state, photo) {
+    state.user.photo = photo
   }
 }
 
@@ -53,12 +59,35 @@ export const actions = {
     try {
       this.$axios.setToken(rootGetters.getToken, 'Bearer')
       const result = await this.$axios.$get(`${this.$axios.defaults.baseURL}/inventory`)
-      commit('setInventory', result.data.inventory)
+      commit('setInventory', result.data.inventory || [])
       return result
     } catch (e) {
       console.log(e.response)
       throw e.response
       //  TODO remove console statement
+    }
+  },
+  async changePhoto ({ commit, rootGetters }, data) {
+    try {
+      this.$axios.setToken(rootGetters.getToken, 'Bearer')
+      const result = await this.$axios.$post(`${this.$axios.defaults.baseURL}/user/change-photo`, data)
+      if (result.success) {
+        commit('changeUserPhoto', result.data)
+      }
+      return result
+    } catch (e) {
+      console.log(e.response)
+      throw e.response
+      //  TODO remove console statement
+    }
+  },
+  async loadStats ({ rootGetters }) {
+    try {
+      this.$axios.setToken(rootGetters.getToken, 'Bearer')
+      const result = await this.$axios.$get(`${this.$axios.defaults.baseURL}/user/stats`)
+      return result
+    } catch (e) {
+      throw e.response
     }
   }
 }

@@ -60,7 +60,7 @@
             </MyInput>
 
             <MyInput
-              v-model="$v.twoFA.$model"
+              v-model.trim="$v.twoFA.$model"
               :rightIcon="false"
               :leftIcon="false"
               name="TwoFA"
@@ -81,7 +81,12 @@
                   Sign Up Now
                 </nuxt-link>
               </p>
-              <button :class="disabled || $v.$invalid ? 'btn_primary_disabled' : ''" :disabled="disabled || $v.$invalid" class="btn btn_primary" type="submit">
+              <button
+                :class="disabled || $v.$invalid ? 'btn_primary_disabled' : ''"
+                :disabled="disabled || $v.$invalid"
+                class="btn btn_primary"
+                type="submit"
+              >
                 Sign In
               </button>
             </div>
@@ -92,7 +97,9 @@
   </div>
 </template>
 
-<script>import { required, email } from 'vuelidate/lib/validators'
+<script>
+import { required, email } from 'vuelidate/lib/validators'
+import showNotification from '@/mixins/showNotification'
 import EyeIcon from 'vue-material-design-icons/EyeOutline.vue'
 import EyeOffIcon from 'vue-material-design-icons/EyeOffOutline.vue'
 import { mapGetters } from 'vuex'
@@ -102,6 +109,7 @@ export default {
     EyeIcon,
     EyeOffIcon
   },
+  mixins: [showNotification],
   computed: {
     ...mapGetters({
       get2fa: '2fa/get2fa'
@@ -166,14 +174,20 @@ export default {
             this.errorMessages.invalidCode = false
           }
         } catch (e) {
+          console.log(e)
           if (e.status === 401 || e.status === 400) {
-            this.errorMessages.invalidCredentials = true
             this.errorMessages.invalidCode = false
           } else if (e.data.invalidCode) {
             this.errorMessages.invalidCode = true
           } else {
             this.errorMessages.email = e.data.error.messages.email
             this.errorMessages.password = e.data.error.messages.password
+          }
+          for (const err in e.data.errors) {
+            this.showNotification(e.data.errors[err][0], 'danger')
+          }
+          for (const err in e.data.error) {
+            this.showNotification(e.data.error[err][0], 'danger')
           }
         } finally {
           this.disabled = false

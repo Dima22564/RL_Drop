@@ -1,6 +1,7 @@
 <template>
   <b-col xl="2" lg="2" md="3" sm="4" cols="6">
     <div @click.stop="showSell = true" @mouseleave="showSell = false" class="inventoryItem">
+
       <div v-if="showSell" class="inventoryItem__click">
         <p class="inventoryItem__name">
           {{ name }}
@@ -21,9 +22,9 @@
           Sell this item
         </p>
         <p class="inventoryItem__desc inventoryItem__desc_emp">
-          for $41.62?
+          for ${{ price }}?
         </p>
-        <button class="btn btn_primary inventoryItem__btn">
+        <button @click="confirmSell({ id, platform, pivotId, price })" class="btn btn_primary inventoryItem__btn">
           Confirm
         </button>
         <button @click.prevent="showConfirm = false" class="btn btn_trans inventoryItem__acc">
@@ -48,6 +49,8 @@
 </template>
 
 <script>
+import { eventBus } from '@/plugins/event-bus'
+
 export default {
   props: {
     name: {
@@ -65,6 +68,18 @@ export default {
     price: {
       type: Number,
       required: true
+    },
+    id: {
+      type: Number,
+      required: true
+    },
+    platform: {
+      type: String,
+      required: true
+    },
+    pivotId: {
+      type: Number,
+      required: true
     }
   },
   data () {
@@ -77,6 +92,9 @@ export default {
     sell () {
       this.showSell = false
       this.showConfirm = true
+    },
+    confirmSell (data) {
+      eventBus.$emit('sellItem', data)
     }
   }
 

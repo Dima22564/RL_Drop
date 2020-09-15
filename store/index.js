@@ -47,7 +47,8 @@ export const actions = {
   setToken ({ commit }, token) {
     this.$axios.setToken(token, 'Bearer')
     commit('setToken', token)
-    Cookies.set('token', token)
+    Cookies.remove('token')
+    Cookies.set('token', token, { expires: 1 })
   },
   async logOut ({ commit, getters }) {
     try {

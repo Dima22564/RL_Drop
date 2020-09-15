@@ -25,24 +25,26 @@
               <BellIcon />
               <div class="notifications__count">9+</div>
             </span>
-            <div v-if="isNotificationShow" @mouseleave="isNotificationShow = false" class="notifications">
-              <p class="notifications__title">
-                notifications
-              </p>
-              <p v-if="getNotifications.length == 0" class="notifications__none">
-                No notifications
-              </p>
-              <div v-else>
-                <Notification
-                  v-for="(item, index) in getNotifications"
-                  :key="index"
-                  :notification-type="item.type"
-                  :id="item.id"
-                >
-                  <p><span class="blue">{{ item.blueText }} </span>sent you <span class="white"> {{ item.whiteText }}</span></p>
-                </Notification>
+            <transition name="fade">
+              <div v-if="isNotificationShow" @mouseleave="isNotificationShow = false" class="notifications">
+                <p class="notifications__title">
+                  notifications
+                </p>
+                <p v-if="getNotifications.length == 0" class="notifications__none">
+                  No notifications
+                </p>
+                <div v-else>
+                  <Notification
+                    v-for="(item, index) in getNotifications"
+                    :key="index"
+                    :notification-type="item.type"
+                    :id="item.id"
+                  >
+                    <p><span class="blue">{{ item.blueText }} </span>sent you <span class="white"> {{ item.whiteText }}</span></p>
+                  </Notification>
+                </div>
               </div>
-            </div>
+            </transition>
           </div>
           <div class="menu__langs">
             <div @click="showLangs" class="menu__langs-link">
@@ -71,12 +73,12 @@
           <div v-if="getToken && getUser" class="menu__langs">
             <div @click="showFinancial" class="menu__langs-link">
               <CardIcon class="menu__langs-icon" />
-              <span class="munu__langs-lang">${{ getUser.balance }}</span>
+              <span class="munu__langs-lang">${{ Number(getUser.balance.toFixed(2)) }}</span>
             </div>
             <div v-if="isFinancialShow" @mouseleave="isFinancialShow = false" class="financial">
               <div class="financial__top">
                 <span class="financial__title">balance</span>
-                <span class="financial__number">{{ getUser.balance.toFixed(2) }} <span>USD</span></span>
+                <span class="financial__number">{{ Number(getUser.balance.toFixed(2)) }} <span>USD</span></span>
               </div>
               <div class="financial__btn">
                 <button class="btn btn_gray">
@@ -88,7 +90,8 @@
 
           <div v-if="getToken && getUser" class="account">
             <div @click="showAccount" class="account__icon">
-              <img src="/images/avatar.jpg" alt="" class="account__img">
+              <img v-if="getUser.photo" :src="getUser.photo" alt="" class="account__img">
+              <AccountEmpty v-else class="account__img account__img_icon" />
               <ArrowDownIcon :class="isAccountShow ? 'account__arrow_rotate' : ''" class="account__arrow" />
             </div>
             <div v-if="isAccountShow" @mouseleave="isAccountShow = false" class="account__drop">
@@ -156,7 +159,7 @@
               <CardIcon class="mobileMenu__icon mobileMenu__icon_dark" />
               <span>Balance</span>
               <div class="mobileMenu__go">
-                <span>{{ getUser.balance }}</span>
+                <span>{{ Number(getUser.balance.toFixed(2)) }}</span>
                 <ArrowRIcon class="arrow" />
               </div>
             </div>
@@ -183,7 +186,8 @@
               </div>
             </div>
             <div v-if="getToken && getUser" @click="showAccount" class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_withIcon">
-              <img src="/images/avatar.jpg" alt="" class="mobileMenu__icon mobileMenu__img">
+              <img v-if="getUser.photo" :src="getUser.photo" alt="" class="mobileMenu__icon mobileMenu__img">
+              <AccountEmpty v-else class="mobileMenu__icon account__img_icon" />
               <span>Account</span>
               <div class="mobileMenu__go">
                 <span>{{ getUser.name }}</span>
@@ -444,6 +448,11 @@
     border-radius: 50%
     flex-shrink: 0
     margin-right: 8px
+    &_icon
+      width: 24px
+      height: 24px
+      font-size: 30px
+      color: rgba(224, 224, 255, 0.4) !important
   &__drop
     border-radius: 12px
     box-shadow: 0 16px 16px -4px rgba(20, 16, 41, 0.24), 0 4px 8px -1px rgba(20, 16, 41, 0.24), 0 0 1px 0 rgba(20, 16, 41, 0.4)
@@ -611,6 +620,7 @@
 <script>
 import VolumeIcon from 'vue-material-design-icons/VolumeHigh.vue'
 import VolumeOffIcon from 'vue-material-design-icons/VolumeOff.vue'
+import AccountEmpty from 'vue-material-design-icons/AccountCircleOutline.vue'
 import BellIcon from 'vue-material-design-icons/BellOutline.vue'
 import CheckIcon from 'vue-material-design-icons/Check.vue'
 import CardIcon from 'vue-material-design-icons/CreditCardOutline.vue'
@@ -640,7 +650,8 @@ export default {
     ArrowRIcon,
     CloseIcon,
     ArrowLIcon,
-    VolumeOffIcon
+    VolumeOffIcon,
+    AccountEmpty
   },
   data () {
     return {

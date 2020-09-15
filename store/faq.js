@@ -5,12 +5,30 @@ export const state = () => ({
 export const mutations = {
   setFaqs (state, faqs) {
     state.faqs = faqs
+  },
+  createFaq (state, faq) {
+    state.faqs.push(faq)
   }
 }
 
 export const actions = {
-  async getFaqs () {
-
+  async getFaqs ({ commit }) {
+    try {
+      const result = await this.$axios.$get(`${this.$axios.defaults.baseURL}/faqs`)
+      commit('setFaqs', result.data || [])
+      console.log(result)
+    } catch (e) {
+      throw e.response
+    }
+  },
+  async createFaq ({ commit }, data) {
+    try {
+      const result = await this.$axios.$post(`${this.$axios.defaults.baseURL}/admin/create-faq`, data)
+      commit('createFaq', result.data)
+      console.log(result)
+    } catch (e) {
+      throw e.response
+    }
   }
 }
 

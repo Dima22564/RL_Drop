@@ -1,7 +1,7 @@
 <template>
   <div class="form__inputs">
     <MyInput
-      v-model="$v.userName.$model"
+      v-model.trim="$v.userName.$model"
       :rightIcon="false"
       :leftIcon="false"
       name="userName"
@@ -12,11 +12,11 @@
     >
       <template slot="error">
         <span v-if="errorMessages.userName">{{ errorMessages.userName }}</span>
-        <span v-if="!$v.userName.required && $v.$error">Name required</span>
+        <span v-if="!$v.userName.required && $v.userName.$error">Name required</span>
       </template>
     </MyInput>
     <MyInput
-      v-model="$v.email.$model"
+      v-model.trim="$v.email.$model"
       :rightIcon="false"
       :leftIcon="false"
       name="email"
@@ -32,7 +32,7 @@
       </template>
     </MyInput>
     <MyInput
-      v-model="phoneNumber"
+      v-model.trim="phoneNumber"
       :rightIcon="false"
       :leftIcon="false"
       name="phoneNumber"
@@ -43,7 +43,8 @@
   </div>
 </template>
 
-<script>import { mapGetters } from 'vuex'
+<script>
+import { mapGetters } from 'vuex'
 import { email, required } from 'vuelidate/lib/validators'
 import { eventBus } from '~/plugins/event-bus'
 

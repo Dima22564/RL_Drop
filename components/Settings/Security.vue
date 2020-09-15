@@ -1,7 +1,7 @@
 <template>
   <div class="form__inputs">
     <MyInput
-      v-model="$v.currentPassword.$model"
+      v-model.trim="$v.currentPassword.$model"
       :rightIcon="false"
       :leftIcon="false"
       name="currentPassword"
@@ -16,7 +16,7 @@
       </template>
     </MyInput>
     <MyInput
-      v-model="$v.newPassword.$model"
+      v-model.trim="$v.newPassword.$model"
       :rightIcon="false"
       :leftIcon="false"
       name="newPassword"
@@ -32,7 +32,7 @@
       </template>
     </MyInput>
     <MyInput
-      v-model="$v.confirmPassword.$model"
+      v-model.trim="$v.confirmPassword.$model"
       :rightIcon="false"
       :leftIcon="false"
       name="confirmPassword"

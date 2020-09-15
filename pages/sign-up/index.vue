@@ -16,44 +16,67 @@
           </h1>
           <form @submit.prevent="register" action="" class="regForm">
             <MyInput
-              v-model="userName"
+              v-model.trim="$v.userName.$model"
               :rightIcon="false"
               :leftIcon="false"
               name="Name"
               label="User name"
               type="text"
               class="regForm__input"
-            />
+              :error="$v.userName.$error"
+            >
+              <template slot="error">
+                <span v-if="!$v.userName.required && $v.userName.$error">Name required</span>
+              </template>
+            </MyInput>
             <MyInput
-              v-model="email"
+              v-model.trim="$v.email.$model"
               :rightIcon="false"
               :leftIcon="false"
               name="email"
               label="Email"
               type="text"
               class="regForm__input"
-            />
+              :error="$v.email.$error"
+            >
+              <template slot="error">
+                <span v-if="!$v.email.required && $v.email.$error">Email required</span>
+                <span v-if="!$v.email.email && $v.email.$error">Field email should be a valid email</span>
+              </template>
+            </MyInput>
             <MyInput
-              v-model="password"
+              v-model.trim="$v.password.$model"
               :rightIcon="false"
               :leftIcon="false"
               name="password"
               label="Password"
               type="text"
               class="regForm__input"
-            />
+              :error="$v.password.$error"
+            >
+              <template slot="error">
+                <span v-if="!$v.password.required && $v.password.$error">Password required</span>
+                <span v-if="!$v.password.minLength && $v.password.$error">Password min length is 6</span>
+              </template>
+            </MyInput>
             <MyInput
-              v-model="confirmPassword"
+              v-model.trim="$v.confirmPassword.$model"
               :rightIcon="false"
               :leftIcon="false"
               name="confirmPassword"
               label="Confirm password"
               type="text"
               class="regForm__input"
-            />
+              :error="$v.confirmPassword.$error"
+            >
+              <template slot="error">
+                <span v-if="!$v.confirmPassword.required && $v.confirmPassword.$error">Password is required</span>
+                <span v-if="!$v.confirmPassword.sameAsPassword && $v.confirmPassword.$error">Passwords must natch</span>
+              </template>
+            </MyInput>
 
             <div class="checkbox regForm__checkbox">
-              <input id="privacy" v-model="acceptPolicy" type="checkbox" name="privacy" class="checkbox__input">
+              <input id="privacy" v-model="$v.acceptPolicy.$model" type="checkbox" name="privacy" class="checkbox__input">
               <label for="privacy" class="checkbox__label">
                 <span>
                   By checking this checkbox I confirm that I agree to the <nuxt-link to="/privacy" tag="span" class="emp">Terms of Service, Privacy Policy </nuxt-link> and <nuxt-link to="/privacy" tag="span" class="emp">Legal</nuxt-link>.
@@ -67,7 +90,11 @@
                   Sign In
                 </nuxt-link>
               </p>
-              <button type="submit" class="btn btn_primary" :class="disabled ? 'btn_primary_disabled' : ''" :disabled="disabled">
+              <button
+                type="submit"
+                class="btn btn_primary"
+                :class="disabled || $v.$invalid ? 'btn_primary_disabled' : ''"
+                :disabled="disabled || $v.$invalid">
                 Sign Up
               </button>
             </div>
@@ -79,6 +106,8 @@
 </template>
 <!--TODO Make validation-->
 <script>
+import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
+import showNotification from '@/mixins/showNotification'
 export default {
   layout: 'register',
   data () {
@@ -87,34 +116,64 @@ export default {
       email: '',
       password: '',
       confirmPassword: '',
-      acceptPolicy: false,
+      acceptPolicy: true,
       disabled: false
+    }
+  },
+  mixins: [showNotification],
+  validations: {
+    userName: {
+      required
+    },
+    email: {
+      required,
+      email
+    },
+    password: {
+      required,
+      minLength: minLength(6)
+    },
+    confirmPassword: {
+      required,
+      sameAsPassword: sameAs('password')
+    },
+    acceptPolicy: {
+      required
     }
   },
   methods: {
     async register () {
-      try {
-        this.disabled = true
-        const data = new FormData()
-        data.append('name', this.userName)
-        data.append('email', this.email)
-        data.append('password', this.password)
-        data.append('confirm_password', this.confirmPassword)
-        data.append('accept_policy', this.acceptPolicy)
-        const result = await this.$store.dispatch('register', data)
-        if (result.success) {
-          this.userName = ''
-          this.email = ''
-          this.password = ''
-          this.confirmPassword = ''
-          this.acceptPolicy = false
-          await this.$router.push('/sign-in')
+      this.$v.$touch()
+      if (!this.$v.$invalid) {
+        try {
+          this.disabled = true
+          const data = new FormData()
+          data.append('name', this.userName)
+          data.append('email', this.email)
+          data.append('password', this.password)
+          data.append('confirm_password', this.confirmPassword)
+          data.append('accept_policy', this.acceptPolicy)
+          const result = await this.$store.dispatch('register', data)
+          if (result.success) {
+            this.userName = ''
+            this.email = ''
+            this.password = ''
+            this.confirmPassword = ''
+            this.acceptPolicy = false
+            await this.$router.push('/sign-in')
+          }
+        } catch (e) {
+          // TODO remove console statement
+          console.log(e.data)
+          for (const err in e.data.errors) {
+            this.showNotification(e.data.errors[err][0], 'danger')
+          }
+          for (const err in e.data.error) {
+            this.showNotification(e.data.error[err][0], 'danger')
+          }
+        } finally {
+          this.disabled = false
         }
-      } catch (e) {
-        // TODO remove console statement
-        console.log(e.data)
-      } finally {
-        this.disabled = false
       }
     }
   }

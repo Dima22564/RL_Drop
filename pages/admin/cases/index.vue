@@ -17,6 +17,18 @@
         <span class="text-light">{{ data.value }}</span>
       </template>
 
+      <template class="text-light" v-slot:cell(pcPrice)="data">
+        <span class="text-light">{{ data.value }}</span>
+      </template>
+
+      <template class="text-light" v-slot:cell(ps4Price)="data">
+        <span class="text-light">{{ data.value }}</span>
+      </template>
+
+      <template class="text-light" v-slot:cell(xboxPrice)="data">
+        <span class="text-light">{{ data.value }}</span>
+      </template>
+
       <!-- A custom formatted column -->
       <template v-slot:cell(name)="data">
         <span class="text-light">{{ data.value }}</span>
@@ -65,8 +77,10 @@ export default {
     return {
       fields: [
         { key: 'id', label: 'Id' },
-        { key: 'price', label: 'Price' },
         { key: 'oldPrice', label: 'Old price' },
+        { key: 'xboxPrice', label: 'PS4' },
+        { key: 'pcPrice', label: 'PC' },
+        { key: 'ps4Price', label: 'Xbox' },
         { key: 'visibility', label: 'Is case visible' },
         { key: 'name', label: 'Name' },
         'image',

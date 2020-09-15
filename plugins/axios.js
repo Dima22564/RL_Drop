@@ -7,15 +7,11 @@ export default function ({ $axios, redirect, store }) {
   //
   //   return request
   // })
-  $axios.onError((error) => {
-    if (error.response) {
-      if (error.response.status === 401) {
-        redirect('/sign-in?message=error')
-        store.dispatch('logOut', { root: true })
-      }
-      if (error.response.status === 500) {
-        redirect('/sign-in?message=error')
-      }
-    }
-  })
+  // $axios.onError((error) => {
+  //   if (error.response) {
+  //     if (error.response.status === 401) {
+  //       redirect('/sign-in?message=error')
+  //     }
+  //   }
+  // })
 }

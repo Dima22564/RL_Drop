@@ -5,7 +5,7 @@
       <b-container>
         <div class="inventory__top">
           <h3>Inventory</h3>
-          <div v-if="getWindowSize >= 991" class="inventory__filter">
+          <div v-if="getWindowSize >= 991 && options.length > 0" class="inventory__filter">
             <div
               v-for="opt in options"
               :key="opt.platform"
@@ -48,9 +48,12 @@
         <b-row class="inventoryItem__row" v-if="getInventory.length > 0">
           <InventoryItem
             v-for="item in getInventory"
-            :key="item.id"
+            :key="item.pivot.id"
+            :pivot-id="item.pivot.id"
+            :id="item.id"
             :img="item.image"
             :name="item.name"
+            :platform="item.platform"
             :price="Number(item[`${item.platform}Price`])"
             desc="fdgfd"
             class="inventoryItem__col"
@@ -64,6 +67,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { eventBus } from '@/plugins/event-bus'
+import showNotification from '@/mixins/showNotification'
 import InventoryItem from './InventoryItem'
 export default {
   data () {
@@ -72,24 +77,47 @@ export default {
       options: []
     }
   },
+  mixins: [showNotification],
   components: {
     InventoryItem
   },
   computed: {
     ...mapGetters({
       getWindowSize: 'common/getWindowSize',
-      getInventory: 'user/getInventory'
+      getInventory: 'user/getInventory',
+      getPlatform: 'common/getPlatform'
     })
   },
   async mounted () {
     try {
       const result = await this.$store.dispatch('user/loadInventory')
-      this.options = result.data.count
-      this.filterItems = this.options[0]
-      console.log(result.data.count)
+      if (!result.data) {
+        this.options = []
+      } else {
+        this.options = result.data.count
+        if (result.data.count.length > 0) {
+          this.filterItems = result.data.count[0]
+        }
+      }
     } catch (e) {
       console.log(e)
     }
+    eventBus.$off('sellItem')
+    eventBus.$on('sellItem', async (data) => {
+      try {
+        const sellData = new FormData()
+        sellData.append('platform', data.platform)
+        sellData.append('id', data.id)
+        console.log(data)
+        const result = await this.$store.dispatch('item/sell', sellData)
+        if (result.data) {
+          this.$store.commit('user/deleteInventoryItemById', data.pivotId)
+          this.$store.commit('user/changeUserBalance', data.price * 1)
+        }
+      } catch (e) {
+        this.showNotification('Something went wrong(', 'danger')
+      }
+    })
   }
 }
 </script>

@@ -66,11 +66,14 @@ export const actions = {
       this.$axios.setToken(rootGetters.getToken, 'Bearer')
       const result = await this.$axios.$post(`${this.$axios.defaults.baseURL}/sell-item`, data)
       if (result.success) {
-        commit('user/changeUserBalance', rootGetters['chest/getWinItem'][`${rootGetters['common/getPlatform']}Price`], { root: true })
+        if (rootGetters['chest/getWinItem']) {
+          commit('user/changeUserBalance', rootGetters['chest/getWinItem'][`${rootGetters['common/getPlatform']}Price`], { root: true })
+        }
         commit('chest/setWinItem', null, { root: true })
       }
       return result
     } catch (e) {
+      console.log(e)
       throw e.response
     }
   }
