@@ -16,24 +16,20 @@
         </div>
         <div class="menu__langs">
           <div @click="showLangs" class="menu__langs-link">
-            <img src="/images/china.svg" alt="" class="menu__langs-img">
-            <span class="munu__langs-lang">CH</span>
+            <img :src="`/images/${$i18n.locale}.svg`"  alt="" class="menu__langs-img">
+            <span class="menu__langs-lang">{{ $i18n.locale }}</span>
           </div>
           <div v-if="isLangsShow" @mouseleave="isLangsShow = false" @mouseover="isLangsShow = true" class="menu__langs-drop menu__langs-drop--footer">
-            <nuxt-link to="/" tag="div" class="menu__langs-dropLink">
-              <img src="/images/china.svg" alt="" class="menu__langs-img">
-              <span class="menu__langs-dropLang">English</span>
-              <CheckIcon class="icon" />
-            </nuxt-link>
-            <nuxt-link to="/" tag="div" class="menu__langs-dropLink">
-              <img src="/images/china.svg" alt="" class="menu__langs-img">
-              <span class="menu__langs-dropLang">English</span>
-              <CheckIcon class="icon" />
-            </nuxt-link>
-            <nuxt-link to="/" tag="div" class="menu__langs-dropLink">
-              <img src="/images/china.svg" alt="" class="menu__langs-img">
-              <span class="menu__langs-dropLang">English</span>
-              <CheckIcon class="icon" />
+            <nuxt-link
+              v-for="locale in $i18n.locales"
+              :key="locale.code"
+              :to="switchLocalePath(locale.code)"
+              tag="div"
+              class="menu__langs-dropLink"
+            >
+              <img :src="`/images/${locale.code}.svg`" alt="" class="menu__langs-img">
+              <span class="menu__langs-dropLang">{{ locale.name }}</span>
+              <CheckIcon v-if="locale.code === $i18n.locale" class="icon" />
             </nuxt-link>
           </div>
         </div>

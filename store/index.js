@@ -36,6 +36,7 @@ export const actions = {
       dispatch('common/initCookie')
       if (getters.getToken) {
         await dispatch('user/getUser', getters.getToken)
+        commit('notifications/setNotifications', rootGetters['user/getUser'].notifications)
         commit('2fa/set2faSecret', rootGetters['user/getUser'].passwordSecurity.google2fa_secret)
         dispatch('2fa/generateOneTimePassword', rootGetters['2fa/get2faSecret'])
       }
@@ -61,6 +62,7 @@ export const actions = {
       commit('2fa/toggle2fa', null)
       commit('2fa/set2faCode', null)
       commit('2fa/set2faSecret', null)
+      commit('notifications/setNotifications', [])
       Cookies.remove('token')
       await this.$router.replace({ path: '/' })
       return result

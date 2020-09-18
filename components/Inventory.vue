@@ -4,7 +4,7 @@
     <section class="inventory">
       <b-container>
         <div class="inventory__top">
-          <h3>Inventory</h3>
+          <h3>{{ $t('inventory') }}</h3>
           <div v-if="getWindowSize >= 991 && options.length > 0" class="inventory__filter">
             <div
               v-for="opt in options"

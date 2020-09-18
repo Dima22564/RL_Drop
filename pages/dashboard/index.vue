@@ -4,15 +4,15 @@
     <section class="accounntDash">
       <b-container>
         <div class="accounntDash__top">
-          <h2>Account</h2>
+          <h2>{{ $t('account') }}</h2>
           <div class="dashLinks">
-            <nuxt-link to="/dashboard" active-class="dashLinks__link_active" tag="div" class="dashLinks__link">
+            <nuxt-link :to="localePath('/dashboard')" active-class="dashLinks__link_active" tag="div" class="dashLinks__link">
               <DashboardIcon />
-              <span class="text">Dashboard</span>
+              <span class="text">{{ $t('dashboard') }}</span>
             </nuxt-link>
-            <nuxt-link to="/settings" active-class="dashLinks__link_active" class="dashLinks__link">
+            <nuxt-link :to="localePath('/settings')" active-class="dashLinks__link_active" class="dashLinks__link">
               <SettingsIcon />
-              <span class="text">Settings</span>
+              <span class="text">{{ $t('settings') }}</span>
             </nuxt-link>
           </div>
         </div>
@@ -33,7 +33,7 @@
                     {{ getUser.name }}
                   </p>
                   <button :disabled="!Boolean(photo) && disabled" @click="changePhoto" class="btn dash__desc">
-                    Change Photo
+                    {{ $t('changePhoto') }}
                   </button>
                   <input
                     ref="photo"
@@ -54,7 +54,7 @@
             <div class="dash__item dash__item_between">
               <div class="dash__text">
                 <p class="dash__balance">
-                  balance
+                  {{ $t('balance') }}
                 </p>
                 <p class="dash__num">
                   <span>$ </span>{{ Number(getUser.balance.toFixed(2)) }}
@@ -62,7 +62,7 @@
               </div>
               <button class="btn btn-arrow btn_primary">
                 <PlusIcon class="btn__icon btn__icon_left" />
-                <span>Refill</span>
+                <span>{{ $t('deposit') }}</span>
               </button>
             </div>
           </b-col>
@@ -71,7 +71,7 @@
               <img src="/images/avatar.jpg" alt="" class="dash__img">
               <div class="dash__text">
                 <p class="dash__title dash__title_block">
-                  Best Drop
+                  {{ $t('bestCrop') }}
                 </p>
                 <p class="dash__desc">
                   Gamma Doppler
@@ -88,7 +88,7 @@
                 {{ cases }}
               </p>
               <p class="dashInfo__text">
-                cases
+                {{ $t('cases') }}
               </p>
             </div>
           </b-col>
@@ -98,7 +98,7 @@
                 {{ crafts }}
               </p>
               <p class="dashInfo__text">
-                crafts
+                {{ $t('crafts') }}
               </p>
             </div>
           </b-col>
@@ -108,7 +108,7 @@
                 {{ items }}
               </p>
               <p class="dashInfo__text">
-                items
+                {{ $t('items') }}
               </p>
             </div>
           </b-col>
@@ -119,7 +119,7 @@
     <!-- Inventory  adapted = true -->
     <Inventory />
     <div v-if="getInventory.length === 0" class="container mt-5">
-      <h3 class="mt-3">You have not items! :(</h3>
+      <h3 class="mt-3">{{ $t('noItems') }}</h3>
     </div>
   </div>
 </template>
@@ -153,8 +153,8 @@ export default {
   async mounted () {
     try {
       const result = await this.$store.dispatch('user/loadStats')
-      this.cases = result.data.crafts
-      this.crafts = result.data.cases
+      this.cases = result.data.cases
+      this.crafts = result.data.crafts
       this.items = result.data.items
     } catch (e) {
       this.showNotification('Unable to load statistics!', 'danger')

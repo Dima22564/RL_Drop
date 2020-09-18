@@ -44,6 +44,7 @@
 </template>
 
 <script>
+import showNotification from '@/mixins/showNotification'
 import { mapGetters } from 'vuex'
 import { email, required } from 'vuelidate/lib/validators'
 import { eventBus } from '~/plugins/event-bus'
@@ -60,6 +61,7 @@ export default {
       }
     }
   },
+  mixins: [showNotification],
   validations: {
     email: {
       required,
@@ -86,19 +88,12 @@ export default {
         try {
           const result = await this.$store.dispatch('settings/updateSettings', data)
           if (result.success) {
-            this.$bvToast.toast(result.message, {
-              title: `Notification`,
-              variant: 'primary',
-              solid: true
-            })
+            this.showNotification(result.message, 'primary')
           } else {
-            this.$bvToast.toast('Something goes wrong!', {
-              title: `Notification`,
-              variant: 'danger',
-              solid: true
-            })
+            this.showNotification('Something goes wrong!', 'danger')
           }
         } catch (e) {
+          console.log(e)
           if (e.data.error.messages.name) {
             this.errorMessages.userName = e.data.error.messages.name[0]
           }

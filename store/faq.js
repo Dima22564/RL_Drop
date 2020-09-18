@@ -12,11 +12,12 @@ export const mutations = {
 }
 
 export const actions = {
-  async getFaqs ({ commit }) {
+  async loadFaqs ({ commit }) {
     try {
+      this.$axios.setHeader('X-localization', this.$i18n.locale)
       const result = await this.$axios.$get(`${this.$axios.defaults.baseURL}/faqs`)
-      commit('setFaqs', result.data || [])
-      console.log(result)
+      commit('setFaqs', result.data.faqs || [])
+      return result.data
     } catch (e) {
       throw e.response
     }
@@ -25,7 +26,7 @@ export const actions = {
     try {
       const result = await this.$axios.$post(`${this.$axios.defaults.baseURL}/admin/create-faq`, data)
       commit('createFaq', result.data)
-      console.log(result)
+      return result
     } catch (e) {
       throw e.response
     }

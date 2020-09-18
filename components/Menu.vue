@@ -3,13 +3,13 @@
     <div v-if="getWindowSize > 991" class="menu">
       <b-container class="menu__container">
         <div class="menu__content menu__content-1">
-          <nuxt-link to="/" class="menu__link">
+          <nuxt-link :to="localePath('/')" class="menu__link">
             <img src="/images/logo.svg" alt="">
           </nuxt-link>
-          <nuxt-link to="/craft" class="menu__link">
-            Craft
+          <nuxt-link :to="localePath('/craft')" class="menu__link">
+            {{ $t('craft') }}
           </nuxt-link>
-          <nuxt-link to="/faq" class="menu__link">
+          <nuxt-link :to="localePath('/faq')" class="menu__link">
             FAQ
           </nuxt-link>
         </div>
@@ -23,24 +23,29 @@
           <div class="menu__icon">
             <span @click="showNotifications" class="menu__volume">
               <BellIcon />
-              <div class="notifications__count">9+</div>
+              <div
+                v-if="getNotifications.length > 0"
+                class="notifications__count">{{ getNotifications.length > 9 ? '9+' : getNotifications.length}}
+              </div>
             </span>
             <transition name="fade">
               <div v-if="isNotificationShow" @mouseleave="isNotificationShow = false" class="notifications">
                 <p class="notifications__title">
-                  notifications
+                  {{ $t('notifications') }}
                 </p>
                 <p v-if="getNotifications.length == 0" class="notifications__none">
-                  No notifications
+                  {{ $t('noNotifications') }}
                 </p>
                 <div v-else>
                   <Notification
-                    v-for="(item, index) in getNotifications"
+                    v-for="(item, index) in notifications"
                     :key="index"
-                    :notification-type="item.type"
+                    :notification-type="item.type.toLowerCase()"
                     :id="item.id"
+                    :date="item.date"
                   >
-                    <p><span class="blue">{{ item.blueText }} </span>sent you <span class="white"> {{ item.whiteText }}</span></p>
+<!--                    <p><span class="blue"></span><span class="white"> {{ item.text }}</span></p>-->
+                    <p v-html="item[`text_${$i18n.locale}`]"></p>
                   </Notification>
                 </div>
               </div>
@@ -48,24 +53,20 @@
           </div>
           <div class="menu__langs">
             <div @click="showLangs" class="menu__langs-link">
-              <img src="/images/china.svg" alt="" class="menu__langs-img">
-              <span class="munu__langs-lang">CH</span>
+              <img :src="`/images/${$i18n.locale}.svg `" alt="" class="menu__langs-img">
+              <span class="menu__langs-lang">{{ $i18n.locale }}</span>
             </div>
             <div v-if="isLangsShow" @mouseleave="isLangsShow = false" @mouseover="isLangsShow = true" class="menu__langs-drop">
-              <nuxt-link to="/" tag="div" class="menu__langs-dropLink">
-                <img src="/images/china.svg" alt="" class="menu__langs-img">
-                <span class="menu__langs-dropLang">English</span>
-                <CheckIcon class="icon" />
-              </nuxt-link>
-              <nuxt-link to="/" tag="div" class="menu__langs-dropLink">
-                <img src="/images/china.svg" alt="" class="menu__langs-img">
-                <span class="menu__langs-dropLang">English</span>
-                <CheckIcon class="icon" />
-              </nuxt-link>
-              <nuxt-link to="/" tag="div" class="menu__langs-dropLink">
-                <img src="/images/china.svg" alt="" class="menu__langs-img">
-                <span class="menu__langs-dropLang">English</span>
-                <CheckIcon class="icon" />
+              <nuxt-link
+                v-for="locale in $i18n.locales"
+                :key="locale.code"
+                :to="switchLocalePath(locale.code)"
+                tag="div"
+                class="menu__langs-dropLink"
+              >
+                <img :src="`/images/${locale.code}.svg `" alt="" class="menu__langs-img">
+                <span class="menu__langs-dropLang">{{ locale.name }}</span>
+                <CheckIcon v-if="locale.code === $i18n.locale" class="icon" />
               </nuxt-link>
             </div>
           </div>
@@ -77,12 +78,12 @@
             </div>
             <div v-if="isFinancialShow" @mouseleave="isFinancialShow = false" class="financial">
               <div class="financial__top">
-                <span class="financial__title">balance</span>
+                <span class="financial__title">{{ $t('balance') }}</span>
                 <span class="financial__number">{{ Number(getUser.balance.toFixed(2)) }} <span>USD</span></span>
               </div>
               <div class="financial__btn">
                 <button class="btn btn_gray">
-                  Deposit
+                  {{ $t('deposit') }}
                 </button>
               </div>
             </div>
@@ -100,20 +101,20 @@
               </p>
               <nuxt-link class="account__link" to="/dashboard" tag="div">
                 <Dashboard class="icon" />
-                <span>Dashboard</span>
+                <span>{{ $t('dashboard') }}</span>
               </nuxt-link>
               <nuxt-link class="account__link" to="/settings" tag="div">
                 <SettingsIcon class="icon" />
-                <span>Settings</span>
+                <span>{{ $t('settings') }}</span>
               </nuxt-link>
               <button @click.prevent="logout" class="account__link account__link_logout">
                 <LogoutIcon class="icon" />
-                <span>Sign Out</span>
+                <span>{{ $t('signOut') }}</span>
               </button>
             </div>
           </div>
           <nuxt-link to="/sign-up" tag="button" v-if="!getToken" class="menu__btn btn btn_primary">
-            Get Started
+            {{ $t('getStarted') }}
           </nuxt-link>
         </div>
       </b-container>
@@ -131,33 +132,33 @@
               <CloseIcon class="mobileMenu__icon" />
             </div>
             <div class="mobileMenu__item mobileMenu__item_center">
-              <nuxt-link to="/">
+              <nuxt-link :to="localePath('/')">
                 <img src="/images/logo-sm.svg" alt="">
               </nuxt-link>
             </div>
-            <nuxt-link tag="div" to="/sign-up" class="mobileMenu__item mobileMenu__item_right">
-              <span v-if="!getToken" class="mobileMenu__btn">Get Started</span>
+            <nuxt-link tag="div" :to="localePath('/sign-up')" class="mobileMenu__item mobileMenu__item_right">
+              <span v-if="!getToken" class="mobileMenu__btn">{{ $t('getStarted') }}</span>
             </nuxt-link>
           </div>
 
           <div v-if="showDropMenu" class="mobileMenu__invisible">
-            <nuxt-link to="/" tag="div" class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_pl72">
-              Home
+            <nuxt-link :to="localePath('/')" tag="div" class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_pl72">
+              {{ $t('home') }}
             </nuxt-link>
-            <nuxt-link to="/craft" tag="div" class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_pl72">
-              Craft
+            <nuxt-link :to="localePath('/craft')" tag="div" class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_pl72">
+              {{ $t('craft') }}
             </nuxt-link>
             <div @click="showLangs" class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_withIcon">
               <img src="/images/russia.svg" alt="" class="mobileMenu__icon mobileMenu__img">
-              <span>Language</span>
+              <span>{{ $t('language') }}</span>
               <div class="mobileMenu__go">
-                <span>English</span>
+                <span>{{ $i18n.locale }}</span>
                 <ArrowRIcon class="arrow" />
               </div>
             </div>
             <div v-if="getToken && getUser" @click="showFinancial" class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_withIcon">
               <CardIcon class="mobileMenu__icon mobileMenu__icon_dark" />
-              <span>Balance</span>
+              <span>{{ $t('balance') }}</span>
               <div class="mobileMenu__go">
                 <span>{{ Number(getUser.balance.toFixed(2)) }}</span>
                 <ArrowRIcon class="arrow" />
@@ -165,7 +166,7 @@
             </div>
             <div class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_withIcon">
               <BellIcon class="mobileMenu__icon mobileMenu__icon_dark" />
-              <span>Notifications</span>
+              <span>{{ $t('notifications') }}</span>
               <div class="mobileMenu__go">
                 <span class="notificationsMobile">23</span>
                 <ArrowRIcon class="arrow" />
@@ -188,14 +189,14 @@
             <div v-if="getToken && getUser" @click="showAccount" class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_withIcon">
               <img v-if="getUser.photo" :src="getUser.photo" alt="" class="mobileMenu__icon mobileMenu__img">
               <AccountEmpty v-else class="mobileMenu__icon account__img_icon" />
-              <span>Account</span>
+              <span>{{ $t('account') }}</span>
               <div class="mobileMenu__go">
                 <span>{{ getUser.name }}</span>
                 <ArrowRIcon class="arrow" />
               </div>
             </div>
-            <nuxt-link tag="button" to="/sign-up" v-if="!getToken" class="btn btn_primary mobileMenu__start">
-              Get Started
+            <nuxt-link tag="button" :to="localePath('/sign-up')" v-if="!getToken" class="btn btn_primary mobileMenu__start">
+              {{ $t('getStarted') }}
             </nuxt-link>
           </div>
         </div>
@@ -205,14 +206,14 @@
         <div class="mobileMenu__top">
           <div @click="goBack" class="mobileMenu__subItem mobileMenu__subItem_blue">
             <ArrowLIcon class="icon" />
-            <span>Back</span>
+            <span>{{ $t('back') }}</span>
           </div>
           <div class="mobileMenu__subItem mobileMenu__subItem_center">
-            Balance
+            {{ $t('balance') }}
           </div>
         </div>
         <button class="btn btn_gray mobileMenu__deposit">
-          Deposit
+          {{ $t('deposit') }}
         </button>
       </div>
 
@@ -220,23 +221,23 @@
         <div class="mobileMenu__top">
           <div @click="goBack" class="mobileMenu__subItem mobileMenu__subItem_blue">
             <ArrowLIcon class="icon" />
-            <span>Back</span>
+            <span>{{ $t('back') }}</span>
           </div>
           <div class="mobileMenu__subItem mobileMenu__subItem_center">
-            Account
+            {{ $t('account') }}
           </div>
         </div>
         <nuxt-link tag="div" to="/Dashboard" class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_withIcon">
           <Dashboard class="mobileMenu__icon mobileMenu__icon_dark" />
-          <span>Dashboard</span>
+          <span>{{ $t('dashboard') }}</span>
         </nuxt-link>
         <nuxt-link tag="div" to="/settings" class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_withIcon">
           <SettingsIcon class="mobileMenu__icon mobileMenu__icon_dark" />
-          <span>Settings</span>
+          <span>{{ $t('settings') }}</span>
         </nuxt-link>
         <div @click.prevent="logout" class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_withIcon mobileMenu__link_logOut">
           <LogoutIcon class="mobileMenu__icon mobileMenu__icon_dark" />
-          <span>Sign Out</span>
+          <span>{{ $t('signOut') }}</span>
         </div>
       </div>
 
@@ -244,22 +245,28 @@
         <div class="mobileMenu__top">
           <div @click="goBack" class="mobileMenu__subItem mobileMenu__subItem_blue">
             <ArrowLIcon class="icon" />
-            <span>Back</span>
+            <span>{{ $t('back') }}</span>
           </div>
           <div class="mobileMenu__subItem mobileMenu__subItem_center">
-            Language
+            {{ $t('language') }}
           </div>
           <div @click="goBack" class="mobileMenu__subItem mobileMenu__subItem_blue mobileMenu__subItem_right">
-            <span>Done</span>
+            <span>{{ $t('done') }}</span>
           </div>
         </div>
-        <div class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_withIcon">
+        <nuxt-link
+          tag="div"
+          v-for="locale in $i18n.locales"
+          :key="locale.code"
+          :to="switchLocalePath(locale.code)"
+          class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_withIcon"
+        >
           <img src="/images/russia.svg" alt="" class="mobileMenu__icon mobileMenu__img">
-          <span>Language</span>
+          <span>{{ locale.name }}</span>
           <div class="mobileMenu__go">
-            <CheckIcon class="arrow arrow_blue" />
+            <CheckIcon v-if="locale.code === $i18n.locale" class="arrow arrow_blue" />
           </div>
-        </div>
+        </nuxt-link>
       </div>
     </div>
 
@@ -277,7 +284,7 @@
           </nuxt-link>
         </div>
         <div class="mobileMenu__item mobileMenu__item_right">
-          <span class="mobileMenu__btn">Get Started</span>
+          <span class="mobileMenu__btn">{{ $t('getStarted') }}</span>
         </div>
       </div>
     </div>
@@ -462,8 +469,8 @@
     right: 0
     bottom: 0
     transform: translateY(calc(100% + 8px))
-    min-width: 255px
     padding: 16px 0
+    width: 255px
   &__name
     padding: 0 16px
     text-transform: uppercase
@@ -569,6 +576,7 @@
     align-items: center
     margin-left: auto
     color: rgba(224, 224, 255, 0.6)
+    text-transform: uppercase
     .arrow
       font-size: 22px
       height: 18px
@@ -618,6 +626,7 @@
 </style>
 
 <script>
+import showNotification from '@/mixins/showNotification'
 import VolumeIcon from 'vue-material-design-icons/VolumeHigh.vue'
 import VolumeOffIcon from 'vue-material-design-icons/VolumeOff.vue'
 import AccountEmpty from 'vue-material-design-icons/AccountCircleOutline.vue'
@@ -653,6 +662,7 @@ export default {
     VolumeOffIcon,
     AccountEmpty
   },
+  mixins: [showNotification],
   data () {
     return {
       isLangsShow: false,
@@ -670,12 +680,23 @@ export default {
       getNotifications: 'notifications/getNotifications',
       getToken: 'getToken',
       getUser: 'user/getUser'
-    })
+    }),
+    notifications () {
+      return this.getNotifications.slice(0, 4)
+    }
   },
   created () {
     eventBus.$on('closeNotification', (id) => {
       this.$store.commit('notifications/deleteNotification', id)
     })
+  },
+  mounted () {
+    window.Echo.private(`room.${this.getUser.id}`)
+      .listen('CreateNotification', (e) => {
+        // this.message = e.message
+        console.log((e))
+        this.$store.commit('notifications/addNotification', e.notification)
+      })
   },
   methods: {
     setSound () {

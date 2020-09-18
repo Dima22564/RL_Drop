@@ -11,7 +11,7 @@ export const mutations = {
 export const actions = {
   async updateSettings ({ rootGetters, commit }, data) {
     try {
-      const userId = rootGetters.getUser.id
+      const userId = rootGetters['user/getUser'].id
       this.$axios.setToken(rootGetters.getToken, 'Bearer')
       const result = await this.$axios.$post(`${this.$axios.defaults.baseURL}/user/${userId}/update`, data)
       if (result.success) {
@@ -24,6 +24,7 @@ export const actions = {
       }
       return result
     } catch (e) {
+      console.log(e)
       throw e.response
     }
   }

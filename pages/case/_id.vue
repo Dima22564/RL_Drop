@@ -64,9 +64,6 @@
             :name="item.name"
             desc="Astral"
           />
-<!--          <Weapon color="red" img-url="/images/weapon-s.png" name="P90" desc="Astral" />-->
-<!--          <Weapon color="pink" img-url="/images/weapon-s.png" name="P90" desc="Astral" />-->
-<!--          <Weapon color="orange" img-url="/images/weapon-s.png" name="P90" desc="Astral" />-->
         </b-row>
       </b-container>
     </section>

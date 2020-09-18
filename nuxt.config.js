@@ -62,6 +62,10 @@ module.exports = {
     {
       src: '@/plugins/apexCharts',
       ssr: false
+    },
+    {
+      src: '@/plugins/laravel-echo',
+      ssr: false
     }
   ],
   /*
@@ -79,7 +83,63 @@ module.exports = {
     'bootstrap-vue/nuxt',
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
-    '@nuxtjs/pwa'
+    '@nuxtjs/pwa',
+    ['nuxt-i18n', {
+      detectBrowserLanguage: {
+        useCookie: true,
+        cookieKey: 'i18n_redirected',
+        alwaysRedirect: true,
+        fallbackLocale: 'en',
+        seo: true
+      },
+      pages: {
+        craft: {
+          ru: '/craft',
+          en: '/craft'
+        },
+        faq: {
+          ru: '/faq',
+          en: '/faq'
+        },
+        case: {
+          ru: '/кейс',
+          en: '/case'
+        },
+        dashboard: {
+          ru: '/dashboard',
+          en: '/dashboard'
+        },
+        settings: {
+          ru: '/крафт',
+          en: '/settings'
+        },
+        'sign-in': {
+          ru: '/sign-in',
+          en: '/sign-in'
+        },
+        'sign-up': {
+          ru: '/sign-up',
+          en: '/sign-up'
+        }
+      },
+      locales: [
+        {
+          name: 'Russian',
+          code: 'ru',
+          iso: 'RU',
+          file: 'ru-RU.js'
+        },
+        {
+          name: 'English',
+          code: 'en',
+          iso: 'ENG',
+          file: 'en-US.js'
+        }
+      ],
+      lazy: true,
+      langDir: 'lang/',
+      defaultLocale: 'ru'
+    }]
   ],
   // 'bootstrapVue': {
   //   componentPlugins: [

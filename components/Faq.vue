@@ -25,11 +25,11 @@ export default {
   },
   props: {
     title: {
-      type: String,
+      type: null,
       required: true
     },
     text: {
-      type: String,
+      type: null,
       required: true
     }
   },

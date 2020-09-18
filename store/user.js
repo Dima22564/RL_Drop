@@ -30,6 +30,11 @@ export const mutations = {
   },
   changeUserPhoto (state, photo) {
     state.user.photo = photo
+  },
+  setLinks (state, data) {
+    state.user.steamLink = data.steamLink
+    state.user.xboxLink = data.xboxLink
+    state.user.ps4Link = data.ps4Link
   }
 }
 
@@ -85,6 +90,16 @@ export const actions = {
     try {
       this.$axios.setToken(rootGetters.getToken, 'Bearer')
       const result = await this.$axios.$get(`${this.$axios.defaults.baseURL}/user/stats`)
+      return result
+    } catch (e) {
+      throw e.response
+    }
+  },
+  async updateLinks ({ rootGetters, commit }, data) {
+    try {
+      this.$axios.setToken(rootGetters.getToken, 'Bearer')
+      const result = await this.$axios.$post(`${this.$axios.defaults.baseURL}/user/links`, data)
+      commit('setLinks', data)
       return result
     } catch (e) {
       throw e.response

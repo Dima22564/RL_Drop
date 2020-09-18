@@ -35,7 +35,7 @@
               <LayersIcon class="case__icon" />
               <div class="case__text">
                 <span class="emp">4,102,715</span>
-                <span class="name">cases</span>
+                <span class="name">{{ $t('cases') }}</span>
               </div>
             </div>
           </b-col>
@@ -44,7 +44,7 @@
               <EqualizerIcon class="case__icon" />
               <div class="case__text">
                 <span class="emp">4,102,715</span>
-                <span class="name">CRAFT</span>
+                <span class="name">{{ $t('craft') }}</span>
               </div>
             </div>
           </b-col>
@@ -53,7 +53,7 @@
               <UserIcon class="case__icon" />
               <div class="case__text">
                 <span class="emp">4,102,715</span>
-                <span class="name">users</span>
+                <span class="name">{{ $t('users') }}</span>
               </div>
             </div>
           </b-col>
@@ -78,7 +78,7 @@
                 <WifiIcon class="case__icon" />
                 <div class="case__text">
                   <span class="emp">4,102,715</span>
-                  <span class="name">cases</span>
+                  <span class="name">{{ $t('cases') }}</span>
                 </div>
               </div>
             </div>
@@ -87,7 +87,7 @@
                 <WifiIcon class="case__icon" />
                 <div class="case__text">
                   <span class="emp">4,102,715</span>
-                  <span class="name">CRAFT</span>
+                  <span class="name">{{ $t('craft') }}</span>
                 </div>
               </div>
             </div>
@@ -96,7 +96,7 @@
                 <WifiIcon class="case__icon" />
                 <div class="case__text">
                   <span class="emp">4,102,715</span>
-                  <span class="name">users</span>
+                  <span class="name">{{ $t('users') }}</span>
                 </div>
               </div>
             </div>
@@ -105,7 +105,7 @@
                 <WifiIcon class="case__icon" />
                 <div class="case__text">
                   <span class="emp">4,102,715</span>
-                  <span class="name">online</span>
+                  <span class="name">{{ $t('online') }}</span>
                 </div>
               </div>
             </div>
@@ -126,7 +126,9 @@
             v-show="item[`${getPlatform}Price`]"
             v-for="item in getCraftItems"
             :key="item.id"
-            @click.prevent="setCraftItem(`/craft?itemId=${item.id}&itemName=${item.name}&platform=${getPlatform}`, item.id)"
+            @click.prevent="setCraftItem(
+              { itemId: item.id, itemName: item.name, platform: getPlatform },
+              item.id)"
             class="weapon__wrapper"
           >
             <div class="weapon weapon_pink">
@@ -251,7 +253,10 @@ export default {
     },
     setCraftItem (s, id) {
       this.reinitSlider()
-      this.$router.push(s)
+      this.$router.push(this.localePath({
+        name: 'craft',
+        query: s
+      }))
       eventBus.$emit('selectCraftItem', [s, id])
     }
   }
@@ -369,6 +374,7 @@ export default {
   &__text
     display: flex
     flex-direction: column
+    text-align: center
   &__icon
     margin-right: 16px
     color: inherit

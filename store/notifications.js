@@ -1,39 +1,27 @@
 export const state = () => ({
-  notifications: [{
-    type: 'success',
-    blueText: 'jelena',
-    whiteText: 'request',
-    id: 'not1'
-  },
-  {
-    type: 'message',
-    blueText: 'jelena',
-    whiteText: 'request',
-    id: 'not2'
-  },
-  {
-    type: 'financial',
-    blueText: 'jelena',
-    whiteText: 'request',
-    id: 'not3'
-  },
-  {
-    type: 'warning',
-    blueText: 'jelena',
-    whiteText: 'request',
-    id: 'not4'
-  }
-  ]
+  notifications: []
 })
 
 export const mutations = {
   deleteNotification (state, id) {
     state.notifications = state.notifications.filter(item => item.id !== id)
+  },
+  addNotification (state, notification) {
+    state.notifications.unshift(notification)
+  },
+  setNotifications (state, notifications) {
+    state.notifications = notifications
   }
 }
 
 export const actions = {
-
+  async readNotification ({ rootGetters }, id) {
+    try {
+      this.$axios.setToken(rootGetters.getToken, 'Bearer')
+      await this.$axios.$get(`${this.$axios.defaults.baseURL}/read-notification/${id}`)
+    } catch (e) {
+    }
+  }
 }
 
 export const getters = {

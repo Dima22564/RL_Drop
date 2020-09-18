@@ -53,7 +53,7 @@
       </template>
 
       <template v-slot:cell()="data">
-        <b-button pill variant="success">Change</b-button>
+        <b-button :to="`/admin/cases/${data.item.id}`" pill variant="success">Change</b-button>
         <b-button @click.prevent="deleteChest(data.item.id)" pill variant="danger">Delete</b-button>
       </template>
     </b-table>

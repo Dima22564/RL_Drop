@@ -4,15 +4,24 @@
     <section class="accounntDash">
       <b-container>
         <div class="accounntDash__top">
-          <h2>Account</h2>
+          <h2>{{ $t('account') }}</h2>
           <div class="dashLinks">
-            <nuxt-link to="/dashboard" active-class="dashLinks__link_active" tag="div" class="dashLinks__link">
+            <nuxt-link
+              :to="localePath('/dashboard')"
+              active-class="dashLinks__link_active"
+              tag="div"
+              class="dashLinks__link"
+            >
               <DashboardIcon />
-              <span class="text">Dashboard</span>
+              <span class="text">{{ $t('dashboard') }}</span>
             </nuxt-link>
-            <nuxt-link active-class="dashLinks__link_active" to="/settings" class="dashLinks__link">
+            <nuxt-link
+              active-class="dashLinks__link_active"
+              :to="localePath('/settings')"
+              class="dashLinks__link"
+            >
               <SettingsIcon />
-              <span class="text">Settings</span>
+              <span class="text">{{ $t('settings') }}</span>
             </nuxt-link>
           </div>
         </div>
@@ -26,7 +35,7 @@
                 </div>
                 <div class="setting__text">
                   <p class="setting__name">
-                    Personal
+                    {{ $t('personal') }}
                   </p>
                   <p class="setting__desc">
                     {{ getUser.name }}
@@ -40,10 +49,10 @@
                 </div>
                 <div class="setting__text">
                   <p class="setting__name">
-                    Security
+                    {{ $t('security') }}
                   </p>
                   <p class="setting__desc">
-                    Change password
+                    {{ $t('chPassword') }}
                   </p>
                 </div>
                 <ArrowR class="setting__next" />
@@ -54,7 +63,7 @@
                 </div>
                 <div class="setting__text">
                   <p class="setting__name">
-                    Verification
+                    {{ $t('verification') }}
                   </p>
                   <p class="setting__desc">
                     Google 2FA
@@ -85,11 +94,11 @@
                 <div class="form__top">
                   <div @click="back" class="form__back" tag="div">
                     <ArrowL class="icon" />
-                    <span>Back</span>
+                    <span>{{ $t('back') }}</span>
                   </div>
                   <h4>Personal</h4>
                   <button :disabled="getButtonState" class="btn form__btn" type="submit">
-                    Done
+                    {{ $t('done') }}
                   </button>
                 </div>
                 <Personal />
@@ -101,11 +110,11 @@
                 <div class="form__top">
                   <div @click="back" class="form__back" tag="div">
                     <ArrowL class="icon" />
-                    <span>Back</span>
+                    <span>{{ $t('back') }}</span>
                   </div>
-                  <h4>Security</h4>
+                  <h4>{{ $t('security') }}</h4>
                   <button :disabled="getButtonState" class="btn form__btn" type="submit">
-                    Done
+                    {{ $t('done') }}
                   </button>
                 </div>
                 <Security />
@@ -117,14 +126,14 @@
                 <div class="form__top">
                   <div @click="back" class="form__back" tag="div">
                     <ArrowL class="icon" />
-                    <span>Activate</span>
+                    <span>{{ $t('activate') }}</span>
                   </div>
-                  <h4>Verification</h4>
+                  <h4>{{ $t('verification') }}</h4>
                   <button @click.prevent="enable2fa" v-if="!get2fa" class="btn form__btn" type="submit">
-                    Activate
+                    {{ $t('activate') }}
                   </button>
                   <button v-else class="btn form__btn" type="button" @click.prevent="disable2fa">
-                    Deactivate
+                    {{ $t('deactivate') }}
                   </button>
                 </div>
                 <Verification :twoFaSecret="get2faSecret" :verification-img="get2faImg" :twoFaCode="get2faCode" />
@@ -132,15 +141,15 @@
             </keep-alive>
 
             <keep-alive>
-              <form v-show="isShowLinks" name="form4" method="POST" class="form">
+              <form @submit.prevent="updateLinks" v-show="isShowLinks" name="form4" method="POST" class="form">
                 <div class="form__top">
                   <div @click="back" class="form__back" tag="div">
                     <ArrowL class="icon" />
-                    <span>Back</span>
+                    <span>{{ $t('back') }}</span>
                   </div>
                   <h4>Links</h4>
                   <button class="btn form__btn" type="submit">
-                    Done
+                    {{ $t('done') }}
                   </button>
                 </div>
                 <Links />
@@ -154,8 +163,8 @@
     <!-- Inventory  adapted = true -->
     <Inventory v-if="getInventory.length > 0" />
     <div v-else class="container mt-5">
-      <h2>Inventory</h2>
-      <h2 class="mt-3">You have not items!:(</h2>
+      <h2>{{ $t('inventory') }}</h2>
+      <h2 class="mt-3">{{ $t('noItems') }}</h2>
     </div>
   </div>
 </template>
@@ -226,6 +235,9 @@ export default {
     },
     changePassword () {
       eventBus.$emit('changePassword')
+    },
+    updateLinks () {
+      eventBus.$emit('updateLinks')
     },
     async disable2fa () {
       try {

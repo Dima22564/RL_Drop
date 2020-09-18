@@ -37,6 +37,22 @@ export const actions = {
     } catch (e) {
       throw e.response
     }
+  },
+  async loadChest ({ rootGetters }, id) {
+    try {
+      this.$axios.setToken(rootGetters.getToken, 'Bearer')
+      return await this.$axios.$get(`${this.$axios.defaults.baseURL}/admin/chest/${id}`)
+    } catch (e) {
+
+    }
+  },
+  async update ({ rootGetters }, data) {
+    try {
+      this.$axios.setToken(rootGetters.getToken, 'Bearer')
+      return await this.$axios.$post(`${this.$axios.defaults.baseURL}/admin/chest/update/${data.get('id')}`, data)
+    } catch (e) {
+
+    }
   }
 }
 

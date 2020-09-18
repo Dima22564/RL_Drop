@@ -4,10 +4,7 @@
       <div class="faq__title">
         <h2>FAQ</h2>
         <div v-if="getWindowSize > 991" class="faq__filter">
-          <span @click="changeFilter('General Questions')">General Questions</span>
-          <span @click="changeFilter('Balance Withdrawal')">Balance Withdrawal</span>
-          <span @click="changeFilter('Premium')">Premium</span>
-          <span @click="changeFilter('Case Battle')">Case Battle</span>
+          <span v-for="opt in options" @click="changeFilter(opt)">{{ opt }}</span>
         </div>
         <multiselect
           v-model="value"
@@ -24,8 +21,9 @@
         <Faq
           v-for="faq in getFaqs"
           :key="faq.id"
-          :title="faq.title"
-          :text="faq.text"
+          :title="faq[`title_${$i18n.locale}`]"
+          :text="faq[`text_${$i18n.locale}`]"
+          v-show="faq[`category_${$i18n.locale}`] === value"
         />
       </b-row>
     </b-container>
@@ -43,12 +41,14 @@ export default {
   data () {
     return {
       value: 'General Questions',
-      options: ['General Questions', 'Balance Withdrawal', 'Premium', 'Case Battle']
+      options: []
     }
   },
   async mounted () {
     try {
-      await this.$store.dispatch('faq/getFaqs')
+      const result = await this.$store.dispatch('faq/loadFaqs')
+      this.options = result.options
+      this.value = result.options[0]
     } catch (e) {
       this.showNotification('Unable to load faqs!', 'danger')
     }

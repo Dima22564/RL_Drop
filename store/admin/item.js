@@ -33,6 +33,22 @@ export const actions = {
     } catch (e) {
       throw e.response
     }
+  },
+  async loadItem ({ rootGetters }, id) {
+    try {
+      this.$axios.setToken(rootGetters.getToken, 'Bearer')
+      return await this.$axios.$get(`${this.$axios.defaults.baseURL}/admin/item/${id}`)
+    } catch (e) {
+
+    }
+  },
+  async update ({ rootGetters }, data) {
+    try {
+      this.$axios.setToken(rootGetters.getToken, 'Bearer')
+      return await this.$axios.$post(`${this.$axios.defaults.baseURL}/admin/item/update/${data.get('id')}`, data)
+    } catch (e) {
+
+    }
   }
 }
 

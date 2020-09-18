@@ -159,7 +159,9 @@
             :desc="item.name"
             :item-id="item.id"
             :class="craftItem === item.id ? 'inventoryItem__col_checked' : ''"
-            @click.prevent.native="setCraftItem(`/craft?itemId=${item.id}&itemName=${item.name}&platform=${getPlatform}`, item.id)"
+            @click.prevent.native="setCraftItem(
+              { itemId: item.id, itemName: item.name, platform: getPlatform },
+              item.id)"
             class="inventoryItem__col"
           />
         </b-row>
@@ -218,12 +220,15 @@ export default {
         console.log(e)
       }
     } else {
-      this.$router.push('/craft')
+      this.$router.push(this.localePath('craft'))
       this.$store.commit('item/setCurrentCraftItem', null)
     }
     eventBus.$off('selectCraftItem')
     eventBus.$on('selectCraftItem', (s) => {
-      this.$router.push(s[0])
+      // this.$router.push(this.localePath({
+      //   name: 'craft',
+      //   query: s[0]
+      // }))
       this.craftStatus = 1
       this.progress = 5
       this.queryReact(s[1], true)
@@ -231,7 +236,10 @@ export default {
   },
   methods: {
     setCraftItem (s, id) {
-      this.$router.push(s)
+      this.$router.push(this.localePath({
+        name: 'craft',
+        query: s
+      }))
       eventBus.$emit('selectCraftItem', [s, id])
     },
     async queryReact (id, doGet) {

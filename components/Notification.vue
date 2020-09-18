@@ -14,6 +14,7 @@
     </div>
     <div class="notification__text">
       <slot />
+      <p>{{ date }}</p>
     </div>
     <div @click="closeNotification" class="notification__close">
       <CloseIcon />
@@ -42,12 +43,17 @@ export default {
       required: true
     },
     id: {
+      type: Number,
+      required: true
+    },
+    date: {
       type: String,
       required: true
     }
   },
   methods: {
-    closeNotification () {
+    async closeNotification () {
+      await this.$store.dispatch('notifications/readNotification', this.id)
       eventBus.$emit('closeNotification', this.id)
     }
   }
