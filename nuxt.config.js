@@ -4,6 +4,10 @@ module.exports = {
   /*
   ** Headers of the page
   */
+  server: {
+    host: 'rldrop.2x2m.ru',
+    port: 80
+  },
   head: {
     title: process.env.npm_package_name || '',
     meta: [
@@ -154,8 +158,9 @@ module.exports = {
   axios: {
     // baseURL: 'http://localhost/rl-drop/public/api'
     // baseURL: 'https://laravel-drlw.frb.io/api'
-    baseURL: 'http://127.0.0.1:8000/api'
+    // baseURL: 'http://127.0.0.1:8000/api'
     // baseURL: 'http://91.247.36.216/api'
+    baseURL: 'rldrop-api.2x2m.ru/api'
   },
   /*
   ** Build configuration
