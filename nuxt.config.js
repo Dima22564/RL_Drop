@@ -4,10 +4,6 @@ module.exports = {
   /*
   ** Headers of the page
   */
-  server: {
-    host: 'rldrop.2x2m.ru',
-    port: 80
-  },
   head: {
     title: process.env.npm_package_name || '',
     meta: [
