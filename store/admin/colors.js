@@ -1,5 +1,6 @@
 export const state = () => ({
-  types: null
+  types: null,
+  itemColors: []
 })
 
 export const mutations = {
@@ -8,14 +9,18 @@ export const mutations = {
   },
   addType (state, type) {
     state.types.push(type)
+  },
+  setColors (state, colors) {
+    state.itemColors = colors
   }
 }
 
 export const actions = {
   async loadTypes ({ commit, rootGetters }) {
     this.$axios.setToken(rootGetters.getToken, 'Bearer')
-    const types = await this.$axios.$get(`${this.$axios.defaults.baseURL}/admin/item-types`)
-    commit('setTypes', types.data)
+    const result = await this.$axios.$get(`${this.$axios.defaults.baseURL}/admin/item-types`)
+    commit('setTypes', result.data.itemTypes)
+    commit('setColors', result.data.itemColors)
   },
   async createType ({ commit, rootGetters }, data) {
     try {
@@ -30,5 +35,6 @@ export const actions = {
 }
 
 export const getters = {
-  getAllTypes: state => state.types
+  getAllTypes: state => state.types,
+  getColors: state => state.itemColors
 }
