@@ -2,6 +2,9 @@
   <b-col xl="2" lg="2" md="3" sm="4" cols="6">
     <div @click.stop="showSell = true" @mouseleave="showSell = false" class="inventoryItem">
 
+      <span :style="{ background: itemColor }" class="inventoryItem__circle" />
+      <div :style="{ background: color }" class="inventoryItem__line" />
+
       <div v-if="showSell" class="inventoryItem__click">
         <p class="inventoryItem__name">
           {{ name }}
@@ -80,6 +83,14 @@ export default {
     pivotId: {
       type: Number,
       required: true
+    },
+    itemColor: {
+      type: String,
+      required: true
+    },
+    color: {
+      type: String,
+      required: true
     }
   },
   data () {
@@ -114,14 +125,22 @@ export default {
   border-radius: 12px
   max-height: 180px
   cursor: pointer
-  &::after
-    content: ''
-    background: #00bbff
+  &__circle
+    width: 16px
+    height: 16px
+    border-radius: 50%
+    position: absolute
+    top: 8px
+    right: 8px
+    z-index: 5
+  &__line
     height: 4px
-    width: 100%
+    width: calc(100%)
     position: absolute
     bottom: 0
     left: 0
+    z-index: 55
+    border-radius: 0 0 24px 24px
   &__click
     position: absolute
     top: 0
@@ -158,6 +177,7 @@ export default {
     line-height: 16px
     width: 100%
     color: white
+    overflow: hidden
   &__name
     color: white
     letter-spacing: 1px
@@ -170,6 +190,9 @@ export default {
     font-weight: 500
     font-size: 13px
     line-height: 16px
+    white-space: nowrap
+    text-overflow: ellipsis
+    overflow: hidden
     &_emp
       color: white
       font-weight: 600

@@ -98,6 +98,7 @@
                 <button
                   :disabled="getBtnState"
                   :class="getBtnState ? 'btn_secondary_disabled' : ''"
+                  @click="sellItem(getCurrentCraftItem.id)"
                   v-if="craftStatus === 3"
                   class="btn btn_secondary craft__btn"
                 >
@@ -156,8 +157,9 @@
             :name="item.name"
             :color="item.type.color"
             :price="item[`${getPlatform}Price`]"
-            :desc="item.name"
+            :desc="item.text"
             :item-id="item.id"
+            :item-color="item.color"
             :class="craftItem === item.id ? 'inventoryItem__col_checked' : ''"
             @click.prevent.native="setCraftItem(
               { itemId: item.id, itemName: item.name, platform: getPlatform },
@@ -312,6 +314,18 @@ export default {
         }
       } catch (e) {
         return this.showNotification(`${e.data.message}`, 'danger')
+      }
+    },
+    async sellItem (id) {
+      try {
+        const data = new FormData()
+        data.append('platform', this.getPlatform)
+        data.append('id', id)
+        this.craftStatus = 1
+        await this.$store.dispatch('item/sell', data)
+        this.showNotification('You sold item!', 'success')
+      } catch (e) {
+        this.showNotification('Something went wrong(', 'danger')
       }
     }
   }

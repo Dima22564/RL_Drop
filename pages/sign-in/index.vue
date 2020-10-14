@@ -99,6 +99,7 @@
 
 <script>
 import { required, email } from 'vuelidate/lib/validators'
+import socket from '@/mixins/socket'
 import showNotification from '@/mixins/showNotification'
 import EyeIcon from 'vue-material-design-icons/EyeOutline.vue'
 import EyeOffIcon from 'vue-material-design-icons/EyeOffOutline.vue'
@@ -109,10 +110,11 @@ export default {
     EyeIcon,
     EyeOffIcon
   },
-  mixins: [showNotification],
+  mixins: [showNotification, socket],
   computed: {
     ...mapGetters({
-      get2fa: '2fa/get2fa'
+      get2fa: '2fa/get2fa',
+      getUser: 'user/getUser'
     })
   },
   data () {
@@ -169,7 +171,8 @@ export default {
               this.errorMessages.invalidCode = true
             }
           }
-          if (result.data.loggedIn) {
+          if (result.data.loggedIn && this.getUser) {
+            this.privateRoomConnect()
             await this.$router.replace({ path: '/' })
             this.errorMessages.invalidCode = false
           }

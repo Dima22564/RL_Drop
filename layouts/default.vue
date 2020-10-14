@@ -31,6 +31,21 @@ export default {
     Menu,
     Header,
     Footer
+  },
+  async mounted () {
+    try {
+      await this.$store.dispatch('common/getIndexStats')
+    } catch (e) {
+
+    }
+  },
+  sockets: {
+    // online (online) {
+    //   console.log('Socket Connected')
+    // },
+    newMessage (data) {
+      console.log(data)
+    }
   }
 }
 </script>

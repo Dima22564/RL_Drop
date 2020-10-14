@@ -167,8 +167,8 @@
             <div class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_withIcon">
               <BellIcon class="mobileMenu__icon mobileMenu__icon_dark" />
               <span>{{ $t('notifications') }}</span>
-              <div class="mobileMenu__go">
-                <span class="notificationsMobile">23</span>
+              <div class="mobileMenu__go" v-if="getNotifications.length > 0">
+                <span class="notificationsMobile">{{ getNotifications.length > 9 ? '9+' : getNotifications.length}}</span>
                 <ArrowRIcon class="arrow" />
               </div>
             </div>
@@ -627,6 +627,7 @@
 
 <script>
 import showNotification from '@/mixins/showNotification'
+import socket from '@/mixins/socket'
 import VolumeIcon from 'vue-material-design-icons/VolumeHigh.vue'
 import VolumeOffIcon from 'vue-material-design-icons/VolumeOff.vue'
 import AccountEmpty from 'vue-material-design-icons/AccountCircleOutline.vue'
@@ -662,7 +663,7 @@ export default {
     VolumeOffIcon,
     AccountEmpty
   },
-  mixins: [showNotification],
+  mixins: [showNotification, socket],
   data () {
     return {
       isLangsShow: false,
@@ -691,12 +692,15 @@ export default {
     })
   },
   mounted () {
-    window.Echo.private(`room.${this.getUser.id}`)
-      .listen('CreateNotification', (e) => {
-        // this.message = e.message
-        console.log((e))
-        this.$store.commit('notifications/addNotification', e.notification)
-      })
+    if (this.getUser) {
+      // window.Echo.private(`room.${this.getUser.id}`)
+      //   .listen('CreateNotification', (e) => {
+      //     // this.message = e.message
+      //     console.log((e))
+      //     this.$store.commit('notifications/addNotification', e.notification)
+      //   })
+      this.privateRoomConnect()
+    }
   },
   methods: {
     setSound () {

@@ -1,8 +1,15 @@
 import Cookies from 'js-cookie'
 import Cookie from 'cookie'
+
 export const state = () => ({
   windowSize: 0,
-  platform: 'pc'
+  platform: 'pc',
+  online: 0,
+  stats: {
+    cases: 0,
+    crafts: 0,
+    users: 0
+  }
 })
 
 export const mutations = {
@@ -11,6 +18,12 @@ export const mutations = {
   },
   setPlatform (state, platform) {
     state.platform = platform
+  },
+  setOnline (state, online) {
+    state.online = online
+  },
+  setStats (state, stats) {
+    state.stats = stats
   }
 }
 
@@ -27,10 +40,23 @@ export const actions = {
     const platform = cookies.platform || 'pc'
     dispatch('setCookiePlatform', platform)
     commit('setPlatform', platform)
+  },
+  SOCKET_online ({ commit }, data) {
+    commit('setOnline', data)
+  },
+  async getIndexStats ({ commit }) {
+    try {
+      const result = await this.$axios.$get(`${this.$axios.defaults.baseURL}/stats`)
+      commit('setStats', result.data)
+    } catch (e) {
+      throw e.response
+    }
   }
 }
 
 export const getters = {
   getWindowSize: state => state.windowSize,
-  getPlatform: state => state.platform
+  getPlatform: state => state.platform,
+  getOnline: state => state.online,
+  getStats: state => state.stats
 }

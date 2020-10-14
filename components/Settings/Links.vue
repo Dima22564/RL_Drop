@@ -5,12 +5,12 @@
       :rightIcon="false"
       :leftIcon="true"
       name="link1"
-      label="Steam Link"
+      label="Epic Game Nickname PC"
       type="text"
       class="form__input"
     >
       <template slot="leftIcon">
-        <SteamIcon />
+        <LaptopIcon />
       </template>
     </MyInput>
     <MyInput
@@ -46,14 +46,14 @@
 import showNotification from '@/mixins/showNotification'
 import { mapGetters } from 'vuex'
 import { eventBus } from '@/plugins/event-bus'
-import SteamIcon from 'vue-material-design-icons/Steam.vue'
 import PlaystationIcon from 'vue-material-design-icons/SonyPlaystation.vue'
 import XboxIcon from 'vue-material-design-icons/MicrosoftXbox.vue'
+import LaptopIcon from 'vue-material-design-icons/Laptop.vue'
 export default {
   components: {
-    SteamIcon,
     PlaystationIcon,
-    XboxIcon
+    XboxIcon,
+    LaptopIcon
   },
   mixins: [showNotification],
   mounted () {

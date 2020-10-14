@@ -7,15 +7,15 @@
       >
         <div class="admin__prices">
           <b-form-group
-            description="Xbox price"
+            description="Old price"
             class="admin__group mr-3"
           >
             <b-form-input
               id="input-3"
+              v-model.trim="form.oldPrice"
               required
               placeholder="Old price"
-              v-model.trim="form.oldPrice"
-            ></b-form-input>
+            />
           </b-form-group>
 
           <b-form-group
@@ -24,9 +24,9 @@
           >
             <b-form-input
               id="input-2"
-              placeholder="Xbox"
               v-model.trim="form.xboxPrice"
-            ></b-form-input>
+              placeholder="Xbox"
+            />
           </b-form-group>
 
           <b-form-group
@@ -35,9 +35,9 @@
           >
             <b-form-input
               id="input-3"
-              placeholder="PS4"
               v-model.trim="form.ps4Price"
-            ></b-form-input>
+              placeholder="PS4"
+            />
           </b-form-group>
 
           <b-form-group
@@ -46,11 +46,10 @@
           >
             <b-form-input
               id="input-3"
-              placeholder="PC"
               v-model.trim="form.pcPrice"
-            ></b-form-input>
+              placeholder="PC"
+            />
           </b-form-group>
-
         </div>
       </b-form-group>
 
@@ -61,15 +60,28 @@
       >
         <b-form-input
           id="name"
+          v-model.trim="form.name"
           required
           placeholder="Name"
-          v-model.trim="form.name"
-        ></b-form-input>
+        />
+      </b-form-group>
+
+      <b-form-group
+        label="Category"
+        label-for="category "
+        description="Enter case Category"
+      >
+        <b-form-input
+          id="category"
+          v-model.trim="form.category"
+          required
+          placeholder="Category"
+        />
       </b-form-group>
 
       <b-form-group id="input-group-4">
         <client-only>
-          <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"></vue-dropzone>
+          <vue-dropzone id="dropzone" ref="myVueDropzone" :options="dropzoneOptions" />
         </client-only>
       </b-form-group>
 
@@ -77,28 +89,29 @@
         id="input-group-5"
         label="Select Items"
         label-for="input-3"
-        description="Select items">
+        description="Select items"
+      >
         <multiselect
           :multiple="true"
           :close-on-select="false"
           :clear-on-select="false"
           :preserve-search="true"
           v-model.trim="form.items"
-          placeholder="Select items"
-          label="name"
-          track-by="name"
           :options="getAllItems"
           :option-height="104"
           :show-labels="false"
           @remove="removeItem"
+          placeholder="Select items"
+          label="name"
+          track-by="name"
         >
-
           <template
             slot="singleLabel"
-            slot-scope="props">
+            slot-scope="props"
+          >
             <img
-              class="option__image"
               :src="props.option.image"
+              class="option__image"
               alt="No Man’s Sky"
             >
             <span class="option__desc">
@@ -108,8 +121,8 @@
           <template slot="option" slot-scope="props">
             <div class="option">
               <img
-                class="option__image"
                 :src="props.option.image"
+                class="option__image"
                 alt="No Man’s Sky"
               >
               <div class="option__desc">
@@ -127,8 +140,10 @@
           class="d-flex flex-row"
         >
           <div>
-            <h5 class="mb-1">{{ item.name }}</h5>
-            <img class="option__image" :src="item.image" alt="">
+            <h5 class="mb-1">
+              {{ item.name }}
+            </h5>
+            <img :src="item.image" class="option__image" alt="">
           </div>
 
           <b-form-group
@@ -140,10 +155,10 @@
             <div class="admin__prices">
               <b-form-input
                 id="input-7"
+                v-model.trim.number="form.itemsWeights[index].weight"
                 required
                 placeholder="Weight"
-                v-model.trim.number="form.itemsWeights[index].weight"
-              ></b-form-input>
+              />
             </div>
           </b-form-group>
         </b-list-group-item>
@@ -155,11 +170,17 @@
         description="Case visibility"
         class="mt-3 mb-3"
       >
-        <b-form-checkbox v-model="form.isChestVisible" :value="true">Is this case visible for user</b-form-checkbox>
+        <b-form-checkbox v-model="form.isChestVisible" :value="true">
+          Is this case visible for user
+        </b-form-checkbox>
       </b-form-group>
 
-      <b-button type="submit" variant="primary">Create</b-button>
-      <b-button type="reset" variant="danger">Reset</b-button>
+      <b-button type="submit" variant="primary">
+        Create
+      </b-button>
+      <b-button type="reset" variant="danger">
+        Reset
+      </b-button>
     </b-form>
   </div>
 </template>
@@ -183,7 +204,9 @@ export default {
         items: [],
         itemsWeights: [],
         isChestVisible: true,
-        name: null
+        name: null,
+        oldPrice: null,
+        category: null
       },
       removedItem: null
     }
@@ -218,16 +241,16 @@ export default {
       const data = new FormData()
       const visibility = this.form.isChestVisible ? 1 : 0
       data.append('name', this.form.name)
-      data.append('price', this.form.price)
+      data.append('old_price', this.form.oldPrice)
       data.append('xbox_price', this.form.xboxPrice)
       data.append('pc_price', this.form.pcPrice)
       data.append('ps4_price', this.form.ps4Price)
+      data.append('category', this.form.category)
       data.append('items', JSON.stringify(this.form.itemsWeights))
       data.append('image', this.$refs.myVueDropzone.getAcceptedFiles()[0])
       data.append('is_case_visible_for_user', visibility)
       try {
         const result = await this.$store.dispatch('admin/chest/creteChest', data)
-        console.log(result)
         if (result.success) {
           this.$bvToast.toast('Case created', {
             title: `Notification`,
@@ -261,6 +284,7 @@ export default {
       this.form.xboxPrice = null
       this.form.pcPrice = null
       this.form.ps4Price = null
+      this.form.category = null
       this.$refs.myVueDropzone.removeAllFiles()
       this.$nextTick()
     }

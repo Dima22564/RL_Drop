@@ -16,7 +16,7 @@ export const mutations = {
 }
 
 export const actions = {
-  async loadTypes ({ commit, rootGetters }) {
+  async getAllColors ({ commit, rootGetters }) {
     this.$axios.setToken(rootGetters.getToken, 'Bearer')
     const result = await this.$axios.$get(`${this.$axios.defaults.baseURL}/admin/item-types`)
     commit('setTypes', result.data.itemTypes)

@@ -37,7 +37,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getAllTypes: 'admin/itemTypes/getAllTypes'
+      getAllTypes: 'admin/colors/getAllTypes'
     })
   },
   methods: {
@@ -46,7 +46,7 @@ export default {
       data.append('type', this.type)
 
       try {
-        const result = await this.$store.dispatch('admin/itemTypes/createType', data)
+        const result = await this.$store.dispatch('admin/colors/createType', data)
         if (result.success) {
           this.type = ''
           this.$bvToast.toast('Type created', {

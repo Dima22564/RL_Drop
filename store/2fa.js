@@ -66,8 +66,10 @@ export const actions = {
     }
   },
   generateOneTimePassword ({ getters, commit }) {
-    const code = authenticator.generate(getters.get2faSecret)
-    commit('set2faCode', code)
+    if (getters.get2faSecret) {
+      const code = authenticator.generate(getters.get2faSecret)
+      commit('set2faCode', code)
+    }
   }
 }
 

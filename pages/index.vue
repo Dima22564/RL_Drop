@@ -12,20 +12,20 @@
             </h2>
             <Timer
               starttime="May 12, 2020 15:37:25"
-              endtime="Jun 13, 2020 16:37:25"
-              trans='{
-                "day":"Day",
-                "hours":"Hrs",
-                "minutes":"Min",
-                "seconds":"Sec",
-                "expired":"Event has been expired.",
-                "running":"Till the end of event.",
-                "upcoming":"Till start of event.",
-                "status": {
-                   "expired":"Expired",
-                   "running":"Running",
-                   "upcoming":"Future"
-                  }}'
+              endtime="Jun 13, 2021 16:37:25"
+              trans="{
+                &quot;day&quot;:&quot;Day&quot;,
+                &quot;hours&quot;:&quot;Hrs&quot;,
+                &quot;minutes&quot;:&quot;Min&quot;,
+                &quot;seconds&quot;:&quot;Sec&quot;,
+                &quot;expired&quot;:&quot;Event has been expired.&quot;,
+                &quot;running&quot;:&quot;Till the end of event.&quot;,
+                &quot;upcoming&quot;:&quot;Till start of event.&quot;,
+                &quot;status&quot;: {
+                   &quot;expired&quot;:&quot;Expired&quot;,
+                   &quot;running&quot;:&quot;Running&quot;,
+                   &quot;upcoming&quot;:&quot;Future&quot;
+                  }}"
             />
           </div>
           <div class="ice__btn">
@@ -40,32 +40,36 @@
 
     <!-- Chests adapted = true -->
     <section class="chests">
-      <b-container>
-          <transition-group class="row" name="fade" tag="div" mode="out-in">
-            <b-col
-              xl="3"
-              lg="4"
-              md="6"
-              sm="6"
-              cols="6"
-              v-for="chest in getAllChests"
-              :key="chest.id"
-              v-show="chest[`${getPlatform}Price`]"
-            >
-<!--              <transition name="fade">-->
-                <nuxt-link :to="`/case/${chest.id}`" class="chest" tag="div">
-                  <img :src="chest.image" alt="" class="chest__img">
-                  <div class="chest__text">
-                    <span class="name">{{ chest.name }}</span>
-                    <div class="chest__discount">
-                      <span class="discount">${{ chest[`${getPlatform}Price`] }}</span>
-                      <span v-show="chest.oldPrice" class="discount-old">${{ chest.oldPrice }}</span>
-                    </div>
-                  </div>
-                </nuxt-link>
-<!--              </transition>-->
-            </b-col>
-          </transition-group>
+      <b-container
+        v-for="(cat, key) in getAllChests"
+        :key="key"
+      >
+        <div class="chests__top">
+          <h4 class="chests__title">{{ key }}</h4>
+        </div>
+        <transition-group class="row" name="fade" tag="div" mode="out-in">
+          <b-col
+            v-for="chest in cat"
+            :key="chest.id"
+            v-show="chest[`${getPlatform}Price`]"
+            xl="3"
+            lg="4"
+            md="6"
+            sm="6"
+            cols="6"
+          >
+            <nuxt-link :to="`/case/${chest.id}`" class="chest" tag="div">
+              <img :src="chest.image" alt="" class="chest__img">
+              <div class="chest__text">
+                <span class="name">{{ chest.name }}</span>
+                <div class="chest__discount">
+                  <span class="discount">${{ chest[`${getPlatform}Price`] }}</span>
+                  <span v-show="chest.oldPrice" class="discount-old">${{ chest.oldPrice }}</span>
+                </div>
+              </div>
+            </nuxt-link>
+          </b-col>
+        </transition-group>
       </b-container>
     </section>
 
@@ -212,6 +216,15 @@ export default {
   padding-bottom: 16px
   +lg
     padding: 16px 0 0
+  &__top
+    display: flex
+    align-items: center
+    justify-content: space-between
+    margin-bottom: 32px
+  &__title
+    font-size: 24px
+    line-height: 32px
+    letter-spacing: -1px
 .chest
   display: flex
   flex-direction: column

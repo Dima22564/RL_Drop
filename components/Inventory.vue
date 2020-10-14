@@ -10,8 +10,8 @@
               v-for="opt in options"
               :key="opt.platform"
               @click="filterItems = opt"
-              class="inventory__filterItem"
               :class="filterItems.platform === opt.platform ? 'inventory__filterItem_active' : ''"
+              class="inventory__filterItem"
             >
               <span>{{ opt.platform.toUpperCase() }}</span>
               <span class="quantity">{{ opt.count }}</span>
@@ -25,8 +25,8 @@
               :searchable="false"
               :allowEmpty="false"
               :showLabels="false"
-              track-by="platform"
               :hideSelected="true"
+              track-by="platform"
               class="inventory__select"
             >
               <template slot="singleLabel" slot-scope="props">
@@ -45,7 +45,7 @@
           </client-only>
         </div>
 
-        <b-row class="inventoryItem__row" v-if="getInventory.length > 0">
+        <b-row v-if="getInventory.length > 0" class="inventoryItem__row">
           <InventoryItem
             v-for="item in getInventory"
             :key="item.pivot.id"
@@ -53,11 +53,13 @@
             :id="item.id"
             :img="item.image"
             :name="item.name"
+            :color="item.type.color"
+            :item-color="item.color"
             :platform="item.platform"
             :price="Number(item[`${item.platform}Price`])"
-            desc="fdgfd"
-            class="inventoryItem__col"
+            :desc="item.text"
             v-show="filterItems.platform === item.platform"
+            class="inventoryItem__col"
           />
         </b-row>
       </b-container>
@@ -71,15 +73,15 @@ import { eventBus } from '@/plugins/event-bus'
 import showNotification from '@/mixins/showNotification'
 import InventoryItem from './InventoryItem'
 export default {
+  components: {
+    InventoryItem
+  },
+  mixins: [showNotification],
   data () {
     return {
       filterItems: {},
       options: []
     }
-  },
-  mixins: [showNotification],
-  components: {
-    InventoryItem
   },
   computed: {
     ...mapGetters({

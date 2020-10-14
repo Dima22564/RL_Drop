@@ -1,6 +1,7 @@
 <template>
   <b-col xl="2" lg="2" md="3" sm="4" cols="6">
-    <div class="inventoryItem__line" :style="{ 'background': color }"></div>
+    <span :style="{ background: itemColor }" class="inventoryItem__circle" />
+    <div :style="{ 'background': color }" class="inventoryItem__line" />
     <input
       :id="itemId"
       :value="itemId"
@@ -62,6 +63,10 @@ export default {
     itemId: {
       type: Number,
       required: true
+    },
+    itemColor: {
+      type: String,
+      required: true
     }
   }
 }
@@ -81,7 +86,14 @@ export default {
   max-height: 180px
   cursor: pointer
   width: 100%
-  overflow: hidden
+  &__circle
+    width: 16px
+    height: 16px
+    border-radius: 50%
+    position: absolute
+    top: 8px
+    right: 8px
+    z-index: 5
   &__line
     height: 4px
     width: calc(100% - 30px)
@@ -138,6 +150,7 @@ export default {
     line-height: 16px
     width: 100%
     color: white
+    overflow: hidden
   &__name
     color: white
     letter-spacing: 1px
@@ -150,6 +163,9 @@ export default {
     font-weight: 500
     font-size: 13px
     line-height: 16px
+    white-space: nowrap
+    overflow: hidden
+    text-overflow: ellipsis
     &_emp
       color: white
       font-weight: 600

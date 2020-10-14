@@ -31,15 +31,6 @@
         <span v-if="!$v.email.email && $v.email.$error">Field email should be a valid email</span>
       </template>
     </MyInput>
-    <MyInput
-      v-model.trim="phoneNumber"
-      :rightIcon="false"
-      :leftIcon="false"
-      name="phoneNumber"
-      label="Phone Number"
-      type="text"
-      class="form__input"
-    />
   </div>
 </template>
 

@@ -8,10 +8,10 @@
       >
         <b-form-input
           id="name"
+          v-model.trim="form.name"
           type="text"
           placeholder="Enter Name"
-          v-model.trim="form.name"
-        ></b-form-input>
+        />
       </b-form-group>
 
       <b-form-group
@@ -25,9 +25,9 @@
           >
             <b-form-input
               id="input-2"
-              placeholder="Xbox"
               v-model.trim="form.xboxPrice"
-            ></b-form-input>
+              placeholder="Xbox"
+            />
           </b-form-group>
 
           <b-form-group
@@ -36,9 +36,9 @@
           >
             <b-form-input
               id="input-3"
-              placeholder="PS4"
               v-model.trim="form.ps4Price"
-            ></b-form-input>
+              placeholder="PS4"
+            />
           </b-form-group>
 
           <b-form-group
@@ -47,11 +47,10 @@
           >
             <b-form-input
               id="input-3"
-              placeholder="PC"
               v-model.trim="form.pcPrice"
-            ></b-form-input>
+              placeholder="PC"
+            />
           </b-form-group>
-
         </div>
       </b-form-group>
 
@@ -59,29 +58,69 @@
         id="input-group-3"
         label="Item Type"
         label-for="input-3"
-        description="Select item type">
+        description="Select item type"
+      >
         <b-form-select
           id="input-3"
-          value-field="id"
-          text-field="type"
           :options="getAllTypes"
           v-model.trim="form.itemType"
-        ></b-form-select>
+          value-field="id"
+          text-field="type"
+        />
+      </b-form-group>
+
+      <b-form-group>
+        <div class="admin__prices admin__colorsBlock">
+          <b-form-group
+            id="input-group-color"
+            label="Item Color"
+            label-for="input-3"
+            description="Select item color"
+            class="admin__colorItem"
+          >
+            <b-form-select
+              id="input-3"
+              :options="getColors"
+              v-model.trim="form.itemColor"
+              value-field="color"
+              text-field="name"
+            />
+          </b-form-group>
+          <div :style="{ background: form.itemColor }" class="admin__color" />
+        </div>
+      </b-form-group>
+
+      <b-form-group
+        description="Enter text"
+        label="Text"
+      >
+        <b-form-textarea
+          id="textarea"
+          v-model="form.text"
+          placeholder="Enter text"
+          rows="3"
+          max-rows="6"
+        />
       </b-form-group>
 
       <b-form-group id="input-group-4">
         <client-only>
-          <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"></vue-dropzone>
+          <vue-dropzone id="dropzone" ref="myVueDropzone" :options="dropzoneOptions" />
         </client-only>
       </b-form-group>
 
       <b-form-group id="input-group-5">
-        <b-form-checkbox v-model="form.appearInChest" :value="true">Do this item appear in chest?</b-form-checkbox>
-        <b-form-checkbox v-model="form.appearInCraft" :value="true">Do this item appear in craft?
+        <b-form-checkbox v-model="form.appearInChest" :value="true">
+          Do this item appear in chest?
+        </b-form-checkbox>
+        <b-form-checkbox v-model="form.appearInCraft" :value="true">
+          Do this item appear in craft?
         </b-form-checkbox>
       </b-form-group>
 
-      <b-button type="submit" variant="primary">Update</b-button>
+      <b-button type="submit" variant="primary">
+        Update
+      </b-button>
     </b-form>
   </div>
 </template>
@@ -109,13 +148,16 @@ export default {
         ps4Price: null,
         pcPrice: null,
         name: '',
-        image: ''
+        image: '',
+        text: '',
+        itemColor: ''
       }
     }
   },
   computed: {
     ...mapGetters({
-      getAllTypes: 'admin/itemTypes/getAllTypes'
+      getAllTypes: 'admin/colors/getAllTypes',
+      getColors: 'admin/colors/getColors'
     })
   },
   async mounted () {
@@ -129,6 +171,8 @@ export default {
       this.form.pcPrice = result.data.pcPrice
       this.form.ps4Price = result.data.ps4Price
       this.form.image = result.data.image
+      this.form.text = result.data.text
+      this.form.itemColor = result.data.color
     } catch (e) {
       this.showNotification('Something went wrong(', 'danger')
     }
@@ -142,6 +186,8 @@ export default {
       this.form.xboxPrice = null
       this.form.pcPrice = null
       this.form.ps4Price = null
+      this.form.itemColor = ''
+      this.form.text = ''
       this.$refs.myVueDropzone.removeAllFiles()
       this.$nextTick()
     },
@@ -155,6 +201,8 @@ export default {
       data.append('xbox_price', this.form.xboxPrice)
       data.append('pc_price', this.form.pcPrice)
       data.append('ps4_price', this.form.ps4Price)
+      data.append('color', this.form.itemColor)
+      data.append('text', this.form.text)
       data.append('image', this.$refs.myVueDropzone.getAcceptedFiles()[0])
       console.log(this.$refs.myVueDropzone.getAcceptedFiles()[0])
 
@@ -174,12 +222,23 @@ export default {
 
 <style lang="sass">
 .admin
+  legend
+    color: white !important
   label
-    color: white
+    color: white !important
     margin-bottom: 10px
   &__prices
     display: flex
     justify-content: space-between
   &__group
     width: 30%
+  &__color
+    width: 80px
+    height: 80px
+  &__colorItem
+    width: 50%
+    margin-right: 24px
+  &__colorsBlock
+    justify-content: flex-start !important
+    align-items: center
 </style>

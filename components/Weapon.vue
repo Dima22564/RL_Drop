@@ -7,8 +7,9 @@
     cols="6"
     class="drop__col"
   >
-    <div :class="'drop_'" class="drop">
-      <span class="drop__line" :style="{ 'background': color }"></span>
+    <div class="drop">
+      <span :style="{ background: itemColor }" class="drop__circle" />
+      <span :style="{ 'background': color }" class="drop__line" />
       <img :src="imgUrl" alt="" class="drop__img">
       <div class="drop__text">
         <p class="drop__name">
@@ -41,6 +42,10 @@ export default {
     desc: {
       type: String,
       required: true
+    },
+    itemColor: {
+      type: String,
+      required: true
     }
   }
 }
@@ -62,6 +67,14 @@ export default {
   margin-bottom: 32px
   +lg
     margin-bottom: 16px
+  &__circle
+    width: 16px
+    height: 16px
+    border-radius: 50%
+    position: absolute
+    top: 8px
+    right: 8px
+    z-index: 5
   &__line
     width: 100%
     height: 4px
@@ -90,4 +103,6 @@ export default {
     margin-bottom: 4px
   &__desc
     color: rgba(224, 224, 255, 0.6)
+    overflow: hidden
+    text-overflow: ellipsis
 </style>

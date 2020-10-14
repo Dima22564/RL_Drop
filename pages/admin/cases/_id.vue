@@ -66,6 +66,19 @@
         />
       </b-form-group>
 
+      <b-form-group
+        label="Category"
+        label-for="category "
+        description="Enter case Category"
+      >
+        <b-form-input
+          id="category"
+          v-model.trim="form.category"
+          required
+          placeholder="Category"
+        />
+      </b-form-group>
+
       <b-form-group id="input-group-4">
         <client-only>
           <vue-dropzone id="dropzone" ref="myVueDropzone" :options="dropzoneOptions" />
@@ -139,8 +152,8 @@
             <b-form-input
               id="input-7"
               v-model.trim.number="item.weight"
-              required
               :value="item.weight"
+              required
               placeholder="Weight"
             />
           </div>

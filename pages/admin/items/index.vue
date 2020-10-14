@@ -1,19 +1,19 @@
 <template>
   <div>
     <b-table
+      :fields="fields"
+      :items="getAllItems"
+      id="chests"
+      :per-page="perPage"
+      :current-page="currentPage"
       head-variant="dark"
       striped
       hover
       small
-      :fields="fields"
-      :items="getAllItems"
-      :per-page="perPage"
-      :current-page="currentPage"
       responsive="sm"
-      id="chests"
     >
       <!-- A virtual column -->
-      <template class="text-light" v-slot:cell(id)="data">
+      <template v-slot:cell(id)="data" class="text-light">
         <span class="text-light">{{ data.value }}</span>
       </template>
 
@@ -26,8 +26,12 @@
         <span class="text-light">{{ data.value.type }}</span>
       </template>
 
+      <template v-slot:cell(color)="data">
+        <span :style="{ color: data.value }">{{ data.value }}</span>
+      </template>
+
       <template v-slot:cell(image)="data">
-        <img class="admin__image" :src="data.value" alt="">
+        <img :src="data.value" class="admin__image" alt="">
       </template>
 
       <!-- A virtual composite column -->
@@ -45,16 +49,20 @@
       </template>
 
       <template v-slot:cell(appearInChest)="data">
-        <b-form-checkbox disabled v-model="data.value === 1 ? true : false"></b-form-checkbox>
+        <b-form-checkbox v-model="data.value === 1 ? true : false" disabled />
       </template>
 
       <template v-slot:cell(appearInCraft)="data">
-        <b-form-checkbox disabled v-model="data.value === 1 ? true : false"></b-form-checkbox>
+        <b-form-checkbox v-model="data.value === 1 ? true : false" disabled />
       </template>
 
       <template v-slot:cell()="data">
-        <b-button pill variant="success" :to="`/admin/items/${data.item.id}`">Change</b-button>
-        <b-button @click.prevent="deleteItem(data.item.id)" pill variant="danger">Delete</b-button>
+        <b-button :to="`/admin/items/${data.item.id}`" pill variant="success">
+          Change
+        </b-button>
+        <b-button @click.prevent="deleteItem(data.item.id)" pill variant="danger">
+          Delete
+        </b-button>
       </template>
     </b-table>
 
@@ -65,7 +73,7 @@
       aria-controls="chests"
       align="center"
       dark
-    ></b-pagination>
+    />
   </div>
 </template>
 
@@ -84,6 +92,7 @@ export default {
         { key: 'type', label: 'Type' },
         { key: 'appearInChest', label: 'In chest' },
         { key: 'appearInCraft', label: 'In craft' },
+        { key: 'color', label: 'Color' },
         'image',
         'actions'
       ],

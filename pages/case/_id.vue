@@ -19,7 +19,8 @@
                   :color="getWinItem.type.color"
                   :img-url="getWinItem.image"
                   :name="getWinItem.name"
-                  desc="Astral"
+                  :desc="getWinItem.text"
+                  :item-color="getWinItem.color"
                   key="winItem"
                 />
               </transition>
@@ -62,7 +63,8 @@
             :color="item.type.color"
             :img-url="item.image"
             :name="item.name"
-            desc="Astral"
+            :desc="item.text"
+            :item-color="item.color"
           />
         </b-row>
       </b-container>

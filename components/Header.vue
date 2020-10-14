@@ -34,7 +34,7 @@
             <div class="case case_green">
               <LayersIcon class="case__icon" />
               <div class="case__text">
-                <span class="emp">4,102,715</span>
+                <span class="emp">{{ getStats.cases }}</span>
                 <span class="name">{{ $t('cases') }}</span>
               </div>
             </div>
@@ -43,7 +43,7 @@
             <div class="case case_blue">
               <EqualizerIcon class="case__icon" />
               <div class="case__text">
-                <span class="emp">4,102,715</span>
+                <span class="emp">{{ getStats.crafts }}</span>
                 <span class="name">{{ $t('craft') }}</span>
               </div>
             </div>
@@ -52,7 +52,7 @@
             <div class="case case_d-blue">
               <UserIcon class="case__icon" />
               <div class="case__text">
-                <span class="emp">4,102,715</span>
+                <span class="emp">{{ getStats.users }}</span>
                 <span class="name">{{ $t('users') }}</span>
               </div>
             </div>
@@ -61,8 +61,8 @@
             <div class="case case_violet">
               <WifiIcon class="case__icon" />
               <div class="case__text">
-                <span class="emp">4,102,715</span>
-                <span class="name">online</span>
+                <span class="emp">{{ getOnline }}</span>
+                <span class="name">{{ $t('online') }}</span>
               </div>
             </div>
           </b-col>
@@ -104,7 +104,7 @@
               <div class="case case_violet">
                 <WifiIcon class="case__icon" />
                 <div class="case__text">
-                  <span class="emp">4,102,715</span>
+                  <span class="emp">{{ getOnline }}</span>
                   <span class="name">{{ $t('online') }}</span>
                 </div>
               </div>
@@ -209,7 +209,9 @@ export default {
     ...mapGetters({
       getWindowSize: 'common/getWindowSize',
       getPlatform: 'common/getPlatform',
-      getCraftItems: 'item/getCraftItems'
+      getCraftItems: 'item/getCraftItems',
+      getOnline: 'common/getOnline',
+      getStats: 'common/getStats'
     })
   },
   async created () {
