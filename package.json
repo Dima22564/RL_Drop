@@ -2,7 +2,7 @@
   "name": "rl_dropv1.0",
   "version": "1.0.0",
   "description": "My mind-blowing Nuxt.js project",
-  "author": "Dmitriy",
+  "author": "RLDrop",
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon server/index.js --watch server",
