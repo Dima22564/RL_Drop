@@ -25,7 +25,8 @@
               <BellIcon />
               <div
                 v-if="getNotifications.length > 0"
-                class="notifications__count">{{ getNotifications.length > 9 ? '9+' : getNotifications.length}}
+                class="notifications__count"
+              >{{ getNotifications.length > 9 ? '9+' : getNotifications.length }}
               </div>
             </span>
             <transition name="fade">
@@ -44,8 +45,8 @@
                     :id="item.id"
                     :date="item.date"
                   >
-<!--                    <p><span class="blue"></span><span class="white"> {{ item.text }}</span></p>-->
-                    <p v-html="item[`text_${$i18n.locale}`]"></p>
+                    <!--                    <p><span class="blue"></span><span class="white"> {{ item.text }}</span></p>-->
+                    <p v-html="item[`text_${$i18n.locale}`]" />
                   </Notification>
                 </div>
               </div>
@@ -113,7 +114,7 @@
               </button>
             </div>
           </div>
-          <nuxt-link to="/sign-up" tag="button" v-if="!getToken" class="menu__btn btn btn_primary">
+          <nuxt-link v-if="!getToken" to="/sign-up" tag="button" class="menu__btn btn btn_primary">
             {{ $t('getStarted') }}
           </nuxt-link>
         </div>
@@ -136,9 +137,11 @@
                 <img src="/images/logo-sm.svg" alt="">
               </nuxt-link>
             </div>
-            <nuxt-link tag="div" :to="localePath('/sign-up')" class="mobileMenu__item mobileMenu__item_right">
-              <span v-if="!getToken" class="mobileMenu__btn">{{ $t('getStarted') }}</span>
+            <nuxt-link v-if="!getToken" :to="localePath('/sign-up')" tag="div" class="mobileMenu__item mobileMenu__item_right">
+              <span class="mobileMenu__btn">{{ $t('getStarted') }}</span>
             </nuxt-link>
+
+            <div class="mobileMenu__balance" v-else>${{ getUser.balance }}</div>
           </div>
 
           <div v-if="showDropMenu" class="mobileMenu__invisible">
@@ -167,8 +170,8 @@
             <div class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_withIcon">
               <BellIcon class="mobileMenu__icon mobileMenu__icon_dark" />
               <span>{{ $t('notifications') }}</span>
-              <div class="mobileMenu__go" v-if="getNotifications.length > 0">
-                <span class="notificationsMobile">{{ getNotifications.length > 9 ? '9+' : getNotifications.length}}</span>
+              <div v-if="getNotifications.length > 0" class="mobileMenu__go">
+                <span class="notificationsMobile">{{ getNotifications.length > 9 ? '9+' : getNotifications.length }}</span>
                 <ArrowRIcon class="arrow" />
               </div>
             </div>
@@ -177,15 +180,15 @@
               <VolumeOffIcon v-else class="mobileMenu__icon mobileMenu__icon_dark" />
               <span>Sound</span>
               <div class="mobileMenu__go">
-                <div :class="sound ? 'toggler_active' : ''" @click="setSound" class="toggler">
-                  <label for="sound" class="toggler__label">
+                <div :class="sound ? 'toggler_active' : ''" class="toggler">
+                  <label class="toggler__label">
                     <div class="toggler__circle" />
                     <div class="toggler__way" />
                   </label>
-                  <input id="sound" type="checkbox" name="sound" class="toggler__input">
                 </div>
               </div>
             </div>
+
             <div v-if="getToken && getUser" @click="showAccount" class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_withIcon">
               <img v-if="getUser.photo" :src="getUser.photo" alt="" class="mobileMenu__icon mobileMenu__img">
               <AccountEmpty v-else class="mobileMenu__icon account__img_icon" />
@@ -195,7 +198,7 @@
                 <ArrowRIcon class="arrow" />
               </div>
             </div>
-            <nuxt-link tag="button" :to="localePath('/sign-up')" v-if="!getToken" class="btn btn_primary mobileMenu__start">
+            <nuxt-link :to="localePath('/sign-up')" v-if="!getToken" tag="button" class="btn btn_primary mobileMenu__start">
               {{ $t('getStarted') }}
             </nuxt-link>
           </div>
@@ -255,10 +258,10 @@
           </div>
         </div>
         <nuxt-link
-          tag="div"
           v-for="locale in $i18n.locales"
           :key="locale.code"
           :to="switchLocalePath(locale.code)"
+          tag="div"
           class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_withIcon"
         >
           <img src="/images/russia.svg" alt="" class="mobileMenu__icon mobileMenu__img">
@@ -515,6 +518,10 @@
   &_empty
     position: initial
     opacity: 0 !important
+  &__balance
+    color: white
+    margin-left: auto
+    font-weight: 500
   &__wrapper
     background-color: #27273e
     border-radius: 12px
@@ -701,10 +708,18 @@ export default {
       //   })
       this.privateRoomConnect()
     }
+    eventBus.$on('closeMenu', () => {
+      this.isLangsShow = false
+      this.isNotificationShow = false
+      this.isAccountShow = false
+      this.isMobileMainMenuShow = true
+      this.showDropMenu = false
+      this.isFinancialShow = false
+    })
   },
   methods: {
     setSound () {
-      this.sound = this.sound !== true
+      this.sound = !this.sound
     },
     async logout () {
       try {

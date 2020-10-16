@@ -16,8 +16,8 @@
               <span class="text">{{ $t('dashboard') }}</span>
             </nuxt-link>
             <nuxt-link
-              active-class="dashLinks__link_active"
               :to="localePath('/settings')"
+              active-class="dashLinks__link_active"
               class="dashLinks__link"
             >
               <SettingsIcon />
@@ -132,7 +132,7 @@
                   <button @click.prevent="enable2fa" v-if="!get2fa" class="btn form__btn" type="submit">
                     {{ $t('activate') }}
                   </button>
-                  <button v-else class="btn form__btn" type="button" @click.prevent="disable2fa">
+                  <button v-else @click.prevent="disable2fa" class="btn form__btn" type="button">
                     {{ $t('deactivate') }}
                   </button>
                 </div>
@@ -164,7 +164,9 @@
     <Inventory v-if="getInventory.length > 0" />
     <div v-else class="container mt-5">
       <h2>{{ $t('inventory') }}</h2>
-      <h2 class="mt-3">{{ $t('noItems') }}</h2>
+      <h2 class="mt-3">
+        {{ $t('noItems') }}
+      </h2>
     </div>
   </div>
 </template>
@@ -180,11 +182,11 @@ import ArrowL from 'vue-material-design-icons/ChevronLeft.vue'
 import ArrowR from 'vue-material-design-icons/ChevronRight.vue'
 import { mapGetters } from 'vuex'
 import Inventory from '@/components/Inventory'
+import { eventBus } from '@/plugins/event-bus'
 import Links from '../../components/Settings/Links'
 import Verification from '../../components/Settings/Verification'
 import Security from '../../components/Settings/Security'
 import Personal from '../../components/Settings/Personal'
-import { eventBus } from '../../plugins/event-bus'
 export default {
   layout: 'default',
   middleware: 'authenticated',
@@ -228,6 +230,7 @@ export default {
   mounted () {
     this.checkMain()
     window.addEventListener('resize', this.checkMain)
+    eventBus.$emit('closeMenu')
   },
   methods: {
     update () {

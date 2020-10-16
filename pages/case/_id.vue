@@ -78,6 +78,7 @@ import showNotification from '@/mixins/showNotification'
 import ArrowRightIcon from 'vue-material-design-icons/ArrowRight.vue'
 import WinItem from '@/components/WinItem'
 import Weapon from '@/components/Weapon'
+import { eventBus } from '@/plugins/event-bus'
 export default {
   layout: 'default',
   mixins: [showNotification],
@@ -110,6 +111,9 @@ export default {
     checkBalance () {
       return !this.getToken || (this.getUser.balance < this.getCurrentChest.chest[`${this.getPlatform}Price`])
     }
+  },
+  mounted () {
+    eventBus.$emit('closeMenu')
   },
   methods: {
     async openChest (id) {

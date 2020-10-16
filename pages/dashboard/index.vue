@@ -131,6 +131,7 @@ import SettingsIcon from 'vue-material-design-icons/CogOutline.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import { mapGetters } from 'vuex'
 import Inventory from '@/components/Inventory'
+import { eventBus } from '@/plugins/event-bus'
 export default {
   layout: 'default',
   middleware: 'authenticated',
@@ -159,6 +160,7 @@ export default {
     } catch (e) {
       this.showNotification('Unable to load statistics!', 'danger')
     }
+    eventBus.$emit('closeMenu')
   },
   methods: {
     handleFileUpload () {

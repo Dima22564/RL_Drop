@@ -32,6 +32,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { eventBus } from '@/plugins/event-bus'
 import Faq from '../components/Faq'
 export default {
   layout: 'default',
@@ -52,6 +53,7 @@ export default {
     } catch (e) {
       this.showNotification('Unable to load faqs!', 'danger')
     }
+    eventBus.$emit('closeMenu')
   },
   computed: {
     ...mapGetters({

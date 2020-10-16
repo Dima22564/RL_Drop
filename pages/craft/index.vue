@@ -225,6 +225,7 @@ export default {
       this.$router.push(this.localePath('craft'))
       this.$store.commit('item/setCurrentCraftItem', null)
     }
+    eventBus.$emit('closeMenu')
     eventBus.$off('selectCraftItem')
     eventBus.$on('selectCraftItem', (s) => {
       // this.$router.push(this.localePath({
