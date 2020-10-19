@@ -13,9 +13,9 @@ function isJWTAdmin (token) {
 
   const jwtData = jwt.decode(token) || {}
   const expires = jwtData.exp || 0
-  const role = jwtData.role
+  const roles = jwtData.roles
 
-  if (role === 'admin' && (new Date().getTime() / 1000) < expires) {
+  if (roles.includes('admin') && (new Date().getTime() / 1000) < expires) {
     return true
   }
   return false
