@@ -70,6 +70,12 @@
           <nuxt-link active-class="admin__link_active" tag="div" class="admin__link" to="/admin/stats/sales">
             Sales
           </nuxt-link>
+          <nuxt-link active-class="admin__link_active" tag="div" class="admin__link" to="/admin/users">
+            Users
+          </nuxt-link>
+          <nuxt-link active-class="admin__link_active" tag="div" class="admin__link" to="/admin/withdraws">
+            Withdraws
+          </nuxt-link>
         </div>
 
         <div class="admin__content">
