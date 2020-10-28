@@ -57,11 +57,11 @@
           <b-col xl="6" offset-xl="1" lg="7">
             <div class="craft">
               <h1 class="craft__title">
-                Craft Your Items
+                {{ $t('craftItem') }}
               </h1>
               <div class="craft__slider">
                 <div class="craft__top">
-                  <span class="craft__desc">Probability of winning</span>
+                  <span class="craft__desc">{{ $t('probOfWinning') }}</span>
                   <span class="craft__progress"> {{ progress }} %</span>
                 </div>
                 <client-only>
@@ -84,7 +84,7 @@
                   v-if="craftStatus === 1 || craftStatus === 0 || craftStatus === 2"
                   class="btn btn_primary"
                 >
-                  Play ${{ price * progress / 100 }}
+                  {{ $t('play') }} ${{ price * progress / 100 }}
                 </button>
                 <button
                   @click.prevent="play"
@@ -93,7 +93,7 @@
                   v-if="craftStatus === 4"
                   class="btn btn_primary"
                 >
-                  Play again
+                  {{ $t('playAgain') }}
                 </button>
                 <button
                   :disabled="getBtnState"
@@ -102,16 +102,18 @@
                   v-if="craftStatus === 3"
                   class="btn btn_secondary craft__btn"
                 >
-                  Sell $13.62
+                  {{ $t('sell') }} $13.62
                 </button>
-                <button
+                <nuxt-link
                   :disabled="getBtnState"
                   :class="getBtnState ? 'btn_primary_disabled' : ''"
                   v-if="craftStatus === 3"
                   class="btn btn_primary"
+                  tag="button"
+                  to="/dashboard"
                 >
-                  Continue
-                </button>
+                  {{ $t('continue') }}
+                </nuxt-link>
               </div>
             </div>
           </b-col>
@@ -123,7 +125,7 @@
     <section class="inventory">
       <b-container>
         <div class="faq__title">
-          <h2>Choose</h2>
+          <h2>{{ $t('choose') }}</h2>
           <div v-if="getWindowSize > 1200" class="faq__filter">
             <span
               v-for="(item) in getTypes"
@@ -147,7 +149,7 @@
           </client-only>
         </div>
 
-        <b-row class="inventoryItem__row">
+        <b-row class="inventoryItemCheck__row">
           <InventoryItemCheck
             v-for="(item) in getCraftItems"
             v-show="item.type.type === filterItems.type"
@@ -160,11 +162,11 @@
             :desc="item.text"
             :item-id="item.id"
             :item-color="item.color"
-            :class="craftItem === item.id ? 'inventoryItem__col_checked' : ''"
+            :class="craftItem === item.id ? 'inventoryItemCheck__col_checked' : ''"
             @click.prevent.native="setCraftItem(
               { itemId: item.id, itemName: item.name, platform: getPlatform },
               item.id)"
-            class="inventoryItem__col"
+            class="inventoryItemCheck__col"
           />
         </b-row>
       </b-container>
@@ -219,7 +221,7 @@ export default {
         this.craftStatus = 1
         this.progress = 5
       } catch (e) {
-        console.log(e)
+        this.showNotification(this.showNotification(this.$t('smtWrong'), 'danger'))
       }
     } else {
       this.$router.push(this.localePath('craft'))
@@ -277,7 +279,7 @@ export default {
           } else {
             clearInterval(interval)
             this.craftStatus = 4
-            this.showNotification(`Item craft failed!`, 'danger')
+            this.showNotification(this.$t('craftFail'), 'danger')
             this.$store.commit('item/setBtnState', false)
           }
         } else if (Math.floor(this.progress) !== this.progressBar) {
@@ -286,21 +288,18 @@ export default {
         } else {
           clearInterval(interval)
           this.craftStatus = 3
-          this.showNotification(`Item crafted successfully!`, 'success')
+          this.showNotification(this.$t('craftSuccess'), 'success')
           this.$store.commit('item/setBtnState', false)
         }
       }, 150)
-      console.log(1)
-      // this.$store.commit('item/setBtnState', false)
     },
     input (e) {
-      // console.log(e)
       if (this.craftStatus !== 1) {
       }
     },
     async play () {
       if (this.checkBalance) {
-        return this.showNotification('You have not enough money!', 'danger')
+        return this.showNotification(this.$t('notEnoughMoney'), 'danger')
       }
       try {
         this.progressBar = 0
@@ -324,9 +323,9 @@ export default {
         data.append('id', id)
         this.craftStatus = 1
         await this.$store.dispatch('item/sell', data)
-        this.showNotification('You sold item!', 'success')
+        this.showNotification(this.$t('soldItem'), 'success')
       } catch (e) {
-        this.showNotification('Something went wrong(', 'danger')
+        this.showNotification(this.$t('smtWrong'), 'danger')
       }
     }
   }

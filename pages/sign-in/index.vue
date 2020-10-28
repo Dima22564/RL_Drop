@@ -19,12 +19,12 @@
               v-model.trim="$v.email.$model"
               :rightIcon="false"
               :leftIcon="false"
+              @input="errorMessages.invalidCredentials = false"
+              :error="$v.email.$error || errorMessages.invalidCredentials"
               name="Email"
               label="Email"
               type="text"
               class="regForm__input"
-              @input="errorMessages.invalidCredentials = false"
-              :error="$v.email.$error || errorMessages.invalidCredentials"
             >
               <template slot="error">
                 <span v-if="errorMessages.email[0] || errorMessages.invalidCredentials">{{ errorMessages.email[0] || 'Invalid Credentials' }}</span>
@@ -37,11 +37,11 @@
               :rightIcon="true"
               :leftIcon="false"
               :type="showPassword ? 'text' : 'password'"
+              @input="errorMessages.invalidCredentials = false"
+              :error="$v.password.$error || errorMessages.invalidCredentials"
               name="password"
               label="Password"
               class="regForm__input"
-              @input="errorMessages.invalidCredentials = false"
-              :error="$v.password.$error || errorMessages.invalidCredentials"
             >
               <template slot="error">
                 <span v-if="errorMessages.password[0] || errorMessages.invalidCredentials">{{ errorMessages.password[0] || 'Invalid Credentials' }}</span>
@@ -54,7 +54,9 @@
               <template slot="label">
                 <div class="input__label input__custom-label">
                   <label for="password">Password</label>
-                  <nuxt-link tag="span" class="emp" to="/password-recovery">Forgot password?</nuxt-link>
+                  <nuxt-link tag="span" class="emp" to="/password-recovery">
+                    Forgot password?
+                  </nuxt-link>
                 </div>
               </template>
             </MyInput>
@@ -63,12 +65,12 @@
               v-model.trim="$v.twoFA.$model"
               :rightIcon="false"
               :leftIcon="false"
+              v-if="get2fa"
+              :error="errorMessages.invalidCode"
               name="TwoFA"
               label="2FA Code"
               type="text"
               class="regForm__input"
-              v-if="get2fa"
-              :error="errorMessages.invalidCode"
             >
               <template slot="error">
                 <span v-if="errorMessages.invalidCode">{{ 'Invalid code! Please try again.' }}</span>

@@ -17,16 +17,16 @@
           <p class="regForm__text regForm__text_big">
             Enter the email address you used and we’ll send you instructions to reset your password.
           </p>
-          <form action="" class="regForm" @submit.prevent="onSubmit">
+          <form @submit.prevent="onSubmit" action="" class="regForm">
             <MyInput
               v-model="email"
               :rightIcon="false"
               :leftIcon="false"
+              :error="Boolean(errorMessage)"
               type="text"
               name="email"
               label="Email"
               class="regForm__input"
-              :error="Boolean(errorMessage)"
             >
               <template slot="error">
                 <span v-if="errorMessage">{{ errorMessage }}</span>
@@ -51,7 +51,7 @@
 </template>
 
 <script>/* eslint-disable */
-  import { showModal } from '../../utils/_showModal'
+import showNotification from '@/mixins/showNotification'
 
 export default {
   layout: 'register',
@@ -61,6 +61,7 @@ export default {
       errorMessage: null
     }
   },
+  mixins: [showNotification],
   methods: {
     async onSubmit () {
       try {
@@ -77,6 +78,7 @@ export default {
         }
       } catch (e) {
         this.errorMessage = e.data.message || e.data.error.messages[0]
+        this.showNotification(this.showNotification(this.$t('smtWrong'), 'danger'))
       }
     }
   }

@@ -17,16 +17,16 @@
           <p class="regForm__text regForm__text_big">
             Enter new password.
           </p>
-          <form class="regForm" @submit.prevent="onSubmit">
+          <form @submit.prevent="onSubmit" class="regForm">
             <MyInput
               v-model.trim="$v.password.$model"
               :rightIcon="false"
               :leftIcon="false"
+              :error="Boolean(errorMessage) || $v.password.$error"
               type="password"
               name="password"
               label="Password"
               class="regForm__input"
-              :error="Boolean(errorMessage) || $v.password.$error"
             >
               <template slot="error">
                 <span v-if="errorMessage">{{ errorMessage }}</span>
@@ -39,11 +39,11 @@
               v-model.trim="$v.confirmPassword.$model"
               :rightIcon="false"
               :leftIcon="false"
+              :error="Boolean(errorMessage) || $v.confirmPassword.$error"
               type="password"
               name="confirmPassword"
               label="Confirm Password"
               class="regForm__input"
-              :error="Boolean(errorMessage) || $v.confirmPassword.$error"
             >
               <template slot="error">
                 <span v-if="errorMessage">{{ errorMessage }}</span>
@@ -55,7 +55,7 @@
             <div class="regForm__bottom">
               <p class="regForm__text">
                 <nuxt-link to="/sign-up" class="regForm__emp" tag="span">
-                Sign In Now
+                  Sign In Now
                 </nuxt-link>
               </p>
               <button :class="disabled || $v.$invalid ? 'btn_primary_disabled' : ''" :disabled="disabled || $v.$invalid" class="btn btn_primary" type="submit">
@@ -71,6 +71,7 @@
 
 <script>/* eslint-disable */
 import { sameAs, required, minLength } from 'vuelidate/lib/validators'
+import showNotification from '@/mixins/showNotification'
 
 export default {
     layout: 'register',
@@ -82,6 +83,7 @@ export default {
         disabled: false
       }
     },
+  mixins: [showNotification],
   validations: {
     confirmPassword: {
       required,
@@ -107,8 +109,7 @@ export default {
             }
           } catch (e) {
             this.errorMessage = e.data.message || e.data.error.messages[0]
-            console.log(e)
-            //TODO remove console statement
+            this.showNotification(this.showNotification(this.$t('smtWrong'), 'danger'))
           }
         }
       }

@@ -101,8 +101,12 @@ export default {
     color: white
     font-weight: 600
     margin-bottom: 4px
+    overflow: hidden
+    white-space: nowrap
+    text-overflow: ellipsis
   &__desc
     color: rgba(224, 224, 255, 0.6)
     overflow: hidden
     text-overflow: ellipsis
+    white-space: nowrap
 </style>

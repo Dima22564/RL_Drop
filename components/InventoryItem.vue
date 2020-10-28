@@ -1,26 +1,37 @@
 <template>
   <b-col xl="2" lg="2" md="3" sm="4" cols="6">
-    <div @click.stop="showSell = true" @mouseleave="showSell = false" class="inventoryItem">
+    <div
+      @click.stop="showSell = true"
+      @mouseleave="closeAll"
+      @mouseover="status"
+      class="inventoryItem"
+    >
 
       <span :style="{ background: itemColor }" class="inventoryItem__circle" />
       <div :style="{ background: color }" class="inventoryItem__line" />
 
-      <div v-if="showSell" class="inventoryItem__click">
+      <div v-if="showSell && withdrawStatus === null" class="inventoryItem__click">
         <p class="inventoryItem__name">
           {{ name }}
         </p>
         <p class="inventoryItem__desc">
           {{ desc }}
         </p>
-        <button @click="sell" class="btn btn_primary inventoryItem__btn">
+        <button @click.prevent="sell" class="btn btn_primary inventoryItem__btn">
           Sell
         </button>
-        <button class="btn btn_trans inventoryItem__acc">
+        <button @click.prevent.once="withdraw({ id, platform, pivotId })" class="btn btn_trans inventoryItem__acc">
           To Account
         </button>
       </div>
 
-      <div v-if="showConfirm" @mouseleave="showConfirm = false" class="inventoryItem__click">
+      <div v-if="showStatus && withdrawStatus !== null" class="inventoryItem__click">
+        <button @click.prevent="" class="btn btn_primary inventoryItem__btn">
+          {{ withdrawStatus }}
+        </button>
+      </div>
+
+      <div v-if="showConfirm && withdrawStatus === null" @mouseleave="showConfirm = false" class="inventoryItem__click">
         <p class="inventoryItem__name">
           Sell this item
         </p>
@@ -53,6 +64,7 @@
 
 <script>
 import { eventBus } from '@/plugins/event-bus'
+import showNotification from '@/mixins/showNotification'
 
 export default {
   props: {
@@ -91,12 +103,18 @@ export default {
     color: {
       type: String,
       required: true
+    },
+    withdrawStatus: {
+      type: null,
+      required: true
     }
   },
+  mixins: [showNotification],
   data () {
     return {
       showSell: false,
-      showConfirm: false
+      showConfirm: false,
+      showStatus: false
     }
   },
   methods: {
@@ -106,6 +124,26 @@ export default {
     },
     confirmSell (data) {
       eventBus.$emit('sellItem', data)
+    },
+    status () {
+      if (this.withdrawStatus !== null) {
+        this.showStatus = true
+        this.showSell = false
+        this.showConfirm = false
+      }
+    },
+    closeAll () {
+      this.showStatus = false
+      this.showSell = false
+      this.showConfirm = false
+    },
+    withdraw (payload) {
+      try {
+        this.$store.dispatch('user/withdraw', payload)
+        this.showNotification('Your application to withdraw accepted!', 'info')
+      } catch (e) {
+
+      }
     }
   }
 

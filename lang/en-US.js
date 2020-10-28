@@ -32,5 +32,20 @@ export default {
   sound: 'Sound',
   bestCrop: 'Best Crop',
   activate: 'Activate',
-  deactivate: 'Deactivate'
+  deactivate: 'Deactivate',
+  openChest: 'Open for',
+  continue: 'Continue',
+  sell: 'Sell for',
+  craftItem: 'Craft Your Item',
+  playAgain: 'Play again',
+  probOfWinning: 'Probability of winning',
+  smtWrong: 'Something went wrong!',
+  soldItem: 'You sold Item!',
+  craftSuccess: 'Item crafted successfully!',
+  notEnoughMoney: 'You have not enough money!',
+  craftFail: 'Craft failed!',
+  notification: 'Notification',
+  twoFaDeactivate: '2fa deactivated successfully!',
+  twoFaActivate: '2fa activated successfully!'
+
 }

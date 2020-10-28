@@ -70,6 +70,10 @@ module.exports = {
     {
       src: '@/plugins/socket',
       ssr: false
+    },
+    {
+      src: '@/plugins/swiper',
+      ssr: false
     }
   ],
   /*

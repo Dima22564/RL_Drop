@@ -11,7 +11,7 @@
           placeholder="Type to Search"
         />
         <b-input-group-append>
-          <b-button :disabled="!filter" @click="filter = ''">
+          <b-button :disabled="!filter" @click="filter=''">
             Clear
           </b-button>
         </b-input-group-append>

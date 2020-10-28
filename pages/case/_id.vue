@@ -4,27 +4,47 @@
     <section class="advanced">
       <b-container>
         <b-row>
-          <b-col xl="12" lg="12" md="8" sm="8" class="m-auto">
+          <b-col xl="12" lg="12" md="12" sm="12" class="m-auto">
             <div class="open" >
               <transition name="fade" mode="out-in">
                 <img src="/images/bg-3.png" alt="" class="open__bg" key="image">
               </transition>
-              <h2 class="open__title" v-if="getCurrentChest">
+              <h2 class="open__title" v-if="getCurrentChest" v-show="getCurrentChest && !isSliderActive">
                 {{ getCurrentChest.chest.name }}
               </h2>
-              <img v-if="getCurrentChest && !getWinItem" :src="getCurrentChest.chest.image" alt="" class="open__chestImage">
-              <transition name="fade" mode="out-in">
-                <WinItem
-                  v-if="getWinItem"
-                  :color="getWinItem.type.color"
-                  :img-url="getWinItem.image"
-                  :name="getWinItem.name"
-                  :desc="getWinItem.text"
-                  :item-color="getWinItem.color"
-                  key="winItem"
-                />
-              </transition>
-              <div class="open__btns">
+              <img v-if="getCurrentChest" v-show="getCurrentChest && !getWinItem" :src="getCurrentChest.chest.image" alt="" class="open__chestImage">
+              <div class="open__slider" ref="openSlider" v-show="getWinItem && !isShowWinItem" v-if="getCurrentChest">
+                <Swiper
+                  :options="options"
+                  ref="mySwiper"
+                >
+                  <swiper-slide
+                    :key="item.id"
+                    v-for="item in getCurrentChest.items"
+                    :index="item.id"
+                  >
+                    <Weapon
+                      class="open__sliderItem"
+                      :color="item.type.color"
+                      :img-url="item.image"
+                      :name="item.name"
+                      :desc="item.text"
+                      :item-color="item.color"
+                      :virtual-index="item.id"
+                    />
+                  </swiper-slide>
+                </Swiper>
+              </div>
+              <WinItem
+                v-if="getWinItem && isShowWinItem"
+                :item-color="getWinItem.color"
+                :color="getWinItem.type.color"
+                :desc="getWinItem.text"
+                :img-url="getWinItem.image"
+                :name="getWinItem.name"
+                :key="getWinItem.name"
+              />
+              <div class="open__btns" v-if="getCurrentChest && !isSliderActive">
                 <button
                   v-if="getCurrentChest && !getWinItem"
                   @click.prevent="openChest(getCurrentChest.chest.id)"
@@ -32,19 +52,19 @@
                   :disabled="checkBalance"
                   :class="checkBalance ? 'btn_primary_disabled' : ''"
                 >
-                  Open for ${{ getCurrentChest.chest[`${getPlatform}Price`] }}
+                  {{ $t('openChest') }} ${{ getCurrentChest.chest[`${getPlatform}Price`] }}
                 </button>
-                <button v-if="getWinItem" class="btn btn_secondary btn-arrow">
-                  <span>Continue</span><ArrowRightIcon class="btn__icon" />
-                </button>
+                <nuxt-link tag="button" to="/dashboard" v-if="getWinItem && animated" class="btn btn_secondary btn-arrow">
+                  <span>{{ $t('continue') }}</span><ArrowRightIcon class="btn__icon" />
+                </nuxt-link>
                 <button
-                  v-if="getWinItem"
+                  v-if="getWinItem && animated"
                   @click.prevent="sellItem(getWinItem.id)"
                   class="btn btn_primary"
                   :class="!getToken ? 'btn_primary_disabled' : ''"
                   :disabled="!getToken"
                 >
-                  Sell for ${{ getWinItem[`${getPlatform}Price`] }}
+                  {{ $t('sell') }} ${{ getWinItem[`${getPlatform}Price`] }}
                 </button>
               </div>
             </div>
@@ -65,6 +85,7 @@
             :name="item.name"
             :desc="item.text"
             :item-color="item.color"
+            class="items__drop"
           />
         </b-row>
       </b-container>
@@ -76,20 +97,48 @@
 import { mapGetters } from 'vuex'
 import showNotification from '@/mixins/showNotification'
 import ArrowRightIcon from 'vue-material-design-icons/ArrowRight.vue'
-import WinItem from '@/components/WinItem'
 import Weapon from '@/components/Weapon'
 import { eventBus } from '@/plugins/event-bus'
+import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
+import WinItem from '@/components/WinItem'
 export default {
   layout: 'default',
   mixins: [showNotification],
   components: {
     Weapon,
     ArrowRightIcon,
+    Swiper,
+    SwiperSlide,
     WinItem
   },
   data () {
     return {
-      disabled: true
+      disabled: true,
+      animated: false,
+      isSliderActive: false,
+      isShowWinItem: false,
+      options: {
+        slidesPerView: 5,
+        spaceBetween: 12,
+        loop: false,
+        freeMode: true,
+        virtual: true,
+        allowTouchMove: false,
+        centeredSlides: true,
+        slideActiveClass: 'open__activeItem',
+        breakpoints: {
+          // when window width is >= 320px
+          1200: {
+            slidesPerView: 5
+          },
+          767: {
+            slidesPerView: 3
+          },
+          200: {
+            slidesPerView: 2
+          }
+        }
+      }
     }
   },
   async created () {
@@ -110,6 +159,9 @@ export default {
     }),
     checkBalance () {
       return !this.getToken || (this.getUser.balance < this.getCurrentChest.chest[`${this.getPlatform}Price`])
+    },
+    swiper () {
+      return this.$refs.mySwiper.$swiper
     }
   },
   mounted () {
@@ -123,7 +175,11 @@ export default {
         data.append('id', id)
         const result = await this.$store.dispatch('chest/openChest', data)
         if (result.success) {
+          this.isSliderActive = true
           this.showNotification('Chest opened!', 'success')
+          setTimeout(() => {
+            this.animateSlider()
+          }, 1000)
         }
       } catch (e) {
         this.showNotification(e.data.message, 'danger')
@@ -135,9 +191,34 @@ export default {
         data.append('platform', this.getPlatform)
         data.append('id', id)
         await this.$store.dispatch('item/sell', data)
+        this.isShowWinItem = false
       } catch (e) {
-        this.showNotification('Something went wrong(', 'danger')
+        this.showNotification(this.$t('smtWrong'), 'danger')
       }
+    },
+    animateSlider () {
+      const foundItem = this.getCurrentChest.items.find(curVal => curVal.id === this.getWinItem.id)
+      const index = this.getCurrentChest.items.indexOf(foundItem)
+      this.swiper.update()
+
+      const i = this.getCurrentChest.items.length
+      let time = 0
+      const interval = setInterval(() => {
+        if (time === 3000) {
+          clearInterval(interval)
+          this.swiper.slideTo(index, 100, false)
+          setTimeout(() => {
+            this.animated = true
+            this.isSliderActive = false
+            this.isShowWinItem = true
+            time = 0
+          }, 1000)
+        } else {
+          const j = Math.floor(Math.random() * (i + 1))
+          this.swiper.slideTo(j, 100, false)
+        }
+        time += 100
+      }, 100)
     }
   }
 }
@@ -153,10 +234,14 @@ export default {
   padding-bottom: 16px
   +lg
     padding-bottom: 32px
+  &__drop
+    .drop
+      margin-bottom: 32px
 .open
   display: flex
   align-items: flex-start
   justify-content: space-between
+  flex-wrap: wrap
   padding: 40px
   position: relative
   border-radius: 12px
@@ -169,6 +254,17 @@ export default {
     background-repeat: no-repeat
     background-size: cover
     background-position: center top
+  .drop
+    margin-bottom: 0
+  &__activeItem
+    .drop
+      box-shadow: 0 8px 8px -4px rgba(0, 187, 255, 0.06), 0 16px 24px 0 rgba(0, 187, 255, 0.12), 0 2px 4px -1px rgba(27, 10, 82, 0.06), 0 0 1px 0 rgba(0, 187, 255, 0.12), inset 0 2px 6px 0 rgba(0, 187, 255, 0.4) !important
+  &__slider
+    width: 100%
+    display: block
+  &__sliderItem
+    width: 190px
+    max-width: 190px
   &__title
     position: relative
     z-index: 5

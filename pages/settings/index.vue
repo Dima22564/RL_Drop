@@ -161,13 +161,13 @@
     </section>
 
     <!-- Inventory  adapted = true -->
-    <Inventory v-if="getInventory.length > 0" />
-    <div v-else class="container mt-5">
+    <div v-if="getInventory.length === 0" class="container mt-5">
       <h2>{{ $t('inventory') }}</h2>
       <h2 class="mt-3">
         {{ $t('noItems') }}
       </h2>
     </div>
+    <Inventory />
   </div>
 </template>
 
@@ -183,6 +183,7 @@ import ArrowR from 'vue-material-design-icons/ChevronRight.vue'
 import { mapGetters } from 'vuex'
 import Inventory from '@/components/Inventory'
 import { eventBus } from '@/plugins/event-bus'
+import showNotification from '@/mixins/showNotification'
 import Links from '../../components/Settings/Links'
 import Verification from '../../components/Settings/Verification'
 import Security from '../../components/Settings/Security'
@@ -227,6 +228,7 @@ export default {
       getInventory: 'user/getInventory'
     })
   },
+  mixins: [showNotification],
   mounted () {
     this.checkMain()
     window.addEventListener('resize', this.checkMain)
@@ -246,42 +248,24 @@ export default {
       try {
         const result = await this.$store.dispatch('2fa/disable2fa')
         if (result.success) {
-          this.$bvToast.toast('2fa deactivated successfully!', {
-            title: `Notification`,
-            variant: 'primary',
-            solid: true
-          })
+          this.showNotification(this.showNotification(this.$t('twoFaDeactivate'), 'primary'))
         } else {
-          this.$bvToast.toast('Sorry, something went wrong!(', {
-            title: `Notification`,
-            variant: 'danger',
-            solid: true
-          })
+          this.showNotification(this.showNotification(this.$t('smtWrong'), 'danger'))
         }
       } catch (e) {
-        console.log(e)
-        // TODO remove console statement
+        this.showNotification(this.showNotification(this.$t('smtWrong'), 'danger'))
       }
     },
     async enable2fa () {
       try {
         const result = await this.$store.dispatch('2fa/generateSecret2fa')
         if (result.success) {
-          this.$bvToast.toast('2fa activated successfully!', {
-            title: `Notification`,
-            variant: 'primary',
-            solid: true
-          })
+          this.showNotification(this.showNotification(this.$t('twoFaActivate'), 'primary'))
         } else {
-          this.$bvToast.toast('Sorry, something went wrong!(', {
-            title: `Notification`,
-            variant: 'danger',
-            solid: true
-          })
+          this.showNotification(this.showNotification(this.$t('smtWrong'), 'danger'))
         }
       } catch (e) {
-        // TODO remove console statement
-        console.log(e)
+        this.showNotification(this.showNotification(this.$t('smtWrong'), 'danger'))
       }
     },
     checkMain () {

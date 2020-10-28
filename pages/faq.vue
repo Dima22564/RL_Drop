@@ -33,12 +33,14 @@
 <script>
 import { mapGetters } from 'vuex'
 import { eventBus } from '@/plugins/event-bus'
+import showNotification from '@/mixins/showNotification'
 import Faq from '../components/Faq'
 export default {
   layout: 'default',
   components: {
     Faq
   },
+  mixins: [showNotification],
   data () {
     return {
       value: 'General Questions',
@@ -51,7 +53,7 @@ export default {
       this.options = result.options
       this.value = result.options[0]
     } catch (e) {
-      this.showNotification('Unable to load faqs!', 'danger')
+      this.showNotification(this.showNotification(this.$t('smtWrong'), 'danger'))
     }
     eventBus.$emit('closeMenu')
   },

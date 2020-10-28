@@ -45,7 +45,9 @@
         :key="key"
       >
         <div class="chests__top">
-          <h4 class="chests__title">{{ key }}</h4>
+          <h4 class="chests__title">
+            {{ key }}
+          </h4>
         </div>
         <transition-group class="row" name="fade" tag="div" mode="out-in">
           <b-col
@@ -102,6 +104,7 @@
 <script>
 import ArrowRightIcon from 'vue-material-design-icons/ArrowRight.vue'
 import { mapGetters } from 'vuex'
+import showNotification from '@/mixins/showNotification'
 import Timer from '../components/Timer'
 export default {
   layout: 'default',
@@ -109,11 +112,12 @@ export default {
     ArrowRightIcon,
     Timer
   },
+  mixins: [showNotification],
   async created () {
     try {
       await this.$store.dispatch('chest/loadAllIndexPage')
     } catch (e) {
-      console.log(e)
+      this.showNotification(this.$t('smtWrong'), 'danger')
     }
   },
   computed: {

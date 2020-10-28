@@ -1,30 +1,30 @@
 <template>
   <b-col xl="2" lg="2" md="3" sm="4" cols="6">
-    <span :style="{ background: itemColor }" class="inventoryItem__circle" />
-    <div :style="{ 'background': color }" class="inventoryItem__line" />
+    <span :style="{ background: itemColor }" class="inventoryItemCheck__circle" />
+    <div :style="{ background: color }" class="inventoryItemCheck__line" />
     <input
       :id="itemId"
       :value="itemId"
       @input="$emit('input', Number($event.target.value))"
-      class="inventoryItem__input"
+      class="inventoryItemCheck__input"
       type="radio"
       name="inventoryItem"
     >
-    <label :for="itemId" class="inventoryItem__label">
-      <div class="inventoryItem">
-        <div class="inventoryItem__check">
+    <label :for="itemId" class="inventoryItemCheck__label">
+      <div class="inventoryItemCheck">
+        <div class="inventoryItemCheck__check">
           <CheckIcon class="icon" />
         </div>
 
-        <img :src="img" alt="" class="inventoryItem__img">
-        <div class="inventoryItem__text">
-          <p class="inventoryItem__name">
+        <img :src="img" alt="" class="inventoryItemCheck__img">
+        <div class="inventoryItemCheck__text">
+          <p class="inventoryItemCheck__name">
             {{ name }}
           </p>
-          <p class="inventoryItem__desc">
+          <p class="inventoryItemCheck__desc">
             {{ desc }}
           </p>
-          <p class="inventoryItem__price">
+          <p class="inventoryItemCheck__price">
             ${{ price }}
           </p>
         </div>
@@ -74,7 +74,7 @@ export default {
 
 <style lang="sass">
 @import '@/theme/_mix.sass'
-.inventoryItem
+.inventoryItemCheck
   +item_dark
   padding: 16px
   position: relative
@@ -92,7 +92,7 @@ export default {
     border-radius: 50%
     position: absolute
     top: 8px
-    right: 8px
+    right: 22px
     z-index: 5
   &__line
     height: 4px
@@ -104,10 +104,10 @@ export default {
     border-radius: 0 0 24px 24px
   &__col
     &_checked
-      .inventoryItem
-        background: rgba(0, 187, 255, 0.03)
+      .inventoryItemCheck
+        background: rgba(0, 187, 255, 0.03) !important
         &__check
-          display: block
+          display: block !important
   &__input
     display: none
   &__label

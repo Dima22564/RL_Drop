@@ -16,7 +16,7 @@
       <slot />
       <p>{{ date }}</p>
     </div>
-    <div @click="closeNotification" class="notification__close">
+    <div v-if="canClose === 1" @click="closeNotification" class="notification__close">
       <CloseIcon />
     </div>
   </div>
@@ -48,6 +48,10 @@ export default {
     },
     date: {
       type: String,
+      required: true
+    },
+    canClose: {
+      type: Number,
       required: true
     }
   },

@@ -104,6 +104,20 @@ export const actions = {
     } catch (e) {
       throw e.response
     }
+  },
+  async withdraw ({ rootGetters, commit }, payload) {
+    try {
+      this.$axios.setToken(rootGetters.getToken, 'Bearer')
+      const data = new FormData()
+      data.append('itemId', payload.id)
+      data.append('pivotId', payload.pivotId)
+      data.append('platform', payload.platform)
+      const result = await this.$axios.$post(`${this.$axios.defaults.baseURL}/user/withdraw`, data)
+      console.log(result)
+      return result
+    } catch (e) {
+      throw e.response
+    }
   }
 }
 

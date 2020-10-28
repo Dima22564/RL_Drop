@@ -44,6 +44,7 @@
                     :notification-type="item.type.toLowerCase()"
                     :id="item.id"
                     :date="item.date"
+                    :can-close="item.can_close"
                   >
                     <!--                    <p><span class="blue"></span><span class="white"> {{ item.text }}</span></p>-->
                     <p v-html="item[`text_${$i18n.locale}`]" />

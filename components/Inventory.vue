@@ -49,6 +49,7 @@
           <InventoryItem
             v-for="item in getInventory"
             :key="item.pivot.id"
+            :withdraw-status="item.pivot.withdrawStatus"
             :pivot-id="item.pivot.id"
             :id="item.id"
             :img="item.image"

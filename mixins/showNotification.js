@@ -2,7 +2,7 @@ export default {
   methods: {
     showNotification (text, type) {
       this.$bvToast.toast(text, {
-        title: `Notification`,
+        title: this.$t('notification'),
         variant: type,
         solid: true
       })

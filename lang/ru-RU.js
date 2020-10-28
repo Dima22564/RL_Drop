@@ -32,5 +32,19 @@ export default {
   sound: 'Звук',
   bestCrop: 'Лучший скин',
   activate: 'Активировать',
-  deactivate: 'Отключить'
+  deactivate: 'Отключить',
+  openChest: 'Открыть за',
+  continue: 'Продолжить',
+  sell: 'Продать',
+  craftItem: 'Скрафтите Ваш предмет',
+  playAgain: 'Играть снова',
+  probOfWinning: 'Шанс успеха',
+  smtWrong: 'Что-то пошло не так!',
+  soldItem: 'Вы продали скин!',
+  craftSuccess: 'Крафт проведен успешно!',
+  notEnoughMoney: 'У вас недостаточно денег!',
+  craftFail: 'Крафт закончися неудачей!',
+  notification: 'Уведомление',
+  twoFaDeactivate: '2fa деактивирована успешно!',
+  twoFaActivate: '2fa активированна успешно!'
 }

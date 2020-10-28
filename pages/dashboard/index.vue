@@ -158,14 +158,13 @@ export default {
       this.crafts = result.data.crafts
       this.items = result.data.items
     } catch (e) {
-      this.showNotification('Unable to load statistics!', 'danger')
+      this.showNotification(this.showNotification(this.$t('smtWrong'), 'danger'))
     }
     eventBus.$emit('closeMenu')
   },
   methods: {
     handleFileUpload () {
       this.photo = this.$refs.photo.files[0]
-      console.log(Boolean(this.photo))
     },
     async changePhoto () {
       const data = new FormData()
@@ -174,7 +173,7 @@ export default {
       try {
         await this.$store.dispatch('user/changePhoto', data)
       } catch (e) {
-        this.showNotification('Something went wrong(', 'danger')
+        this.showNotification(this.showNotification(this.$t('smtWrong'), 'danger'))
       } finally {
         this.disabled = false
       }
