@@ -56,8 +56,7 @@ export const actions = {
         }
       }
     } catch (e) {
-      console.log(e.response.data)
-      //  TODO remove console statement
+      throw e.response
     }
   },
   async loadInventory ({ commit, rootGetters }) {
@@ -67,9 +66,7 @@ export const actions = {
       commit('setInventory', result.data.inventory || [])
       return result
     } catch (e) {
-      console.log(e.response)
       throw e.response
-      //  TODO remove console statement
     }
   },
   async changePhoto ({ commit, rootGetters }, data) {
@@ -81,9 +78,7 @@ export const actions = {
       }
       return result
     } catch (e) {
-      console.log(e.response)
       throw e.response
-      //  TODO remove console statement
     }
   },
   async loadStats ({ rootGetters }) {

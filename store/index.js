@@ -41,8 +41,7 @@ export const actions = {
         dispatch('2fa/generateOneTimePassword', rootGetters['2fa/get2faSecret'])
       }
     } catch (e) {
-      console.log(e)
-      //  TODO remove console statement
+      throw e.response
     }
   },
   setToken ({ commit }, token) {
@@ -67,8 +66,7 @@ export const actions = {
       await this.$router.replace({ path: '/' })
       return result
     } catch (e) {
-      console.log(e)
-    //  TODO remove console statement
+      throw e.response
     }
   },
   autoLogin ({ dispatch, commit }) {

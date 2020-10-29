@@ -166,11 +166,15 @@ export default {
           if (!this.get2fa) {
             result = await this.$store.dispatch('preLogin', data)
           } else {
-            result = await this.$store.dispatch('loginWith2fa', data)
-            if (!result.success) {
-              this.errorMessages.invalidCode = true
-            } else {
-              this.errorMessages.invalidCode = true
+            try {
+              result = await this.$store.dispatch('loginWith2fa', data)
+              if (!result.success) {
+                this.errorMessages.invalidCode = true
+              } else {
+                this.errorMessages.invalidCode = true
+              }
+            } catch (e) {
+              this.showNotification('Invalid code', 'danger')
             }
           }
           if (result.data.loggedIn && this.getUser) {
@@ -179,7 +183,6 @@ export default {
             this.errorMessages.invalidCode = false
           }
         } catch (e) {
-          console.log(e)
           if (e.status === 401 || e.status === 400) {
             this.errorMessages.invalidCode = false
           } else if (e.data.invalidCode) {
