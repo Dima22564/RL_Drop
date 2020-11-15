@@ -35,8 +35,8 @@
 
             <div class="regForm__bottom">
               <p class="regForm__text">
-                Not a member? <nuxt-link to="/sign-up" class="regForm__emp" tag="span">
-                  Sign Up Now
+                Not a member? <nuxt-link to="/sign-in" class="regForm__emp" tag="span">
+                  Sign In Now
                 </nuxt-link>
               </p>
               <button type="submit" class="btn btn_primary">

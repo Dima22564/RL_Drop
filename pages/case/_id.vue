@@ -14,26 +14,29 @@
               </h2>
               <img v-if="getCurrentChest" v-show="getCurrentChest && !getWinItem" :src="getCurrentChest.chest.image" alt="" class="open__chestImage">
               <div class="open__slider" ref="openSlider" v-show="getWinItem && !isShowWinItem" v-if="getCurrentChest">
-                <Swiper
-                  :options="options"
-                  ref="mySwiper"
-                >
-                  <swiper-slide
-                    :key="item.id"
-                    v-for="item in getCurrentChest.items"
-                    :index="item.id"
+                <client-only>
+                  <Swiper
+                    :options="options"
+                    ref="mySwiper"
+                    virtual
                   >
-                    <Weapon
-                      class="open__sliderItem"
-                      :color="item.type.color"
-                      :img-url="item.image"
-                      :name="item.name"
-                      :desc="item.text"
-                      :item-color="item.color"
-                      :virtual-index="item.id"
-                    />
-                  </swiper-slide>
-                </Swiper>
+                    <swiper-slide
+                      :key="item.id"
+                      v-for="item in getCurrentChest.items"
+                      :index="item.id"
+                    >
+                      <Weapon
+                        class="open__sliderItem"
+                        :color="item.type.color"
+                        :img-url="item.image"
+                        :name="item.name"
+                        :desc="item.text"
+                        :item-color="item.color"
+                        :virtual-index="item.id"
+                      />
+                    </swiper-slide>
+                  </Swiper>
+                </client-only>
               </div>
               <WinItem
                 v-if="getWinItem && isShowWinItem"
@@ -49,14 +52,14 @@
                   v-if="getCurrentChest && !getWinItem"
                   @click.prevent="openChest(getCurrentChest.chest.id)"
                   class="btn btn_primary"
-                  :disabled="checkBalance"
-                  :class="checkBalance ? 'btn_primary_disabled' : ''"
+                  :disabled="checkBalance || Number(getCurrentChest.chest[`${getPlatform}Price`]) === 0"
+                  :class="{'btn_primary_disabled': checkBalance || Number(getCurrentChest.chest[`${getPlatform}Price`]) === 0}"
                 >
                   {{ $t('openChest') }} ${{ getCurrentChest.chest[`${getPlatform}Price`] }}
                 </button>
-                <nuxt-link tag="button" to="/dashboard" v-if="getWinItem && animated" class="btn btn_secondary btn-arrow">
+                <button @click.prevent="continuePlay" v-if="getWinItem && animated" class="btn btn_secondary btn-arrow">
                   <span>{{ $t('continue') }}</span><ArrowRightIcon class="btn__icon" />
-                </nuxt-link>
+                </button>
                 <button
                   v-if="getWinItem && animated"
                   @click.prevent="sellItem(getWinItem.id)"
@@ -94,7 +97,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import showNotification from '@/mixins/showNotification'
 import ArrowRightIcon from 'vue-material-design-icons/ArrowRight.vue'
 import Weapon from '@/components/Weapon'
@@ -112,6 +115,18 @@ export default {
     WinItem
   },
   data () {
+    // const vSlides = []
+    // for (let i = 0; i < 100; i++) {
+    //   let slide = `<Weapon
+    //                   class="open__sliderItem"
+    //                   :color="item.type.color"
+    //                   :img-url="item.image"
+    //                   :name="item.name"
+    //                   :desc="item.text"
+    //                   :item-color="item.color"
+    //                   :virtual-index="item.id"
+    //                 />`
+    // }
     return {
       disabled: true,
       animated: false,
@@ -120,7 +135,7 @@ export default {
       options: {
         slidesPerView: 5,
         spaceBetween: 12,
-        loop: false,
+        loop: true,
         freeMode: true,
         virtual: true,
         allowTouchMove: false,
@@ -168,6 +183,21 @@ export default {
     eventBus.$emit('closeMenu')
   },
   methods: {
+    ...mapMutations({
+      setWinItem: 'chest/setWinItem'
+    }),
+    continuePlay () {
+      this.setWinItem(null)
+      this.isSliderActive = false
+      this.isShowWinItem = false
+    },
+    emitOpenChest () {
+      const item = {
+        userId: this.getUser.id,
+        winItem: this.getWinItem
+      }
+      this.$socket.emit('openChest', item)
+    },
     async openChest (id) {
       try {
         const data = new FormData()
@@ -199,26 +229,38 @@ export default {
     animateSlider () {
       const foundItem = this.getCurrentChest.items.find(curVal => curVal.id === this.getWinItem.id)
       const index = this.getCurrentChest.items.indexOf(foundItem)
+      // const winIndex = (document.querySelector('.swiper-slide[index=' + String(this.getWinItem.id) + ']')).getAttribute('data-swiper-slide-index')
+      // console.log(winIndex)
+      console.log(index)
+      console.log(foundItem)
+
       this.swiper.update()
 
-      const i = this.getCurrentChest.items.length
+      // const i = this.getCurrentChest.items.length
+      let slideIndexTo = 1
       let time = 0
-      const interval = setInterval(() => {
-        if (time === 3000) {
-          clearInterval(interval)
-          this.swiper.slideTo(index, 100, false)
-          setTimeout(() => {
-            this.animated = true
-            this.isSliderActive = false
-            this.isShowWinItem = true
-            time = 0
-          }, 1000)
-        } else {
-          const j = Math.floor(Math.random() * (i + 1))
-          this.swiper.slideTo(j, 100, false)
-        }
-        time += 100
-      }, 100)
+      try {
+        const interval = setInterval(() => {
+          if (time >= 6000) {
+            clearInterval(interval)
+            this.swiper.slideToLoop(index, 100, false)
+            setTimeout(() => {
+              this.animated = true
+              this.isSliderActive = false
+              this.isShowWinItem = true
+              time = 0
+              this.emitOpenChest()
+            }, 1000)
+          } else {
+            // const j = Math.floor(Math.random() * (i + 1))
+            slideIndexTo++
+            this.swiper.slideTo(slideIndexTo, 50, false)
+          }
+          time += 200
+        }, 200)
+      } catch (e) {
+        console.log(e)
+      }
     }
   }
 }

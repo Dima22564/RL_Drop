@@ -18,7 +18,7 @@ export default {
   personal: 'Приватность',
   done: 'Готово',
   userName: 'Имя',
-  users: 'Пользовалели',
+  users: 'Игроки',
   number: 'Номер телефона',
   security: 'Безопасность',
   online: 'Онлайн',
@@ -46,5 +46,8 @@ export default {
   craftFail: 'Крафт закончися неудачей!',
   notification: 'Уведомление',
   twoFaDeactivate: '2fa деактивирована успешно!',
-  twoFaActivate: '2fa активированна успешно!'
+  twoFaActivate: '2fa активированна успешно!',
+  changesSaved: 'Ваши изменения сохранены!',
+  signIn: 'Войти сейчас'
+
 }

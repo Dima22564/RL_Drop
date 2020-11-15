@@ -68,13 +68,13 @@
           </b-col>
           <b-col xl="4" lg="4">
             <div class="dash__item">
-              <img src="/images/avatar.jpg" alt="" class="dash__img">
+              <img v-if="bestItem" :src="bestItem.image" alt="" class="dash__img">
               <div class="dash__text">
                 <p class="dash__title dash__title_block">
                   {{ $t('bestCrop') }}
                 </p>
-                <p class="dash__desc">
-                  Gamma Doppler
+                <p v-if="bestItem" class="dash__desc">
+                  {{ bestItem.name }}
                 </p>
               </div>
             </div>
@@ -148,7 +148,8 @@ export default {
       disabled: true,
       cases: 0,
       crafts: 0,
-      items: 0
+      items: 0,
+      bestItem: null
     }
   },
   async mounted () {
@@ -157,6 +158,7 @@ export default {
       this.cases = result.data.cases
       this.crafts = result.data.crafts
       this.items = result.data.items
+      this.bestItem = result.data.bestItem
     } catch (e) {
       this.showNotification(this.showNotification(this.$t('smtWrong'), 'danger'))
     }
@@ -262,9 +264,12 @@ export default {
       justify-content: space-between
     &_wrap
       flex-wrap: wrap
+  &__text
+    overflow: hidden
   &__block
     display: flex
     align-items: center
+    overflow: hidden
   &__balance
     text-transform: uppercase
     font-weight: 600
@@ -297,7 +302,6 @@ export default {
     white-space: nowrap
     overflow: hidden
     text-overflow: ellipsis
-    display: table-caption
     &_block
       display: block
   &__desc

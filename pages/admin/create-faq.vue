@@ -108,6 +108,7 @@ export default {
       categoryEn: ''
     }
   },
+  middleware: 'admin',
   async mounted () {
     try {
       await this.$store.dispatch('faq/loadFaqs')

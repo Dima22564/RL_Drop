@@ -40,6 +40,7 @@ export default {
   components: {
     'v-chart': ECharts
   },
+  middleware: 'admin',
   data () {
     return {
       soldItemsGroupedByPlatforms: {

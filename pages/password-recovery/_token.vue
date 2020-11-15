@@ -54,7 +54,7 @@
 
             <div class="regForm__bottom">
               <p class="regForm__text">
-                <nuxt-link to="/sign-up" class="regForm__emp" tag="span">
+                <nuxt-link to="/sign-in" class="regForm__emp" tag="span">
                   Sign In Now
                 </nuxt-link>
               </p>
@@ -106,6 +106,7 @@ export default {
             const result = await this.$store.dispatch('password/sendPassword', formData)
             if (result.success) {
               this.errorMessage = null
+              await this.$router.push('/sign-in')
             }
           } catch (e) {
             this.errorMessage = e.data.message || e.data.error.messages[0]

@@ -73,6 +73,9 @@
           <nuxt-link active-class="admin__link_active" tag="div" class="admin__link" to="/admin/users">
             Users
           </nuxt-link>
+          <nuxt-link active-class="admin__link_active" tag="div" class="admin__link" to="/admin/poster/top-index">
+            Top Index Banner
+          </nuxt-link>
           <nuxt-link active-class="admin__link_active" tag="div" class="admin__link" to="/admin/withdraws">
             Withdraws
           </nuxt-link>
@@ -87,14 +90,30 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
+
 export default {
   components: {},
-  middleware: 'admin',
+  middleware: ['both'],
   async created () {
     try {
       await this.$store.dispatch('admin/colors/getAllColors')
     } catch (e) {
     }
+  },
+  mounted () {
+    const that = this
+    this.windowSize = window.innerWidth
+    this.setWindowSize(window.innerWidth)
+    window.addEventListener('resize', function () {
+      const windowSize = window.innerWidth
+      that.setWindowSize(windowSize)
+    })
+  },
+  methods: {
+    ...mapMutations({
+      setWindowSize: 'common/setWindowSize'
+    })
   }
 }
 </script>

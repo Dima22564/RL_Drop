@@ -3,38 +3,9 @@
     <!-- Timer  adapted = true  -->
     <section class="meeting">
       <b-container>
-        <div class="ice">
-          <img v-if="getWindowSize > 576" src="/images/bg-1.png" alt="" class="ice__bg">
-          <img v-else src="/images/bg-1-mobile.png" alt="" class="ice__bg">
-          <div class="ice__text">
-            <h2 class="ice__title">
-              Ice Melting Event
-            </h2>
-            <Timer
-              starttime="May 12, 2020 15:37:25"
-              endtime="Jun 13, 2021 16:37:25"
-              trans="{
-                &quot;day&quot;:&quot;Day&quot;,
-                &quot;hours&quot;:&quot;Hrs&quot;,
-                &quot;minutes&quot;:&quot;Min&quot;,
-                &quot;seconds&quot;:&quot;Sec&quot;,
-                &quot;expired&quot;:&quot;Event has been expired.&quot;,
-                &quot;running&quot;:&quot;Till the end of event.&quot;,
-                &quot;upcoming&quot;:&quot;Till start of event.&quot;,
-                &quot;status&quot;: {
-                   &quot;expired&quot;:&quot;Expired&quot;,
-                   &quot;running&quot;:&quot;Running&quot;,
-                   &quot;upcoming&quot;:&quot;Future&quot;
-                  }}"
-            />
-          </div>
-          <div class="ice__btn">
-            <button class="btn btn_primary btn-arrow">
-              <span>Play</span>
-              <ArrowRightIcon class="btn__icon" />
-            </button>
-          </div>
-        </div>
+        <TopIndexBanner
+          title="ice melting effect"
+        />
       </b-container>
     </section>
 
@@ -43,6 +14,7 @@
       <b-container
         v-for="(cat, key) in getAllChests"
         :key="key"
+        :id="key"
       >
         <div class="chests__top">
           <h4 class="chests__title">
@@ -78,39 +50,22 @@
     <!-- Try  adapted = true -->
     <section class="try">
       <b-container>
-        <div class="chance">
-          <b-row>
-            <img v-if="getWindowSize > 992" src="/images/bg-2.png" alt="" class="chance__bg">
-            <img v-else src="/images/bg-2-mobile.png" alt="" class="chance__bg">
-            <b-col xl="5" lg="5" md="8">
-              <h2 class="chance__title">
-                Get Your Chance to Win Items
-              </h2>
-              <p class="chance__text">
-                Exclusive opportunity to win very best items! Save event tokens, use them on the wheel and get your prize!
-              </p>
-              <button class="btn btn_primary btn-arrow chance__btn">
-                <span>Try It Now</span>
-                <ArrowRightIcon class="btn__icon" />
-              </button>
-            </b-col>
-          </b-row>
-        </div>
+        <BottomIndexBanner />
       </b-container>
     </section>
   </div>
 </template>
 
 <script>
-import ArrowRightIcon from 'vue-material-design-icons/ArrowRight.vue'
 import { mapGetters } from 'vuex'
 import showNotification from '@/mixins/showNotification'
-import Timer from '../components/Timer'
+import TopIndexBanner from '@/components/TopBanner'
+import BottomIndexBanner from '@/components/BottomBanner'
 export default {
   layout: 'default',
   components: {
-    ArrowRightIcon,
-    Timer
+    TopIndexBanner,
+    BottomIndexBanner
   },
   mixins: [showNotification],
   async created () {
@@ -136,86 +91,6 @@ export default {
   padding: 0 0 32px
   +lg
     padding: 0 0 16px
-.ice
-  border-radius: 12px
-  box-shadow: 0 8px 8px -4px rgba(20, 16, 41, 0.24), 0 2px 4px -1px rgba(20, 16, 41, 0.24), 0 0 1px 0 rgba(20, 16, 41, 0.4)
-  background-color: #27273e
-  padding: 40px
-  display: flex
-  align-items: flex-start
-  justify-content: space-between
-  position: relative
-  min-height: 228px
-  +md
-    flex-direction: column
-  &__title
-    margin-bottom: 40px
-  &__bg
-    position: absolute
-    right: -30px
-    bottom: -30px
-    user-select: none
-    +lg
-      width: 100%
-      bottom: -22px
-    +md
-      bottom: -17px
-      right: 0
-      border-radius: 0 0 12px 12px
-  &__btn
-    position: relative
-    z-index: 5
-    +md
-      width: 100%
-      margin-top: 66px
-      .btn
-        width: 100%
-        justify-content: center
-  &__text
-    position: relative
-    z-index: 5
-    +md
-      width: 100%
-  &__timer
-    display: flex
-    align-items: flex-start
-    user-select: none
-    +md
-      justify-content: center
-      width: 100%
-    &-item
-      display: flex
-      flex-direction: column
-      align-items: center
-      &:not(:last-child)
-        margin-right: 8px
-      .num
-        width: 48px
-        height: 48px
-        letter-spacing: -1px
-        margin-bottom: 8px
-        display: flex
-        align-items: center
-        justify-content: center
-        font-size: 24px
-        font-weight: bold
-        color: white
-        border-radius: 4px
-        text-transform: uppercase
-        background-color: rgba(224, 224, 255, 0.02)
-      .day
-        text-align: center
-        font-size: 13px
-        line-height: 16px
-        text-transform: uppercase
-        color: rgba(224, 224, 255, 0.6)
-        letter-spacing: 1px
-        font-weight: 600
-      .expired
-        font-size: 24px
-        text-transform: uppercase
-        font-weight: 600
-        color: rgba(224, 224, 255, 0.6)
 .chests
   padding-bottom: 16px
   +lg
@@ -241,6 +116,8 @@ export default {
     position: relative
     z-index: 5
     height: 216px
+    +media-b(500)
+      height: auto
   &__discount
     position: relative
     z-index: 10
@@ -302,30 +179,5 @@ export default {
 
 .try
   padding-bottom: 48px
-.chance
-  border-radius: 12px
-  box-shadow: 0 8px 8px -4px rgba(20, 16, 41, 0.24), 0 2px 4px -1px rgba(20, 16, 41, 0.24), 0 0 1px 0 rgba(20, 16, 41, 0.4)
-  background-color: #27273e
-  padding: 40px
-  position: relative
-  &__bg
-    position: absolute
-    right: 0
-    bottom: 0
-    border-radius: 12px
-    width: 100%
-    height: 100%
-    +lg
-      width: initial
-  &__title
-    margin-bottom: 32px
-  &__text
-    color: rgba(224, 224, 255, 0.6)
-    font-size: 18px
-    font-weight: 500
-    margin-bottom: 24px
-  &__btn
-    +sm
-      width: 100%
-      justify-content: center
+
 </style>

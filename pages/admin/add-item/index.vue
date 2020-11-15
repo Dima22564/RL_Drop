@@ -132,6 +132,7 @@
 import { mapGetters } from 'vuex'
 export default {
   layout: 'admin',
+  middleware: 'admin',
   data () {
     return {
       selected: null,

@@ -26,9 +26,9 @@
       </div>
 
       <div v-if="showStatus && withdrawStatus !== null" class="inventoryItem__click">
-        <button @click.prevent="" class="btn btn_primary inventoryItem__btn">
+        <span class="btn btn_primary inventoryItem__btn">
           {{ withdrawStatus }}
-        </button>
+        </span>
       </div>
 
       <div v-if="showConfirm && withdrawStatus === null" @mouseleave="showConfirm = false" class="inventoryItem__click">
@@ -141,6 +141,7 @@ export default {
       try {
         this.$store.dispatch('user/withdraw', payload)
         this.showNotification('Your application to withdraw accepted!', 'info')
+        this.withdrawStatus = 'pending'
       } catch (e) {
 
       }

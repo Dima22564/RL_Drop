@@ -88,6 +88,7 @@ export default {
   layout: 'admin',
   name: 'AdminUsers',
   mixins: [showNotification],
+  middleware: 'admin',
   data () {
     return {
       filter: '',

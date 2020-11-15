@@ -77,7 +77,7 @@
               <div class="case case_green">
                 <WifiIcon class="case__icon" />
                 <div class="case__text">
-                  <span class="emp">4,102,715</span>
+                  <span class="emp">{{ getStats.cases }}</span>
                   <span class="name">{{ $t('cases') }}</span>
                 </div>
               </div>
@@ -86,7 +86,7 @@
               <div class="case case_blue">
                 <WifiIcon class="case__icon" />
                 <div class="case__text">
-                  <span class="emp">4,102,715</span>
+                  <span class="emp">{{ getStats.crafts }}</span>
                   <span class="name">{{ $t('craft') }}</span>
                 </div>
               </div>
@@ -95,7 +95,7 @@
               <div class="case case_d-blue">
                 <WifiIcon class="case__icon" />
                 <div class="case__text">
-                  <span class="emp">4,102,715</span>
+                  <span class="emp">{{ getStats.users }}</span>
                   <span class="name">{{ $t('users') }}</span>
                 </div>
               </div>
@@ -116,28 +116,26 @@
 
     <div class="header__slider">
       <client-only>
-        <slick
-          ref="slick"
-          :options="slickOptions"
-          @reInit="reinitSlider"
-          v-if="dataReady"
+        <Swiper
+          ref="mySwiper"
+          v-if="getWinLiveItems"
+          :options="options"
+          autoplay
         >
-          <div
-            v-show="item[`${getPlatform}Price`]"
-            v-for="item in getCraftItems"
-            :key="item.id"
-            @click.prevent="setCraftItem(
-              { itemId: item.id, itemName: item.name, platform: getPlatform },
-              item.id)"
-            class="weapon__wrapper"
+          <swiper-slide
+            :key="item.key"
+            v-for="item in getWinLiveItems"
+            :index="item.winItem.id"
           >
-            <div class="weapon weapon_pink">
-              <span class="weapon__line" :style="{ 'background': item.type.color }"></span>
-              <img :data-lazy="item.image" alt="" class="weapon__img">
-              <span class="weapon__name">{{ item.name }}</span>
+            <div class="weapon__wrapper">
+              <nuxt-link :to="'/user/' + item.userId" tag="div" class="weapon weapon_pink">
+                <span :style="{ 'background': item.winItem.type.color }" class="weapon__line" />
+                <img :src="item.winItem.image" alt="" class="weapon__img">
+                <span class="weapon__name">{{ item.winItem.name }}</span>
+              </nuxt-link>
             </div>
-          </div>
-        </slick>
+          </swiper-slide>
+        </swiper>
       </client-only>
     </div>
   </header>
@@ -152,8 +150,10 @@ import UserIcon from 'vue-material-design-icons/Account.vue'
 import WifiIcon from 'vue-material-design-icons/Wifi.vue'
 import EqualizerIcon from 'vue-material-design-icons/Equalizer.vue'
 import { mapGetters, mapMutations } from 'vuex'
+import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
+import { Swiper as SwiperClass, Autoplay } from 'swiper/swiper.esm'
 import MyParallax from '../components/Parallax'
-import { eventBus } from '../plugins/event-bus'
+SwiperClass.use([Autoplay])
 export default {
   components: {
     LaptopIcon,
@@ -163,36 +163,24 @@ export default {
     UserIcon,
     WifiIcon,
     EqualizerIcon,
-    MyParallax
+    MyParallax,
+    Swiper,
+    SwiperSlide
   },
   data () {
     return {
       dataReady: false,
-      slickOptions: {
-        slidesToShow: 6,
-        centerMode: true,
-        slidesToScroll: 4,
-        dots: false,
-        arrows: false,
-        variableWidth: true,
-        autoplay: true,
-        infinite: false,
-        initialSlide: 10,
-        autoplaySpeed: 4000,
-        responsive: [
-          {
-            breakpoint: 1100,
-            settings: {
-              slidesToShow: 2
-            }
-          },
-          {
-            breakpoint: 768,
-            settings: {
-              slidesToShow: 1
-            }
-          }
-        ]
+      options: {
+        slidesPerView: 'auto',
+        spaceBetween: 12,
+        loop: false,
+        freeMode: true,
+        allowTouchMove: false,
+        centeredSlides: false,
+        autoplay: {
+          delay: 3000
+        },
+        speed: 500
       },
       caseOptions: {
         slidesToShow: 2,
@@ -209,16 +197,19 @@ export default {
     ...mapGetters({
       getWindowSize: 'common/getWindowSize',
       getPlatform: 'common/getPlatform',
-      getCraftItems: 'item/getCraftItems',
+      getWinLiveItems: 'item/getWinLiveItems',
       getOnline: 'common/getOnline',
       getStats: 'common/getStats'
-    })
+    }),
+    swiper () {
+      return this.$refs.mySwiper.$swiper
+    }
   },
-  async created () {
-    try {
-      await this.$store.dispatch('item/loadCraftItems')
-    } catch (e) {
-      console.log(e)
+  sockets: {
+    updateLiveItems (item) {
+      this.swiper.removeSlide(0)
+      this.$store.commit('item/updateLiveItems', item)
+      this.swiper.update()
     }
   },
   mounted () {
@@ -229,13 +220,6 @@ export default {
       const windowSize = window.innerWidth
       that.setWindowSize(windowSize)
     })
-    eventBus.$off('loadSlider')
-    eventBus.$on('loadSlider', (arg) => {
-      if (arg) {
-        this.dataReady = arg
-        this.reinitSlider()
-      }
-    })
     this.$store.dispatch('common/initCookie')
   },
   methods: {
@@ -243,23 +227,9 @@ export default {
       setWindowSize: 'common/setWindowSize',
       setPlatform: 'common/setPlatform'
     }),
-    reinitSlider () {
-      this.$nextTick(() => {
-        this.$refs.slick.reSlick()
-      })
-    },
     changeItems (filter) {
       this.setPlatform(filter)
       this.$store.dispatch('common/setCookiePlatform', filter)
-      this.reinitSlider()
-    },
-    setCraftItem (s, id) {
-      this.reinitSlider()
-      this.$router.push(this.localePath({
-        name: 'craft',
-        query: s
-      }))
-      eventBus.$emit('selectCraftItem', [s, id])
     }
   }
 }
@@ -272,6 +242,8 @@ export default {
   padding: 32px 0
   +lg
     padding: 16px 0
+  .swiper-slide
+    width: 160px
   &__part
     &-1
       margin-bottom: 32px
@@ -347,7 +319,7 @@ export default {
     cursor: pointer
     color: rgba(224, 224, 255, 0.6)
     &_active
-      box-shadow: 0 8px 8px -4px rgba(20, 16, 41, 0.24), 0 2px 4px -1px rgba(20, 16, 41, 0.24), 0 0 1px 0 rgba(20, 16, 41, 0.4);
+      box-shadow: 0 8px 8px -4px rgba(20, 16, 41, 0.24), 0 2px 4px -1px rgba(20, 16, 41, 0.24), 0 0 1px 0 rgba(20, 16, 41, 0.4)
       background-color: #33334b
       color: white
 

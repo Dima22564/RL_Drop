@@ -4,7 +4,7 @@
     <b-container>
       <div class="footer__part-1">
         <nuxt-link to="/" class="footer__link footer__logo">
-          RLDROP
+          <img src="/images/logo.svg" alt="">
         </nuxt-link>
         <div class="footer__social">
           <a href="" class="footer__social-link">
@@ -103,8 +103,8 @@ export default {
   &__logo
     font-size: 24px
     font-weight: 600
-    &:hover
-      color: #e0e0ff
+    img
+      width: 125px
   &__link
     color: white
     letter-spacing: 4px

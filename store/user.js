@@ -18,6 +18,7 @@ export const mutations = {
   },
   changeUserBalance (state, balance) {
     state.user.balance += balance
+    state.user.balance = Number(state.user.balance.toFixed(2))
   },
   beautifyBalance (state, id) {
     state.user.balance = Number(state.user.balance.toFixed(2))

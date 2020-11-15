@@ -3,7 +3,7 @@
     <div v-if="getWindowSize > 991" class="menu">
       <b-container class="menu__container">
         <div class="menu__content menu__content-1">
-          <nuxt-link :to="localePath('/')" class="menu__link">
+          <nuxt-link :to="localePath('/')" class="menu__link menu__logo">
             <img src="/images/logo.svg" alt="">
           </nuxt-link>
           <nuxt-link :to="localePath('/craft')" class="menu__link">
@@ -115,7 +115,7 @@
               </button>
             </div>
           </div>
-          <nuxt-link v-if="!getToken" to="/sign-up" tag="button" class="menu__btn btn btn_primary">
+          <nuxt-link v-if="!getToken" to="/sign-in" tag="button" class="menu__btn btn btn_primary">
             {{ $t('getStarted') }}
           </nuxt-link>
         </div>
@@ -142,7 +142,9 @@
               <span class="mobileMenu__btn">{{ $t('getStarted') }}</span>
             </nuxt-link>
 
-            <div class="mobileMenu__balance" v-else>${{ getUser.balance }}</div>
+            <div v-else class="mobileMenu__balance">
+              ${{ getUser.balance }}
+            </div>
           </div>
 
           <div v-if="showDropMenu" class="mobileMenu__invisible">
@@ -301,6 +303,9 @@
   box-shadow: 0 2px 4px -1px rgba(20, 16, 41, 0.24), 0 0 1px 0 rgba(20, 16, 41, 0.4)
   padding: 12px 0
   background: #27273e
+  &__logo
+    img
+      width: 125px
   &__content
     display: flex
     align-items: center

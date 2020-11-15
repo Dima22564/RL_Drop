@@ -46,6 +46,7 @@ export default {
   craftFail: 'Craft failed!',
   notification: 'Notification',
   twoFaDeactivate: '2fa deactivated successfully!',
-  twoFaActivate: '2fa activated successfully!'
-
+  twoFaActivate: '2fa activated successfully!',
+  changesSaved: 'Your changes saved!',
+  signIn: 'Sign In Now'
 }

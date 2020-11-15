@@ -19,7 +19,7 @@
                   :dash-spacing="0"
                   :stroke-width="2"
                   :active-width="4"
-                  :active-count="this.progressBar / 100 * 60"
+                  :active-count="progressBar / 100 * 60"
                   size="10rem"
                   active-stroke="#00bbff"
                   stroke="transparent"
@@ -31,7 +31,7 @@
                   :stroke-width="100"
                   :active-width="100"
                   :dash-spacing="0"
-                  :active-count="this.progressBar / 100 * 60"
+                  :active-count="progressBar / 100 * 60"
                   size="10rem"
                   stroke="transparent"
                   class="craft__progressLine"
@@ -84,7 +84,7 @@
                   v-if="craftStatus === 1 || craftStatus === 0 || craftStatus === 2"
                   class="btn btn_primary"
                 >
-                  {{ $t('play') }} ${{ price * progress / 100 }}
+                  {{ $t('play') }} ${{ Number(price * progress / 100).toFixed(2) }}
                 </button>
                 <button
                   @click.prevent="play"
@@ -102,7 +102,7 @@
                   v-if="craftStatus === 3"
                   class="btn btn_secondary craft__btn"
                 >
-                  {{ $t('sell') }} $13.62
+                  {{ $t('sell') }} ${{ getCurrentCraftItem[`${getPlatform}Price`] }}
                 </button>
                 <nuxt-link
                   :disabled="getBtnState"
@@ -133,6 +133,10 @@
               :class="filterItems.type === item.type ? 'faq__filter_active' : ''"
               @click="filterItems = item"
             >{{ item.type }}</span>
+            <span
+              :class="filterItems.type === null ? 'faq__filter_active' : ''"
+              @click="filterItems.type = null"
+            >All</span>
           </div>
           <client-only v-else-if="getWindowSize <= 1200 && getTypes.length > 0">
             <multiselect
@@ -152,7 +156,7 @@
         <b-row class="inventoryItemCheck__row">
           <InventoryItemCheck
             v-for="(item) in getCraftItems"
-            v-show="item.type.type === filterItems.type"
+            v-show="item.type.type === filterItems.type || filterItems.type === null  "
             :key="item.id"
             v-model="craftItem"
             :img="item.image"

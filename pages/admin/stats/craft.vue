@@ -39,6 +39,7 @@ export default {
   components: {
     'v-chart': ECharts
   },
+  middleware: 'admin',
   mixins: [showNotification, updateChart],
   data () {
     return {

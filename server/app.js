@@ -2,40 +2,47 @@ const app = require('express')()
 // eslint-disable-next-line import/order
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
-// const redisAdapter = require('socket.io-redis')
-// io.adapter(redisAdapter({ host: '127.0.0.1', port: 6379 }))
-const Redis = require('redis')
-const subscriber = Redis.createClient()
-// const publisher = Redis.createClient()
+const axios = require('axios')
 
-subscriber.on('message', async (channel, message) => {
-  await console.log("Subscriber received message in channel '" + channel + "': " + message)
-})
+axios.defaults.baseURL = 'http://127.0.0.1:8000/api'
 
-subscriber.on('Custom', async (channel, message) => {
-  await console.log("Subscriber received message in channel '" + channel + "': " + message)
-})
+let winItems = []
+let key = winItems.length
 
-subscriber.subscribe('fromNuxt')
+const getWinItems = async () => {
+  if (winItems.length === 0) {
+    try {
+      const result = await axios.get(`${axios.defaults.baseURL}/win-items`)
+      winItems = result.data
+    } catch (e) {
+    }
+  }
+  key = winItems.length
+  io.sockets.emit('setLiveItems', winItems)
+}
 
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
   const updateOnline = () => {
     io.sockets.emit('online', Object.keys(io.sockets.adapter.rooms).length)
   }
-  // publisher.publish('fromNuxt', 'hello laravel 3')
-
   updateOnline()
 
   socket.on('disconnect', () => {
     updateOnline()
   })
 
-  socket.emit('newMessage', {
-    text: 'sfdfedf'
+  await getWinItems()
+
+  socket.on('openChest', (item) => {
+    key += 1
+    item.key = key
+    if (winItems.length >= 40) {
+      winItems.shift()
+    }
+    winItems.push(item)
+    io.sockets.emit('updateLiveItems', item)
   })
 })
-
-
 
 module.exports = {
   app,

@@ -131,6 +131,7 @@ import showNotification from '@/mixins/showNotification'
 export default {
   layout: 'admin',
   mixins: [showNotification],
+  middleware: 'admin',
   data () {
     return {
       selected: null,

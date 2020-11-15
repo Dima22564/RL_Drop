@@ -78,6 +78,7 @@ export default {
   layout: 'admin',
   name: 'AdminWithdraws',
   mixins: [showNotification],
+  middleware: 'both',
   data () {
     return {
       pending: {

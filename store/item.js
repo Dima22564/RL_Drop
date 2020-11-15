@@ -1,15 +1,13 @@
-import { eventBus } from '@/plugins/event-bus'
-
 export const state = () => ({
-  craftItems: null,
+  winLiveItems: null,
   currentCraftItem: null,
   btnDisabled: true,
   types: []
 })
 
 export const mutations = {
-  setCraftItems (state, items) {
-    state.craftItems = items
+  setLiveItems (state, items) {
+    state.winLiveItems = items
   },
   setCurrentCraftItem (state, items) {
     state.currentCraftItem = items
@@ -19,22 +17,15 @@ export const mutations = {
   },
   setTypes (state, types) {
     state.types = types
+  },
+  updateLiveItems (state, item) {
+    state.winLiveItems.push(item)
   }
 }
 
 export const actions = {
-  async loadCraftItems ({ commit }) {
-    try {
-      const result = await this.$axios.$get(`${this.$axios.defaults.baseURL}/craft-items`)
-      commit('setCraftItems', result.data.items)
-      commit('setTypes', result.data.types)
-      if (result.success) {
-        eventBus.$emit('loadSlider', true)
-      }
-      return result
-    } catch (e) {
-      throw e.response
-    }
+  SOCKET_setLiveItems ({ commit }, items) {
+    commit('setLiveItems', items)
   },
   async getItemForCraft ({ commit }, id) {
     try {
@@ -70,17 +61,17 @@ export const actions = {
           commit('user/changeUserBalance', rootGetters['chest/getWinItem'][`${rootGetters['common/getPlatform']}Price`], { root: true })
         }
         commit('chest/setWinItem', null, { root: true })
+        commit('user/setUser', result.data.user, { root: true })
       }
       return result
     } catch (e) {
-      console.log(e)
       throw e.response
     }
   }
 }
 
 export const getters = {
-  getCraftItems: state => state.craftItems,
+  getWinLiveItems: state => state.winLiveItems,
   getCurrentCraftItem: state => state.currentCraftItem,
   getBtnState: state => state.btnDisabled,
   getTypes: state => state.types

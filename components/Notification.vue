@@ -16,7 +16,7 @@
       <slot />
       <p>{{ date }}</p>
     </div>
-    <div v-if="canClose === 1" @click="closeNotification" class="notification__close">
+    <div @click="closeNotification" class="notification__close">
       <CloseIcon />
     </div>
   </div>
