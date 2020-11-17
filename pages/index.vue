@@ -4,7 +4,13 @@
     <section class="meeting">
       <b-container>
         <TopIndexBanner
-          title="ice melting effect"
+          v-if="getTopIndexBanner"
+          :title="getTopIndexBanner.title"
+          :endtime="getTopIndexBanner.end_date"
+          :starttime="getTopIndexBanner.start_date"
+          :image="getTopIndexBanner.image"
+          :mobile-image="getTopIndexBanner.mobile_image"
+          :caseCategory="getTopIndexBanner.case_category"
         />
       </b-container>
     </section>
@@ -33,6 +39,9 @@
             cols="6"
           >
             <nuxt-link :to="`/case/${chest.id}`" class="chest" tag="div">
+              <div class="chest__limited" v-if="chest.isLimited">
+                {{ chest.currentOpen }}/{{ chest.maxOpen }}
+              </div>
               <img :src="chest.image" alt="" class="chest__img">
               <div class="chest__text">
                 <span class="name">{{ chest.name }}</span>
@@ -50,7 +59,15 @@
     <!-- Try  adapted = true -->
     <section class="try">
       <b-container>
-        <BottomIndexBanner />
+        <BottomIndexBanner
+          v-if="getBottomIndexBanner"
+          :title="getBottomIndexBanner.title"
+          :mobile-image="getBottomIndexBanner.mobile_image"
+          :image="getBottomIndexBanner.image"
+          :case-id="getBottomIndexBanner.case_id"
+          :text_en="getBottomIndexBanner.text_en"
+          :text_ru="getBottomIndexBanner.text_ru"
+        />
       </b-container>
     </section>
   </div>
@@ -79,7 +96,9 @@ export default {
     ...mapGetters({
       getWindowSize: 'common/getWindowSize',
       getAllChests: 'chest/getAllChests',
-      getPlatform: 'common/getPlatform'
+      getPlatform: 'common/getPlatform',
+      getTopIndexBanner: 'banners/getTopIndexBanner',
+      getBottomIndexBanner: 'banners/getBottomIndexBanner'
     })
   }
 }
@@ -108,9 +127,18 @@ export default {
   display: flex
   flex-direction: column
   margin-bottom: 32px
-  cursor: pointer7
+  cursor: pointer
+  position: relative
   +lg
     margin-bottom: 16px
+  &__limited
+    position: absolute
+    top: 8px
+    left: 8px
+    z-index: 6
+    font-size: 14px
+    font-weight: 500
+    color: white
   &__img
     width: 100%
     position: relative

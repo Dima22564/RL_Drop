@@ -175,6 +175,26 @@
         </b-form-checkbox>
       </b-form-group>
 
+      <b-form-group
+        label="Limited"
+        label-for="limited"
+        description="Is case limited?"
+        class="mt-3 mb-3"
+      >
+        <b-form-checkbox v-model="form.isLimited" :value="true">
+          Is this case limited?
+        </b-form-checkbox>
+        <div class="d-flex" v-if="form.isLimited">
+          <b-form-input
+            id="category"
+            v-model.trim="form.maxOpens"
+            required
+            placeholder="Max opens"
+            class="w-50 mr-3"
+          />
+        </div>
+      </b-form-group>
+
       <b-button type="submit" variant="primary">
         Create
       </b-button>
@@ -207,7 +227,9 @@ export default {
         isChestVisible: true,
         name: null,
         oldPrice: null,
-        category: null
+        category: null,
+        isLimited: false,
+        maxOpens: ''
       },
       removedItem: null
     }
@@ -250,6 +272,8 @@ export default {
       data.append('items', JSON.stringify(this.form.itemsWeights))
       data.append('image', this.$refs.myVueDropzone.getAcceptedFiles()[0])
       data.append('is_case_visible_for_user', visibility)
+      data.append('is_limited', this.form.isLimited ? 1 : 0)
+      data.append('max_open', this.form.isLimited ? this.form.maxOpens : 0)
       try {
         const result = await this.$store.dispatch('admin/chest/creteChest', data)
         if (result.success) {
@@ -261,14 +285,6 @@ export default {
           this.reset()
         }
       } catch (e) {
-        // if (typeof e.error.messages.type !== 'undefined') {
-        //   this.$bvToast.toast(e.error.messages.type[0], {
-        //     title: `Notification`,
-        //     variant: 'danger',
-        //     solid: true
-        //   })
-        //   return 0
-        // }
         this.$bvToast.toast('Something went wrong(', {
           title: `Notification`,
           variant: 'danger',

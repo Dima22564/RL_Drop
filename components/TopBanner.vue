@@ -1,14 +1,14 @@
 <template>
   <div class="ice">
-    <img v-if="getWindowSize > 576" src="/images/bg-1.png" alt="" class="ice__bg">
-    <img v-else src="/images/bg-1-mobile.png" alt="" class="ice__bg">
+    <img v-if="getWindowSize > 576" :src="image" alt="" class="ice__bg">
+    <img v-else :src="mobileImage" alt="" class="ice__bg">
     <div class="ice__text">
       <h2 class="ice__title">
         {{ title }}
       </h2>
       <Timer
-        starttime="Thu, Nov 15, 2020, 00:00:00"
-        endtime="Thu, Nov 20, 2020, 1:00:00"
+        :starttime="starttime"
+        :endtime="endtime"
         trans="{
                 &quot;day&quot;:&quot;Day&quot;,
                 &quot;hours&quot;:&quot;Hrs&quot;,
@@ -25,7 +25,7 @@
       />
     </div>
     <div class="ice__btn">
-      <button @click.prevent="scrollTo('sed')" class="btn btn_primary btn-arrow">
+      <button @click.prevent="scrollTo" class="btn btn_primary btn-arrow">
         <span>{{ $t('play') }}</span>
         <ArrowRightIcon class="btn__icon" />
       </button>
@@ -35,6 +35,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import showNotification from '@/mixins/showNotification'
 import ArrowRightIcon from 'vue-material-design-icons/ArrowRight.vue'
 import Timer from '../components/Timer'
 
@@ -44,15 +45,35 @@ export default {
     Timer,
     ArrowRightIcon
   },
+  mixins: [showNotification],
   methods: {
-    scrollTo (id) {
-      document.getElementById(id).scrollIntoView({ behavior: 'smooth' })
+    scrollTo () {
+      try {
+        document.getElementById(this.caseCategory).scrollIntoView({ behavior: 'smooth' })
+      } catch (e) {
+        this.showNotification(this.$t('smtWrong'), 'danger')
+      }
     }
   },
   props: {
     title: {
       type: String,
       required: true
+    },
+    image: {
+      type: null
+    },
+    mobileImage: {
+      type: null
+    },
+    starttime: {
+      type: null
+    },
+    endtime: {
+      type: null
+    },
+    caseCategory: {
+      type: null
     }
   },
   computed: {

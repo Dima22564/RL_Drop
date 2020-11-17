@@ -76,6 +76,9 @@
           <nuxt-link active-class="admin__link_active" tag="div" class="admin__link" to="/admin/poster/top-index">
             Top Index Banner
           </nuxt-link>
+          <nuxt-link active-class="admin__link_active" tag="div" class="admin__link" to="/admin/poster/bottom-index">
+            Bottom Index Banner
+          </nuxt-link>
           <nuxt-link active-class="admin__link_active" tag="div" class="admin__link" to="/admin/withdraws">
             Withdraws
           </nuxt-link>
@@ -126,7 +129,9 @@ export default {
   margin: 0
 .navbar
   background: #202036 !important
-  z-index: 5
+  z-index: 10
+.dropzone-custom-title
+  color: black
 .admin
   display: flex
   margin-top: 75px

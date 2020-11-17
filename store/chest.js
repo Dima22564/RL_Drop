@@ -27,6 +27,8 @@ export const actions = {
       this.$axios.setToken(rootGetters.getToken, 'Bearer')
       const result = await this.$axios.$get(`${this.$axios.defaults.baseURL}/chests-list`)
       commit('setChests', result.data.chests)
+      commit('banners/setTopIndexBanner', result.data.indexTopBanner, { root: true })
+      commit('banners/setBottomIndexBanner', result.data.indexBottomBanner, { root: true })
     } catch (e) {
       throw e.response
     }

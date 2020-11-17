@@ -1,19 +1,19 @@
 <template>
   <div class="chance">
     <b-row>
-      <img v-if="getWindowSize > 992" src="/images/bg-2.png" alt="" class="chance__bg">
-      <img v-else src="/images/bg-2-mobile.png" alt="" class="chance__bg">
+      <img v-if="getWindowSize > 992" :src="image" alt="" class="chance__bg">
+      <img v-else :src="mobileImage" alt="" class="chance__bg">
       <b-col xl="5" lg="5" md="8">
         <h2 class="chance__title">
-          Get Your Chance to Win Items
+          {{ title }}
         </h2>
         <p class="chance__text">
-          Exclusive opportunity to win very best items! Save event tokens, use them on the wheel and get your prize!
+          {{ this[`text_${$i18n.locale}`] }}
         </p>
-        <button class="btn btn_primary btn-arrow chance__btn">
+        <nuxt-link tag="button" :to="`/case/${caseId}`" class="btn btn_primary btn-arrow chance__btn">
           <span>Try It Now</span>
           <ArrowRightIcon class="btn__icon" />
-        </button>
+        </nuxt-link>
       </b-col>
     </b-row>
   </div>
@@ -32,6 +32,26 @@ export default {
     ...mapGetters({
       getWindowSize: 'common/getWindowSize'
     })
+  },
+  props: {
+    title: {
+      type: null
+    },
+    image: {
+      type: null
+    },
+    mobileImage: {
+      type: null
+    },
+    caseId: {
+      type: null
+    },
+    text_ru: {
+      type: null
+    },
+    text_en: {
+      type: null
+    }
   }
 }
 </script>
@@ -44,6 +64,7 @@ export default {
   background-color: #27273e
   padding: 40px
   position: relative
+  min-height: 352px
   &__bg
     position: absolute
     right: 0

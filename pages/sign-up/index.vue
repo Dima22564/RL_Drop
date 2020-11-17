@@ -50,7 +50,7 @@
               :leftIcon="false"
               name="password"
               label="Password"
-              type="text"
+              type="password"
               class="regForm__input"
               :error="$v.password.$error"
             >
@@ -65,7 +65,7 @@
               :leftIcon="false"
               name="confirmPassword"
               label="Confirm password"
-              type="text"
+              type="password"
               class="regForm__input"
               :error="$v.confirmPassword.$error"
             >

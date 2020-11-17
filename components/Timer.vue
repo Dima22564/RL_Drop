@@ -62,19 +62,30 @@ export default {
 
     }
   },
+  watch: {
+    endtime () {
+      this.updateTimer()
+    },
+    starttime () {
+      this.updateTimer()
+    }
+  },
   created () {
     this.wordString = JSON.parse(this.trans)
   },
   mounted () {
-    this.start = new Date(this.starttime).getTime()
-    this.end = new Date(this.endtime).getTime()
-    // Update the count down every 1 second
-    this.timerCount(this.start, this.end)
-    this.interval = setInterval(() => {
-      this.timerCount(this.start, this.end)
-    }, 1000)
+    this.updateTimer()
   },
   methods: {
+    updateTimer () {
+      this.start = new Date(this.starttime).getTime()
+      this.end = new Date(this.endtime).getTime()
+      // Update the count down every 1 second
+      this.timerCount(this.start, this.end)
+      this.interval = setInterval(() => {
+        this.timerCount(this.start, this.end)
+      }, 1000)
+    },
     timerCount (start, end) {
       // Get todays date and time
       const now = new Date().getTime()
