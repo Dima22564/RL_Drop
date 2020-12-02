@@ -48,5 +48,6 @@ export default {
   twoFaDeactivate: '2fa deactivated successfully!',
   twoFaActivate: '2fa activated successfully!',
   changesSaved: 'Your changes saved!',
-  signIn: 'Sign In Now'
+  signIn: 'Sign In Now',
+  passwordLink: 'Password link send to your email!'
 }

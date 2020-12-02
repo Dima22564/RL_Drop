@@ -24,7 +24,6 @@ export const actions = {
       }
       return result
     } catch (e) {
-      console.log(e)
       throw e.response
     }
   }

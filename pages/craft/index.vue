@@ -14,24 +14,24 @@
             <TriangleIcon v-if="craftStatus === 4" class="craftProgress__triangle craftProgress__triangle_danger" />
             <TriangleIcon v-if="craftStatus === 3" class="craftProgress__triangle craftProgress__triangle_success" />
             <div class="craftProgress">
-              <div v-if="craftStatus === 2 || craftStatus === 3 || craftStatus === 4">
+              <div v-if="getCurrentCraftItem">
                 <circleBar
                   :dash-spacing="0"
                   :stroke-width="2"
                   :active-width="4"
-                  :active-count="progressBar / 100 * 60"
+                  :active-count="activeCount"
                   size="10rem"
                   active-stroke="#00bbff"
                   stroke="transparent"
                   class="craft__progressLine"
                 />
               </div>
-              <div v-if="craftStatus === 2 || craftStatus === 3 || craftStatus === 4">
+              <div v-if="getCurrentCraftItem ">
                 <circleBar
                   :stroke-width="100"
                   :active-width="100"
                   :dash-spacing="0"
-                  :active-count="progressBar / 100 * 60"
+                  :active-count="activeCount"
                   size="10rem"
                   stroke="transparent"
                   class="craft__progressLine"
@@ -42,8 +42,14 @@
                 <span class="main" />
                 <span class="center" />
               </div>
-              <div class="craftProgress__progress">
-                {{ progressBar }} <span> %</span>
+              <div
+                class="craftProgress__progress"
+                :class="{ 'craftProgress__progress_initial': !getCurrentCraftItem }"
+                :style="{ transform: `rotate(${activeCircleCount}deg) translateX(175px)` }"
+              >
+                <span class="rotate">
+                  <span>{{ progressBar }}</span> <span class="emp"> %</span>
+                </span>
               </div>
               <div v-if="getCurrentCraftItem" class="craftProgress__circle">
                 <img :src="getCurrentCraftItem.image" alt="" class="craftProgress__img">
@@ -79,7 +85,7 @@
               <div class="craft__bottom">
                 <button
                   @click.prevent="play"
-                  :disabled="getBtnState"
+                  :disabled="getBtnState || !getCurrentCraftItem"
                   :class="getBtnState ? 'btn_primary_disabled' : ''"
                   v-if="craftStatus === 1 || craftStatus === 0 || craftStatus === 2"
                   class="btn btn_primary"
@@ -87,7 +93,7 @@
                   {{ $t('play') }} ${{ Number(price * progress / 100).toFixed(2) }}
                 </button>
                 <button
-                  @click.prevent="play"
+                  @click.prevent="continueCraft"
                   :disabled="getBtnState"
                   :class="getBtnState ? 'btn_primary_disabled' : ''"
                   v-if="craftStatus === 4"
@@ -104,16 +110,15 @@
                 >
                   {{ $t('sell') }} ${{ getCurrentCraftItem[`${getPlatform}Price`] }}
                 </button>
-                <nuxt-link
+                <button
                   :disabled="getBtnState"
                   :class="getBtnState ? 'btn_primary_disabled' : ''"
                   v-if="craftStatus === 3"
                   class="btn btn_primary"
-                  tag="button"
-                  to="/dashboard"
+                  @click.prevent="continueCraft"
                 >
                   {{ $t('continue') }}
-                </nuxt-link>
+                </button>
               </div>
             </div>
           </b-col>
@@ -130,12 +135,12 @@
             <span
               v-for="(item) in getTypes"
               :key="item.id"
-              :class="filterItems.type === item.type ? 'faq__filter_active' : ''"
-              @click="filterItems = item"
+              :class="filterItems.type === item.type && showAll === false ? 'faq__filter_active' : ''"
+              @click="showItems(item)"
             >{{ item.type }}</span>
             <span
-              :class="filterItems.type === null ? 'faq__filter_active' : ''"
-              @click="filterItems.type = null"
+              :class="showAll ? 'faq__filter_active' : ''"
+              @click="showAll = true"
             >All</span>
           </div>
           <client-only v-else-if="getWindowSize <= 1200 && getTypes.length > 0">
@@ -149,6 +154,7 @@
               track-by="type"
               label="type"
               class="inventory__select"
+              @input="hideAll"
             />
           </client-only>
         </div>
@@ -156,7 +162,7 @@
         <b-row class="inventoryItemCheck__row">
           <InventoryItemCheck
             v-for="(item) in getCraftItems"
-            v-show="item.type.type === filterItems.type || filterItems.type === null  "
+            v-show="item.type.type === filterItems.type || showAll"
             :key="item.id"
             v-model="craftItem"
             :img="item.image"
@@ -199,7 +205,14 @@ export default {
       craftItem: null,
       price: null,
       craftStatus: 0,
-      craftResult: null
+      craftResult: null,
+      showAll: false,
+      active () {
+        return 60 - (this.progressBar / 100 * 60)
+      },
+      circleCount () {
+        return -90 - this.progressBar * 3.6
+      }
     }
   },
   computed: {
@@ -213,22 +226,42 @@ export default {
       getTypes: 'item/getTypes',
       getUser: 'user/getUser'
     }),
+    activeCount: {
+      get () {
+        return this.active()
+      },
+      set (value) {
+        this.active = value
+      }
+    },
+    activeCircleCount: {
+      get () {
+        return this.circleCount()
+      },
+      set (value) {
+        this.circleCount = value
+      }
+    },
     checkBalance () {
       return !this.getToken || (this.getUser.balance < this.getCurrentCraftItem[`${this.getPlatform}Price`])
     }
   },
-  mounted () {
-    // this.$router.push('/craft')
+  async mounted () {
+    try {
+      await this.$store.dispatch('item/fetchCraftItems')
+    } catch (e) {
+      this.showNotification('Something went wrong!', 'danger')
+    }
     if ('itemId' in this.$route.query) {
       try {
-        this.queryReact(this.$route.query.itemId, true)
+        await this.queryReact(this.$route.query.itemId, true)
         this.craftStatus = 1
         this.progress = 5
       } catch (e) {
         this.showNotification(this.showNotification(this.$t('smtWrong'), 'danger'))
       }
     } else {
-      this.$router.push(this.localePath('craft'))
+      await this.$router.push(this.localePath('craft'))
       this.$store.commit('item/setCurrentCraftItem', null)
     }
     eventBus.$emit('closeMenu')
@@ -244,6 +277,18 @@ export default {
     })
   },
   methods: {
+    continueCraft () {
+      this.craftStatus = 1
+      this.progress = 5
+      this.$store.commit('item/setCurrentCraftItem', null)
+    },
+    hideAll () {
+      this.showAll = false
+    },
+    showItems (item) {
+      this.showAll = false
+      this.filterItems = item
+    },
     setCraftItem (s, id) {
       this.$router.push(this.localePath({
         name: 'craft',
@@ -274,19 +319,25 @@ export default {
       }
     },
     craftAnimation () {
-      // const randomNum = Math.floor(Math.random() * this.progress)
+      this.active = () => {
+        return (this.progressBar / 100 * 60)
+      }
+      this.circleCount = () => {
+        return -90 + this.progressBar * 3.6
+      }
+      const endNumber = 100 - this.progress
+      const failNumber = Math.floor(Math.random() * this.progress)
       const interval = setInterval(() => {
         if (this.craftResult === false) {
-          if (Math.floor(this.progress) !== this.progressBar) {
+          if (failNumber > this.progressBar) {
             this.progressBar += 1
-            // this.progressBar *= 0.799999
           } else {
             clearInterval(interval)
             this.craftStatus = 4
             this.showNotification(this.$t('craftFail'), 'danger')
             this.$store.commit('item/setBtnState', false)
           }
-        } else if (Math.floor(this.progress) !== this.progressBar) {
+        } else if (endNumber + 3 > this.progressBar) {
           this.progressBar += 1
           // this.progressBar *= 0.799999
         } else {
@@ -298,8 +349,13 @@ export default {
       }, 150)
     },
     input (e) {
-      if (this.craftStatus !== 1) {
+      this.active = () => {
+        return 60 - (this.progressBar / 100 * 60)
       }
+      this.circleCount = () => {
+        return -90 - this.progressBar * 3.6
+      }
+      this.progressBar = this.progress
     },
     async play () {
       if (this.checkBalance) {
@@ -492,9 +548,11 @@ export default {
     position: absolute
     z-index: 3
     top: calc(50% - 36px)
-    right: -30px
-    span
+    transform: translateX(175px)
+    .emp
       font-size: 14px
+    &_initial
+      transform: rotate(0) translateX(175px) !important
   &__circle
     width: 200px
     height: 200px

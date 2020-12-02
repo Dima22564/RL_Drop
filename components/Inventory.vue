@@ -103,7 +103,7 @@ export default {
         }
       }
     } catch (e) {
-      console.log(e)
+      this.showNotification('Something went wrong(', 'danger')
     }
     eventBus.$off('sellItem')
     eventBus.$on('sellItem', async (data) => {
@@ -111,7 +111,6 @@ export default {
         const sellData = new FormData()
         sellData.append('platform', data.platform)
         sellData.append('id', data.id)
-        console.log(data)
         const result = await this.$store.dispatch('item/sell', sellData)
         if (result.data) {
           this.$store.commit('user/deleteInventoryItemById', data.pivotId)

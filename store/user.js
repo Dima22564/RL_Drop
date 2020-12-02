@@ -1,6 +1,8 @@
 export const state = () => ({
   user: null,
-  inventory: []
+  inventory: [],
+  soldItems: [],
+  withdrewItems: []
 })
 
 // noinspection SpellCheckingInspection
@@ -36,6 +38,12 @@ export const mutations = {
     state.user.steamLink = data.steamLink
     state.user.xboxLink = data.xboxLink
     state.user.ps4Link = data.ps4Link
+  },
+  setSoldItems (state, items) {
+    state.soldItems = items
+  },
+  setWithdrewItems (state, items) {
+    state.withdrewItems = items
   }
 }
 
@@ -45,7 +53,6 @@ export const actions = {
       this.$axios.setToken(token, 'Bearer')
       const result = await this.$axios.$post(`${this.$axios.defaults.baseURL}/user`, { token })
       commit('setUser', result.data.user)
-      console.log(result)
       // commit('2fa/set2faSecret', getters.getUser.passwordSecurity
       //   .google2fa_secret, { root: true })
       // dispatch('2fa/generateOneTimePassword', getters['2fa/get2faSecret'], { root: true })
@@ -65,6 +72,8 @@ export const actions = {
       this.$axios.setToken(rootGetters.getToken, 'Bearer')
       const result = await this.$axios.$get(`${this.$axios.defaults.baseURL}/inventory`)
       commit('setInventory', result.data.inventory || [])
+      commit('setSoldItems', result.data.soldItems)
+      commit('setWithdrewItems', result.data.withdrewItems)
       return result
     } catch (e) {
       throw e.response
@@ -85,8 +94,7 @@ export const actions = {
   async loadStats ({ rootGetters }) {
     try {
       this.$axios.setToken(rootGetters.getToken, 'Bearer')
-      const result = await this.$axios.$get(`${this.$axios.defaults.baseURL}/user/stats`)
-      return result
+      return await this.$axios.$get(`${this.$axios.defaults.baseURL}/user/stats`)
     } catch (e) {
       throw e.response
     }
@@ -109,7 +117,6 @@ export const actions = {
       data.append('pivotId', payload.pivotId)
       data.append('platform', payload.platform)
       const result = await this.$axios.$post(`${this.$axios.defaults.baseURL}/user/withdraw`, data)
-      console.log(result)
       return result
     } catch (e) {
       throw e.response
@@ -119,5 +126,7 @@ export const actions = {
 
 export const getters = {
   getUser: state => state.user,
-  getInventory: state => state.inventory
+  getInventory: state => state.inventory,
+  getSoldItems: state => state.soldItems,
+  getWithdrewItems: state => state.withdrewItems
 }

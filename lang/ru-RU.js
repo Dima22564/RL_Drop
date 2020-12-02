@@ -48,6 +48,7 @@ export default {
   twoFaDeactivate: '2fa деактивирована успешно!',
   twoFaActivate: '2fa активированна успешно!',
   changesSaved: 'Ваши изменения сохранены!',
-  signIn: 'Войти сейчас'
+  signIn: 'Войти сейчас',
+  passwordLink: 'Ссылка на подтверждение пароля отправлена на Ваш email.'
 
 }

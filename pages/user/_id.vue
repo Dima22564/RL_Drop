@@ -3,67 +3,28 @@
     <!-- Statistics  adapted = true -->
     <section class="accounntDash">
       <b-container>
-        <div class="accounntDash__top">
-          <h2>{{ $t('account') }}</h2>
-          <div class="dashLinks">
-            <nuxt-link :to="localePath('/dashboard')" active-class="dashLinks__link_active" tag="div" class="dashLinks__link">
-              <DashboardIcon />
-              <span class="text">{{ $t('dashboard') }}</span>
-            </nuxt-link>
-            <nuxt-link :to="localePath('/settings')" active-class="dashLinks__link_active" class="dashLinks__link">
-              <SettingsIcon />
-              <span class="text">{{ $t('settings') }}</span>
-            </nuxt-link>
-          </div>
-        </div>
-
         <b-row>
           <b-col xl="4" lg="4" md="6" class="dash__col">
             <div class="dash__item dash__item_wrap">
               <div class="dash__block">
-                <label v-if="getUser.photo" for="photo">
-                  <img :src="getUser.photo" alt="" class="dash__img">
+                <label v-if="user">
+                  <img :src="user.photo" alt="" class="dash__img">
                 </label>
-                <label v-else for="photo">
-                  <img :src="getUser.photo" alt="" class="dash__img">
+                <label v-else>
+                  <img src="user.photo" alt="" class="dash__img">
                 </label>
                 <img v-else src="/images/avatar.jpg" alt="" class="dash__img">
                 <div class="dash__text">
-                  <p class="dash__title">
-                    {{ getUser.name }}
+                  <p class="dash__title" v-if="user">
+                    {{ user.name }}
                   </p>
-                  <label for="photo" class="btn dash__desc">
-                    {{ $t('changePhoto') }}
-                  </label>
-                  <input
-                    ref="photo"
-                    @change="handleFileUpload"
-                    type="file"
-                    class="dash__photo"
-                    name=""
-                    id="photo"
-                  >
                 </div>
               </div>
-              <p v-if="photo" for="photo" class="dash__desc dash__desc_w100 mt-1 dash__desc_photo">
-                {{ photo.name }}
-              </p>
             </div>
           </b-col>
           <b-col xl="4" lg="4" md="6" class="dash__col">
             <div class="dash__item dash__item_between">
-              <div class="dash__text">
-                <p class="dash__balance">
-                  {{ $t('balance') }}
-                </p>
-                <p class="dash__num">
-                  <span>$ </span>{{ Number(getUser.balance.toFixed(2)) }}
-                </p>
-              </div>
-              <button class="btn btn-arrow btn_primary">
-                <PlusIcon class="btn__icon btn__icon_left" />
-                <span>{{ $t('deposit') }}</span>
-              </button>
+
             </div>
           </b-col>
           <b-col xl="4" lg="4">
@@ -117,16 +78,82 @@
     </section>
 
     <!-- Inventory  adapted = true -->
-    <Inventory />
-    <div v-if="getInventory.length === 0" class="container mt-5">
-      <h3 class="mt-3">{{ $t('noItems') }}</h3>
+    <section class="inventory" v-if="inventory.length > 0" >
+      <b-container>
+        <div class="inventory__top">
+          <h3>{{ $t('inventory') }}</h3>
+          <div v-if="getWindowSize >= 991 && options.length > 0" class="inventory__filter">
+            <div
+              v-for="opt in options"
+              :key="opt.platform"
+              @click="filterItems = opt"
+              :class="filterItems.platform === opt.platform ? 'inventory__filterItem_active' : ''"
+              class="inventory__filterItem"
+            >
+              <span>{{ opt.platform.toUpperCase() }}</span>
+              <span class="quantity">{{ opt.count }}</span>
+            </div>
+          </div>
+          <client-only v-else>
+            <multiselect
+              v-if="options.length > 0"
+              v-model="filterItems"
+              :options="options"
+              :searchable="false"
+              :allowEmpty="false"
+              :showLabels="false"
+              :hideSelected="true"
+              track-by="platform"
+              class="inventory__select"
+            >
+              <template slot="singleLabel" slot-scope="props">
+                <div class="customLabel">
+                  <span class="customLabel__name">{{ props.option.platform }}</span>
+                  <span class="customLabel__num">{{ props.option.count }}</span>
+                </div>
+              </template>
+              <template slot="option" slot-scope="props">
+                <div class="customLabel">
+                  <span class="customLabel__name">{{ props.option.platform }}</span>
+                  <span class="customLabel__num">{{ props.option.count }}</span>
+                </div>
+              </template>
+            </multiselect>
+          </client-only>
+        </div>
+
+        <b-row v-if="inventory.length > 0" class="inventoryItem__row">
+          <InventoryItem
+            v-for="item in inventory"
+            :key="item.pivot.id"
+            :withdraw-status="item.pivot.withdrawStatus"
+            :pivot-id="item.pivot.id"
+            :id="item.id"
+            :img="item.image"
+            :name="item.name"
+            :color="item.type.color"
+            :item-color="item.color"
+            :platform="item.platform"
+            :price="Number(item[`${item.platform}Price`])"
+            :desc="item.text"
+            :decoration="true"
+            v-show="filterItems.platform === item.platform"
+            class="inventoryItem__col"
+          />
+        </b-row>
+      </b-container>
+    </section >
+    <div v-if="inventory.length === 0" class="container mt-5">
+      <h3 class="mt-3">
+        {{ $t('noItems') }}
+      </h3>
     </div>
 
     <b-container>
       <h3 class="inventory__title">Sold Items</h3>
-      <b-row v-if="getSoldItems.length > 0">
+      <b-row v-if="soldItems.length > 0">
         <InventoryItem
-          v-for="item in getSoldItems"
+          v-for="item in soldItems"
           :key="item.pivot.id"
           :withdraw-status="item.pivot.withdrawStatus"
           :pivot-id="item.pivot.id"
@@ -146,9 +173,9 @@
 
     <b-container>
       <h3 class="inventory__title">Success Withdrew Items</h3>
-      <b-row v-if="getWithdrewItems.length > 0">
+      <b-row v-if="withdrewItems.length > 0">
         <InventoryItem
-          v-for="item in getWithdrewItems"
+          v-for="item in withdrewItems"
           :key="item.pivot.id"
           :withdraw-status="item.pivot.withdrawStatus"
           :pivot-id="item.pivot.id"
@@ -170,71 +197,57 @@
 
 <script>
 import showNotification from '@/mixins/showNotification'
-import DashboardIcon from 'vue-material-design-icons/ViewDashboardOutline.vue'
-import SettingsIcon from 'vue-material-design-icons/CogOutline.vue'
-import InventoryItem from '@/components/InventoryItem'
-import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import { mapGetters } from 'vuex'
-import Inventory from '@/components/Inventory'
 import { eventBus } from '@/plugins/event-bus'
+import InventoryItem from '@/components/InventoryItem'
 export default {
   layout: 'default',
-  middleware: 'authenticated',
   components: {
-    DashboardIcon,
-    SettingsIcon,
-    PlusIcon,
-    Inventory,
     InventoryItem
   },
   mixins: [showNotification],
   data () {
     return {
-      photo: null,
       disabled: true,
       cases: 0,
       crafts: 0,
       items: 0,
-      bestItem: null
+      bestItem: null,
+      user: null,
+      inventory: [],
+      options: [],
+      soldItems: [],
+      withdrewItems: [],
+      filterItems: {}
     }
   },
   async mounted () {
     try {
-      const result = await this.$store.dispatch('user/loadStats')
+      const result = await this.$axios.$get(`${this.$axios.defaults.baseURL}/user/${this.$route.params.id}`)
       this.cases = result.data.cases
       this.crafts = result.data.crafts
       this.items = result.data.items
       this.bestItem = result.data.bestItem
+      this.user = result.data.user
+      this.inventory = result.data.inventory
+      this.soldItems = result.data.soldItems
+      this.withdrewItems = result.data.withdrewItems
+      if (!result.data) {
+        this.options = []
+      } else {
+        this.options = result.data.count
+        if (result.data.count.length > 0) {
+          this.filterItems = result.data.count[0]
+        }
+      }
     } catch (e) {
       this.showNotification(this.showNotification(this.$t('smtWrong'), 'danger'))
     }
     eventBus.$emit('closeMenu')
   },
-  methods: {
-    handleFileUpload () {
-      this.photo = this.$refs.photo.files[0]
-      this.changePhoto()
-    },
-    async changePhoto () {
-      const data = new FormData()
-      data.append('photo', this.photo)
-      this.disabled = true
-      try {
-        await this.$store.dispatch('user/changePhoto', data)
-      } catch (e) {
-        this.showNotification(this.showNotification(this.$t('smtWrong'), 'danger'))
-      } finally {
-        this.disabled = false
-      }
-    }
-  },
   computed: {
     ...mapGetters({
-      getWindowSize: 'common/getWindowSize',
-      getUser: 'user/getUser',
-      getInventory: 'user/getInventory',
-      getSoldItems: 'user/getSoldItems',
-      getWithdrewItems: 'user/getWithdrewItems'
+      getWindowSize: 'common/getWindowSize'
     })
   }
 }
@@ -256,17 +269,6 @@ export default {
     background: white
     padding: 1px 4px
     border-radius: 64px
-.accounntDash
-  padding-top: 16px
-  &__top
-    display: flex
-    align-items: center
-    justify-content: space-between
-    margin-bottom: 32px
-    +sm
-      flex-direction: column
-      align-items: flex-start
-      margin-bottom: 24px
 .dashLinks
   color: rgba(224, 224, 255, 0.6)
   font-size: 14px

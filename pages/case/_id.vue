@@ -5,41 +5,38 @@
       <b-container>
         <b-row>
           <b-col xl="12" lg="12" md="12" sm="12" class="m-auto">
-            <div class="open" >
+            <div class="open" v-if="getCurrentChest">
+              <div class="open__layer">
+                <div class="open__line"></div>
+              </div>
               <transition name="fade" mode="out-in">
-                <img src="/images/bg-3.png" alt="" class="open__bg" key="image">
+                <img :src="getCurrentChest.chest.backgroundImage" alt="" class="open__bg" key="image">
               </transition>
-              <h2 class="open__title" v-if="getCurrentChest" v-show="getCurrentChest && !isSliderActive">
+              <h2 class="open__title" v-if="getCurrentChest" v-show="status === 0 || status === 2">
                 {{ getCurrentChest.chest.name }}
               </h2>
-              <img v-if="getCurrentChest" v-show="getCurrentChest && !getWinItem" :src="getCurrentChest.chest.image" alt="" class="open__chestImage">
-              <div class="open__slider" ref="openSlider" v-show="getWinItem && !isShowWinItem" v-if="getCurrentChest">
-                <client-only>
-                  <Swiper
-                    :options="options"
-                    ref="mySwiper"
-                    virtual
-                  >
-                    <swiper-slide
-                      :key="item.id"
-                      v-for="item in getCurrentChest.items"
-                      :index="item.id"
-                    >
-                      <Weapon
-                        class="open__sliderItem"
-                        :color="item.type.color"
-                        :img-url="item.image"
-                        :name="item.name"
-                        :desc="item.text"
-                        :item-color="item.color"
-                        :virtual-index="item.id"
-                      />
-                    </swiper-slide>
-                  </Swiper>
-                </client-only>
+              <img v-if="getCurrentChest" v-show="status === 0" :src="getCurrentChest.chest.image" alt="" class="open__chestImage">
+              <div class="open__slider" v-show="status === 1" v-if="getCurrentChest">
+                <div
+                  class="slider__wrapper"
+                  v-if="sliderItems.length > 0"
+                  :style="{ transform: 'translate3d(-' + this.distance + 'px, 0, 0)' }"
+                >
+                  <Weapon
+                    v-for="item in sliderItems"
+                    class="slider__item"
+                    :color="item.type.color"
+                    :img-url="item.image"
+                    :name="item.name"
+                    :desc="item.text"
+                    :item-color="item.color"
+                    :key="item.id"
+                    :id="item.isWin ? 'winItem' : ''"
+                  />
+                </div>
               </div>
               <WinItem
-                v-if="getWinItem && isShowWinItem"
+                v-if="getWinItem && status === 2"
                 :item-color="getWinItem.color"
                 :color="getWinItem.type.color"
                 :desc="getWinItem.text"
@@ -47,9 +44,9 @@
                 :name="getWinItem.name"
                 :key="getWinItem.name"
               />
-              <div class="open__btns" v-if="getCurrentChest && !isSliderActive">
+              <div class="open__btns" v-if="getCurrentChest">
                 <button
-                  v-if="getCurrentChest && !getWinItem"
+                  v-if="status === 0"
                   @click.prevent="openChest(getCurrentChest.chest.id)"
                   class="btn btn_primary"
                   :disabled="checkBalance || Number(getCurrentChest.chest[`${getPlatform}Price`]) === 0"
@@ -57,11 +54,11 @@
                 >
                   {{ $t('openChest') }} ${{ getCurrentChest.chest[`${getPlatform}Price`] }}
                 </button>
-                <button @click.prevent="continuePlay" v-if="getWinItem && animated" class="btn btn_secondary btn-arrow">
+                <button @click.prevent="continuePlay" v-if="status === 2" class="btn btn_secondary btn-arrow">
                   <span>{{ $t('continue') }}</span><ArrowRightIcon class="btn__icon" />
                 </button>
                 <button
-                  v-if="getWinItem && animated"
+                  v-if="getWinItem && status === 2"
                   @click.prevent="sellItem(getWinItem.id)"
                   class="btn btn_primary"
                   :class="!getToken ? 'btn_primary_disabled' : ''"
@@ -102,58 +99,25 @@ import showNotification from '@/mixins/showNotification'
 import ArrowRightIcon from 'vue-material-design-icons/ArrowRight.vue'
 import Weapon from '@/components/Weapon'
 import { eventBus } from '@/plugins/event-bus'
-import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 import WinItem from '@/components/WinItem'
+import $ from 'jquery'
 export default {
   layout: 'default',
   mixins: [showNotification],
   components: {
     Weapon,
     ArrowRightIcon,
-    Swiper,
-    SwiperSlide,
     WinItem
   },
   data () {
-    // const vSlides = []
-    // for (let i = 0; i < 100; i++) {
-    //   let slide = `<Weapon
-    //                   class="open__sliderItem"
-    //                   :color="item.type.color"
-    //                   :img-url="item.image"
-    //                   :name="item.name"
-    //                   :desc="item.text"
-    //                   :item-color="item.color"
-    //                   :virtual-index="item.id"
-    //                 />`
-    // }
     return {
       disabled: true,
       animated: false,
       isSliderActive: false,
       isShowWinItem: false,
-      options: {
-        slidesPerView: 5,
-        spaceBetween: 12,
-        loop: true,
-        freeMode: true,
-        virtual: true,
-        allowTouchMove: false,
-        centeredSlides: true,
-        slideActiveClass: 'open__activeItem',
-        breakpoints: {
-          // when window width is >= 320px
-          1200: {
-            slidesPerView: 5
-          },
-          767: {
-            slidesPerView: 3
-          },
-          200: {
-            slidesPerView: 2
-          }
-        }
-      }
+      sliderItems: [],
+      distance: 0,
+      status: 0
     }
   },
   async created () {
@@ -188,8 +152,9 @@ export default {
     }),
     continuePlay () {
       this.setWinItem(null)
-      this.isSliderActive = false
-      this.isShowWinItem = false
+      this.status = 0
+      this.sliderItems = []
+      this.distance = 0
     },
     emitOpenChest () {
       const item = {
@@ -200,16 +165,34 @@ export default {
     },
     async openChest (id) {
       try {
+        this.status = 1
         const data = new FormData()
         data.append('platform', this.getPlatform)
         data.append('id', id)
         const result = await this.$store.dispatch('chest/openChest', data)
         if (result.success) {
-          this.isSliderActive = true
           this.showNotification('Chest opened!', 'success')
+          const winItemNumber = Math.floor(Math.random() * (50 - 10))
+          this.sliderItems = this.getCurrentChest.items
+          const items = this.getCurrentChest.items.map((item) => {
+            return item
+          })
+          const itemQuantity = items.length
+          const chestItems = this.getCurrentChest.items
+          if (items.length < 50) {
+            const border = 50 - items.length
+            for (let i = 0; i < border; i++) {
+              const num = Math.floor(Math.random() * itemQuantity)
+              items.push(chestItems[num])
+            }
+          }
+          const winItem = result.data
+          winItem.isWin = true
+          items[winItemNumber] = winItem
+          this.sliderItems = items
           setTimeout(() => {
             this.animateSlider()
-          }, 1000)
+          }, 200)
         }
       } catch (e) {
         this.showNotification(e.data.message, 'danger')
@@ -220,47 +203,34 @@ export default {
         const data = new FormData()
         data.append('platform', this.getPlatform)
         data.append('id', id)
+        data.append('userId', this.getUser.id)
         await this.$store.dispatch('item/sell', data)
-        this.isShowWinItem = false
+        this.status = 0
+        this.sliderItems = []
+        this.distance = 0
       } catch (e) {
         this.showNotification(this.$t('smtWrong'), 'danger')
       }
     },
     animateSlider () {
-      const foundItem = this.getCurrentChest.items.find(curVal => curVal.id === this.getWinItem.id)
-      const index = this.getCurrentChest.items.indexOf(foundItem)
+      // const foundItem = this.getCurrentChest.items.find(curVal => curVal.id === this.getWinItem.id)
+      // const index = this.getCurrentChest.items.indexOf(foundItem)
       // const winIndex = (document.querySelector('.swiper-slide[index=' + String(this.getWinItem.id) + ']')).getAttribute('data-swiper-slide-index')
       // console.log(winIndex)
-      console.log(index)
-      console.log(foundItem)
-
-      this.swiper.update()
-
+      // console.log(index)
+      // console.log(foundItem)
       // const i = this.getCurrentChest.items.length
-      let slideIndexTo = 1
-      let time = 0
-      try {
-        const interval = setInterval(() => {
-          if (time >= 6000) {
-            clearInterval(interval)
-            this.swiper.slideToLoop(index, 100, false)
-            setTimeout(() => {
-              this.animated = true
-              this.isSliderActive = false
-              this.isShowWinItem = true
-              time = 0
-              this.emitOpenChest()
-            }, 1000)
-          } else {
-            // const j = Math.floor(Math.random() * (i + 1))
-            slideIndexTo++
-            this.swiper.slideTo(slideIndexTo, 50, false)
-          }
-          time += 200
-        }, 200)
-      } catch (e) {
-        console.log(e)
-      }
+      const bannerWidth = $('.open').outerWidth()
+      const itemPosition = $('#winItem').position().left
+      const randomNum = Math.floor(Math.random() * 110 + 60)
+      const totalTranslate = -bannerWidth / 2 + itemPosition + randomNum
+      setTimeout(() => {
+        this.distance = totalTranslate
+
+        setTimeout(() => {
+          this.status = 2
+        }, 3000)
+      }, 300)
     }
   }
 }
@@ -279,6 +249,13 @@ export default {
   &__drop
     .drop
       margin-bottom: 32px
+.slider
+  &__wrapper
+    display: flex
+    align-items: center
+    transition: all 2000ms ease
+  &__item
+    max-width: 190px !important
 .open
   display: flex
   align-items: flex-start
@@ -298,6 +275,19 @@ export default {
     background-position: center top
   .drop
     margin-bottom: 0
+  &__layer
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    display: flex
+    align-items: center
+    justify-content: center
+  &__line
+    width: 4px
+    background-color: #00ffaa
+    height: 100%
   &__activeItem
     .drop
       box-shadow: 0 8px 8px -4px rgba(0, 187, 255, 0.06), 0 16px 24px 0 rgba(0, 187, 255, 0.12), 0 2px 4px -1px rgba(27, 10, 82, 0.06), 0 0 1px 0 rgba(0, 187, 255, 0.12), inset 0 2px 6px 0 rgba(0, 187, 255, 0.4) !important

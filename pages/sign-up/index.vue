@@ -163,8 +163,6 @@ export default {
             await this.$router.push('/sign-in')
           }
         } catch (e) {
-          // TODO remove console statement
-          console.log(e.data)
           for (const err in e.data.errors) {
             this.showNotification(e.data.errors[err][0], 'danger')
           }

@@ -29,7 +29,6 @@ export const actions = {
     this.$axios.setToken(rootGetters.getToken, 'Bearer')
     try {
       const result = await this.$axios.$post(`${this.$axios.defaults.baseURL}/enable2fa`)
-      console.log(result)
       if (result.success) {
         commit('set2faImg', result.data.google2fa_url)
         commit('set2faSecret', result.data.user.password_security.google2fa_secret)
@@ -38,8 +37,7 @@ export const actions = {
       }
       return result
     } catch (e) {
-      console.log(e.response)
-      //  TODO remove console statement
+      throw e.response
     }
   },
   async verify2fa (ctx, formData) {
@@ -61,8 +59,7 @@ export const actions = {
       }
       return result
     } catch (e) {
-      console.log(e)
-      //  TODO remove console statement
+      throw e.response
     }
   },
   generateOneTimePassword ({ getters, commit }) {

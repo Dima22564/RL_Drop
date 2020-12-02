@@ -75,7 +75,6 @@ export default {
         const data = new FormData()
         data.append('name', this.userName)
         data.append('email', this.email)
-        data.append('phone_number', this.phoneNumber)
         try {
           const result = await this.$store.dispatch('settings/updateSettings', data)
           if (result.success) {
@@ -84,13 +83,6 @@ export default {
             this.showNotification('Something goes wrong!', 'danger')
           }
         } catch (e) {
-          console.log(e)
-          if (e.data.error.messages.name) {
-            this.errorMessages.userName = e.data.error.messages.name[0]
-          }
-          if (e.data.error.messages.email) {
-            this.errorMessages.email = e.data.error.messages.email[0]
-          }
         } finally {
           this.$store.commit('settings/toggleButtonState', false)
         }

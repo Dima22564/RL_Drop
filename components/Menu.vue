@@ -44,11 +44,11 @@
                     :notification-type="item.type.toLowerCase()"
                     :id="item.id"
                     :date="item.date"
-                    :can-close="item.can_close"
                   >
                     <!--                    <p><span class="blue"></span><span class="white"> {{ item.text }}</span></p>-->
                     <p v-html="item[`text_${$i18n.locale}`]" />
                   </Notification>
+                  <button v-if="getNotifications.length > 0" @click="readNotifications" class="btn btn_primary notifications__read">Read all</button>
                 </div>
               </div>
             </transition>
@@ -142,7 +142,7 @@
               <span class="mobileMenu__btn">{{ $t('getStarted') }}</span>
             </nuxt-link>
 
-            <div v-else class="mobileMenu__balance">
+            <div v-if="getToken && getUser" class="mobileMenu__balance">
               ${{ getUser.balance }}
             </div>
           </div>
@@ -170,7 +170,7 @@
                 <ArrowRIcon class="arrow" />
               </div>
             </div>
-            <div class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_withIcon">
+            <div @click="showMobileNotifications" class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_withIcon">
               <BellIcon class="mobileMenu__icon mobileMenu__icon_dark" />
               <span>{{ $t('notifications') }}</span>
               <div v-if="getNotifications.length > 0" class="mobileMenu__go">
@@ -221,6 +221,30 @@
         <button class="btn btn_gray mobileMenu__deposit">
           {{ $t('deposit') }}
         </button>
+      </div>
+
+      <div v-if="isMobileNotificationShow" class="mobileMenu__wrapper">
+        <div class="mobileMenu__top">
+          <div @click="goBack" class="mobileMenu__subItem mobileMenu__subItem_blue">
+            <ArrowLIcon class="icon" />
+            <span>{{ $t('notifications') }}</span>
+          </div>
+        </div>
+        <p v-if="getNotifications.length === 0" class="notifications__none">
+          {{ $t('noNotifications') }}
+        </p>
+        <div v-else>
+          <Notification
+            v-for="(item, index) in notifications"
+            :key="index"
+            :notification-type="item.type.toLowerCase()"
+            :id="item.id"
+            :date="item.date"
+          >
+            <p v-html="item[`text_${$i18n.locale}`]" />
+          </Notification>
+          <button v-if="getNotifications.length > 0" @click="readNotifications" class="btn btn_primary notifications__read">Read all</button>
+        </div>
       </div>
 
       <div v-if="isAccountShow" class="mobileMenu__wrapper">
@@ -393,6 +417,9 @@
   z-index: 55
   background-color: #27273e
   padding: 16px 0
+  &__read
+    width: calc(100% - 48px)
+    margin: 16px 24px 0 24px
   &__none
     color: rgba(224,224,255,.6)
     font-weight: 600
@@ -682,6 +709,7 @@ export default {
       isLangsShow: false,
       isNotificationShow: false,
       isAccountShow: false,
+      isMobileNotificationShow: false,
       isFinancialShow: false,
       showDropMenu: false,
       isMobileMainMenuShow: true,
@@ -721,11 +749,19 @@ export default {
       this.isMobileMainMenuShow = true
       this.showDropMenu = false
       this.isFinancialShow = false
+      this.isMobileNotificationShow = false
     })
   },
   methods: {
     setSound () {
       this.sound = !this.sound
+    },
+    async readNotifications () {
+      try {
+        await this.$store.dispatch('notifications/readAll')
+      } catch (e) {
+
+      }
     },
     async logout () {
       try {
@@ -734,8 +770,9 @@ export default {
         this.isNotificationShow = false
         this.isAccountShow = false
         this.isFinancialShow = false
+        this.isMobileNotificationShow = false
+        this.isMobileNotificationShow = false
       } catch (e) {
-        console.log(e)
       }
     },
     showLangs () {
@@ -744,6 +781,7 @@ export default {
       this.isAccountShow = false
       this.isFinancialShow = false
       this.isMobileMainMenuShow = false
+      this.isMobileNotificationShow = false
     },
     showNotifications () {
       this.isLangsShow = false
@@ -751,6 +789,7 @@ export default {
       this.isAccountShow = false
       this.isFinancialShow = false
       this.isMobileMainMenuShow = false
+      this.isMobileNotificationShow = false
     },
     showAccount () {
       this.isLangsShow = false
@@ -758,6 +797,7 @@ export default {
       this.isAccountShow = this.isAccountShow !== true
       this.isFinancialShow = false
       this.isMobileMainMenuShow = false
+      this.isMobileNotificationShow = false
     },
     showFinancial () {
       this.isLangsShow = false
@@ -766,12 +806,20 @@ export default {
       this.isMobileMainMenuShow = false
       this.isFinancialShow = this.isFinancialShow !== true
     },
+    showMobileNotifications () {
+      this.isMobileNotificationShow = this.isMobileNotificationShow !== true
+      this.isLangsShow = false
+      this.isNotificationShow = false
+      this.isAccountShow = false
+      this.isMobileMainMenuShow = false
+    },
     goBack () {
       this.isLangsShow = false
       this.isNotificationShow = false
       this.isAccountShow = false
       this.isMobileMainMenuShow = true
       this.isFinancialShow = false
+      this.isMobileNotificationShow = false
     }
   }
 }

@@ -2,7 +2,8 @@ export const state = () => ({
   winLiveItems: null,
   currentCraftItem: null,
   btnDisabled: true,
-  types: []
+  types: [],
+  craftItems: []
 })
 
 export const mutations = {
@@ -20,12 +21,24 @@ export const mutations = {
   },
   updateLiveItems (state, item) {
     state.winLiveItems.push(item)
+  },
+  setCraftItems (state, items) {
+    state.craftItems = items
   }
 }
 
 export const actions = {
   SOCKET_setLiveItems ({ commit }, items) {
     commit('setLiveItems', items)
+  },
+  async fetchCraftItems ({ commit }) {
+    try {
+      const result = await this.$axios.$get(`${this.$axios.defaults.baseURL}/craft-items`)
+      commit('setTypes', result.data.types)
+      commit('setCraftItems', result.data.items)
+    } catch (e) {
+      throw e.response
+    }
   },
   async getItemForCraft ({ commit }, id) {
     try {
@@ -74,5 +87,6 @@ export const getters = {
   getWinLiveItems: state => state.winLiveItems,
   getCurrentCraftItem: state => state.currentCraftItem,
   getBtnState: state => state.btnDisabled,
-  getTypes: state => state.types
+  getTypes: state => state.types,
+  getCraftItems: state => state.craftItems
 }

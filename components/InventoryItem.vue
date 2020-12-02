@@ -1,7 +1,7 @@
 <template>
   <b-col xl="2" lg="2" md="3" sm="4" cols="6">
     <div
-      @click.stop="showSell = true"
+      @click.stop="decoration === true ? false : showSell = true"
       @mouseleave="closeAll"
       @mouseover="status"
       class="inventoryItem"
@@ -10,7 +10,7 @@
       <span :style="{ background: itemColor }" class="inventoryItem__circle" />
       <div :style="{ background: color }" class="inventoryItem__line" />
 
-      <div v-if="showSell && withdrawStatus === null" class="inventoryItem__click">
+      <div v-if="showSell && withdrawStatusData === null" class="inventoryItem__click">
         <p class="inventoryItem__name">
           {{ name }}
         </p>
@@ -20,25 +20,25 @@
         <button @click.prevent="sell" class="btn btn_primary inventoryItem__btn">
           Sell
         </button>
-        <button @click.prevent.once="withdraw({ id, platform, pivotId })" class="btn btn_trans inventoryItem__acc">
+        <button @click.prevent.once="withdraw({ id, platform, pivotId, userId: getUser.id })" class="btn btn_trans inventoryItem__acc">
           To Account
         </button>
       </div>
 
-      <div v-if="showStatus && withdrawStatus !== null" class="inventoryItem__click">
+      <div v-if="showStatus && withdrawStatusData !== null" class="inventoryItem__click">
         <span class="btn btn_primary inventoryItem__btn">
-          {{ withdrawStatus }}
+          {{ withdrawStatusData }}
         </span>
       </div>
 
-      <div v-if="showConfirm && withdrawStatus === null" @mouseleave="showConfirm = false" class="inventoryItem__click">
+      <div v-if="showConfirm && withdrawStatusData === null" @mouseleave="showConfirm = false" class="inventoryItem__click">
         <p class="inventoryItem__name">
           Sell this item
         </p>
         <p class="inventoryItem__desc inventoryItem__desc_emp">
           for ${{ price }}?
         </p>
-        <button @click="confirmSell({ id, platform, pivotId, price })" class="btn btn_primary inventoryItem__btn">
+        <button @click="confirmSell({ id, platform, pivotId, price, userId: getUser.id })" class="btn btn_primary inventoryItem__btn">
           Confirm
         </button>
         <button @click.prevent="showConfirm = false" class="btn btn_trans inventoryItem__acc">
@@ -65,6 +65,7 @@
 <script>
 import { eventBus } from '@/plugins/event-bus'
 import showNotification from '@/mixins/showNotification'
+import { mapGetters } from 'vuex'
 
 export default {
   props: {
@@ -107,26 +108,40 @@ export default {
     withdrawStatus: {
       type: null,
       required: true
+    },
+    decoration: {
+      type: Boolean,
+      default: false
     }
   },
   mixins: [showNotification],
+  computed: {
+    ...mapGetters({
+      getUser: 'user/getUser'
+    })
+  },
   data () {
     return {
       showSell: false,
       showConfirm: false,
-      showStatus: false
+      showStatus: false,
+      withdrawStatusData: this.withdrawStatus
     }
   },
   methods: {
     sell () {
-      this.showSell = false
-      this.showConfirm = true
+      if (!this.decoration) {
+        this.showSell = false
+        this.showConfirm = true
+      }
     },
     confirmSell (data) {
-      eventBus.$emit('sellItem', data)
+      if (!this.decoration) {
+        eventBus.$emit('sellItem', data)
+      }
     },
     status () {
-      if (this.withdrawStatus !== null) {
+      if (this.withdrawStatusData !== null) {
         this.showStatus = true
         this.showSell = false
         this.showConfirm = false
@@ -137,11 +152,13 @@ export default {
       this.showSell = false
       this.showConfirm = false
     },
-    withdraw (payload) {
+    async withdraw (payload) {
       try {
-        this.$store.dispatch('user/withdraw', payload)
-        this.showNotification('Your application to withdraw accepted!', 'info')
-        this.withdrawStatus = 'pending'
+        if (!this.decoration) {
+          await this.$store.dispatch('user/withdraw', payload)
+          this.showNotification('Your application to withdraw accepted!', 'info')
+          this.withdrawStatusData = 'pending'
+        }
       } catch (e) {
 
       }

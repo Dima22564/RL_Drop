@@ -25,6 +25,15 @@
             <span>{{ item.user.email }}</span>
           </div>
           <div>
+            <strong>Username: </strong>
+            <span>{{ item.user.name }}</span>
+          </div>
+          <div>
+            <strong>
+              <a :href="`http://localhost:3000/user/${item.user.id}`">User account</a>
+            </strong>
+          </div>
+          <div>
             <strong>Platform: </strong>
             <span>{{ item.platform }}</span>
           </div>

@@ -4,11 +4,11 @@
       v-model.trim="$v.currentPassword.$model"
       :rightIcon="false"
       :leftIcon="false"
+      :error="Boolean(errorMessages.currentPassword) || $v.currentPassword.$error"
       name="currentPassword"
       label="Current Password"
       type="password"
       class="form__input"
-      :error="Boolean(errorMessages.currentPassword) || $v.currentPassword.$error"
     >
       <template slot="error">
         <span v-if="errorMessages.currentPassword">{{ errorMessages.currentPassword }}</span>
@@ -19,11 +19,11 @@
       v-model.trim="$v.newPassword.$model"
       :rightIcon="false"
       :leftIcon="false"
+      :error="Boolean(errorMessages.newPassword) || $v.newPassword.$error"
       name="newPassword"
       label="New Password"
       type="password"
       class="form__input"
-      :error="Boolean(errorMessages.newPassword) || $v.newPassword.$error"
     >
       <template slot="error">
         <span v-if="errorMessages.newPassword">{{ errorMessages.newPassword[0] }}</span>
@@ -35,11 +35,11 @@
       v-model.trim="$v.confirmPassword.$model"
       :rightIcon="false"
       :leftIcon="false"
+      :error="Boolean(errorMessages.confirmPassword) || $v.confirmPassword.$error"
       name="confirmPassword"
       label="Confirm Password"
       type="password"
       class="form__input form__input_w100"
-      :error="Boolean(errorMessages.confirmPassword) || $v.confirmPassword.$error"
     >
       <template slot="error">
         <span v-if="errorMessages.confirmPassword">{{ errorMessages.confirmPassword[0] }}</span>
@@ -50,8 +50,10 @@
 </template>
 
 <script>import { required, minLength } from 'vuelidate/lib/validators'
+import showNotification from '@/mixins/showNotification'
 import { eventBus } from '~/plugins/event-bus'
 export default {
+  mixins: [showNotification],
   data () {
     return {
       currentPassword: '',
@@ -89,11 +91,7 @@ export default {
         try {
           const result = await this.$store.dispatch('password/changePassword', formData)
           if (result.success) {
-            this.$bvToast.toast('Password successfully saved!', {
-              title: `Notification`,
-              variant: 'primary',
-              solid: true
-            })
+            this.showNotification(this.$t('passwordLink'), 'primary')
             this.errorMessages.currentPassword = null
             this.errorMessages.newPassword = null
             this.errorMessages.confirmPassword = null

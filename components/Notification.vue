@@ -49,10 +49,6 @@ export default {
     date: {
       type: String,
       required: true
-    },
-    canClose: {
-      type: Number,
-      required: true
     }
   },
   methods: {

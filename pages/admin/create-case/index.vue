@@ -81,7 +81,16 @@
 
       <b-form-group id="input-group-4">
         <client-only>
-          <vue-dropzone id="dropzone" ref="myVueDropzone" :options="dropzoneOptions" />
+          <div class="d-flex justify-content-between">
+            <div class="w-50 mr-3">
+              <p class="text-white">Case image</p>
+              <vue-dropzone id="dropzone" ref="myVueDropzone" :options="dropzoneOptions" />
+            </div>
+            <div class="w-50">
+              <p class="text-white">Case background</p>
+              <vue-dropzone id="backgroundImage" ref="backgroundImage" :options="dropzoneOptions" />
+            </div>
+          </div>
         </client-only>
       </b-form-group>
 
@@ -262,7 +271,6 @@ export default {
     },
     async submit () {
       const data = new FormData()
-      const visibility = this.form.isChestVisible ? 1 : 0
       data.append('name', this.form.name)
       data.append('old_price', this.form.oldPrice)
       data.append('xbox_price', this.form.xboxPrice)
@@ -271,7 +279,8 @@ export default {
       data.append('category', this.form.category)
       data.append('items', JSON.stringify(this.form.itemsWeights))
       data.append('image', this.$refs.myVueDropzone.getAcceptedFiles()[0])
-      data.append('is_case_visible_for_user', visibility)
+      data.append('backgroundImage', this.$refs.backgroundImage.getAcceptedFiles()[0])
+      data.append('is_case_visible_for_user', this.form.isChestVisible ? 1 : 0)
       data.append('is_limited', this.form.isLimited ? 1 : 0)
       data.append('max_open', this.form.isLimited ? this.form.maxOpens : 0)
       try {
@@ -303,6 +312,7 @@ export default {
       this.form.ps4Price = null
       this.form.category = null
       this.$refs.myVueDropzone.removeAllFiles()
+      this.$refs.backgroundImage.removeAllFiles()
       this.$nextTick()
     }
   }
