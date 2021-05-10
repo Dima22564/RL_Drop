@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="getInventory.length > 0">
     <!-- Inventory  adapted = true -->
     <section class="inventory">
       <b-container>
@@ -45,7 +45,7 @@
           </client-only>
         </div>
 
-        <b-row v-if="getInventory.length > 0" class="inventoryItem__row">
+        <b-row class="inventoryItem__row">
           <InventoryItem
             v-for="item in getInventory"
             :key="item.pivot.id"

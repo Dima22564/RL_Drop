@@ -78,7 +78,7 @@ export default {
         try {
           const result = await this.$store.dispatch('settings/updateSettings', data)
           if (result.success) {
-            this.showNotification(result.message, 'primary')
+            this.showNotification('Инструкция отправлена на почту ' + this.email, 'primary')
           } else {
             this.showNotification('Something goes wrong!', 'danger')
           }

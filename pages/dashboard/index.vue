@@ -123,7 +123,7 @@
     </div>
 
     <b-container>
-      <h3 class="inventory__title">Sold Items</h3>
+      <h3 v-if="getSoldItems.length > 0" class="inventory__title">Sold Items</h3>
       <b-row v-if="getSoldItems.length > 0">
         <InventoryItem
           v-for="item in getSoldItems"
@@ -145,7 +145,7 @@
     </b-container>
 
     <b-container>
-      <h3 class="inventory__title">Success Withdrew Items</h3>
+      <h3 v-if="getWithdrewItems.length > 0" class="inventory__title">Success Withdrew Items</h3>
       <b-row v-if="getWithdrewItems.length > 0">
         <InventoryItem
           v-for="item in getWithdrewItems"
@@ -201,12 +201,13 @@ export default {
   async mounted () {
     try {
       const result = await this.$store.dispatch('user/loadStats')
+      console.log(result)
       this.cases = result.data.cases
       this.crafts = result.data.crafts
       this.items = result.data.items
       this.bestItem = result.data.bestItem
     } catch (e) {
-      this.showNotification(this.showNotification(this.$t('smtWrong'), 'danger'))
+      this.showNotification(this.$t('smtWrong'), 'danger')
     }
     eventBus.$emit('closeMenu')
   },
@@ -222,7 +223,7 @@ export default {
       try {
         await this.$store.dispatch('user/changePhoto', data)
       } catch (e) {
-        this.showNotification(this.showNotification(this.$t('smtWrong'), 'danger'))
+        this.showNotification(this.$t('smtWrong'), 'danger')
       } finally {
         this.disabled = false
       }

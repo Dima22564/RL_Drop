@@ -36,10 +36,10 @@
       </div>
 
       <div class="footer__part-2">
-        <span class="footer__link-2">© RLDrop 2020, All rights reserved.</span>
-        <nuxt-link to="" class="footer__link-2">
+        <span class="footer__link-2">© RLZone 2020, All rights reserved.</span>
+        <p id="partnership" @click="copy" class="footer__link-2">
           Partnership
-        </nuxt-link>
+        </p>
         <nuxt-link to="" class="footer__link-2">
           Terms & Conditions
         </nuxt-link>
@@ -56,6 +56,7 @@
 import VkIcon from 'vue-material-design-icons/Vk.vue'
 import CheckIcon from 'vue-material-design-icons/Check.vue'
 import TwitterIcon from 'vue-material-design-icons/Twitter.vue'
+import showNotification from '~/mixins/showNotification'
 export default {
   components: {
     VkIcon,
@@ -67,7 +68,12 @@ export default {
       isLangsShow: false
     }
   },
+  mixins: [showNotification],
   methods: {
+    async copy () {
+      await navigator.clipboard.writeText('support@rlzone.online')
+      this.showNotification(this.$t('copied'), 'primary')
+    },
     showLangs () {
       if (this.isLangsShow === true) {
         this.isLangsShow = false
@@ -109,10 +115,12 @@ export default {
     color: white
     letter-spacing: 4px
     font-weight: 600
+    cursor: pointer
     &-2
       font-size: 14px
       color: rgba(224, 224, 255, 0.6)
       font-weight: 500
+      cursor: pointer
       +lg
         &:not(:last-child)
           margin-right: 16px

@@ -72,8 +72,8 @@ export const actions = {
       this.$axios.setToken(rootGetters.getToken, 'Bearer')
       const result = await this.$axios.$get(`${this.$axios.defaults.baseURL}/inventory`)
       commit('setInventory', result.data.inventory || [])
-      commit('setSoldItems', result.data.soldItems)
-      commit('setWithdrewItems', result.data.withdrewItems)
+      commit('setSoldItems', result.data.soldItems || [])
+      commit('setWithdrewItems', result.data.withdrewItems || [])
       return result
     } catch (e) {
       throw e.response

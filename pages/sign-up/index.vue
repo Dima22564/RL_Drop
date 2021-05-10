@@ -116,7 +116,7 @@ export default {
       email: '',
       password: '',
       confirmPassword: '',
-      acceptPolicy: true,
+      acceptPolicy: false,
       disabled: false
     }
   },

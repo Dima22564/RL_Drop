@@ -143,7 +143,7 @@ export default {
     width: 100%
     position: relative
     z-index: 5
-    height: 216px
+    max-height: 216px
     +media-b(500)
       height: auto
   &__discount

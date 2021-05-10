@@ -126,7 +126,7 @@
                 <div class="form__top">
                   <div @click="back" class="form__back" tag="div">
                     <ArrowL class="icon" />
-                    <span>{{ $t('activate') }}</span>
+                    <span>{{ $t('back') }}</span>
                   </div>
                   <h4>{{ $t('verification') }}</h4>
                   <button @click.prevent="enable2fa" v-if="!get2fa" class="btn form__btn" type="submit">
@@ -159,15 +159,6 @@
         </b-row>
       </b-container>
     </section>
-
-    <!-- Inventory  adapted = true -->
-    <div v-if="getInventory.length === 0" class="container mt-5">
-      <h2>{{ $t('inventory') }}</h2>
-      <h2 class="mt-3">
-        {{ $t('noItems') }}
-      </h2>
-    </div>
-    <Inventory />
   </div>
 </template>
 
@@ -181,7 +172,6 @@ import WifiIcon from 'vue-material-design-icons/Wifi.vue'
 import ArrowL from 'vue-material-design-icons/ChevronLeft.vue'
 import ArrowR from 'vue-material-design-icons/ChevronRight.vue'
 import { mapGetters } from 'vuex'
-import Inventory from '@/components/Inventory'
 import { eventBus } from '@/plugins/event-bus'
 import showNotification from '@/mixins/showNotification'
 import Links from '../../components/Settings/Links'
@@ -203,8 +193,7 @@ export default {
     Links,
     Verification,
     Security,
-    Personal,
-    Inventory
+    Personal
   },
   data () {
     return {
@@ -248,24 +237,24 @@ export default {
       try {
         const result = await this.$store.dispatch('2fa/disable2fa')
         if (result.success) {
-          this.showNotification(this.showNotification(this.$t('twoFaDeactivate'), 'primary'))
+          this.showNotification(this.$t('twoFaDeactivate'), 'primary')
         } else {
-          this.showNotification(this.showNotification(this.$t('smtWrong'), 'danger'))
+          this.showNotification(this.$t('smtWrong'), 'danger')
         }
       } catch (e) {
-        this.showNotification(this.showNotification(this.$t('smtWrong'), 'danger'))
+        this.showNotification(this.$t('smtWrong'), 'danger')
       }
     },
     async enable2fa () {
       try {
         const result = await this.$store.dispatch('2fa/generateSecret2fa')
         if (result.success) {
-          this.showNotification(this.showNotification(this.$t('twoFaActivate'), 'primary'))
+          this.showNotification(this.$t('twoFaActivate'), 'primary')
         } else {
-          this.showNotification(this.showNotification(this.$t('smtWrong'), 'danger'))
+          this.showNotification(this.$t('smtWrong'), 'danger')
         }
       } catch (e) {
-        this.showNotification(this.showNotification(this.$t('smtWrong'), 'danger'))
+        this.showNotification(this.$t('smtWrong'), 'danger')
       }
     },
     checkMain () {
@@ -275,7 +264,8 @@ export default {
           this.isShowPersonal = true
         }
       } else {
-        this.isShowMain = false
+        this.isShowMain = true
+        this.isShowPersonal = false
       }
     },
     showPersonal () {

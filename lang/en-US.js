@@ -49,5 +49,9 @@ export default {
   twoFaActivate: '2fa activated successfully!',
   changesSaved: 'Your changes saved!',
   signIn: 'Sign In Now',
-  passwordLink: 'Password link send to your email!'
+  passwordLink: 'Password link send to your email!',
+  invalidCode: 'Invalid code',
+  invalidCredentials: 'Invalid Credentials',
+  locked: 'Locked',
+  copied: 'Email copied'
 }

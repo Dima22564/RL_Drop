@@ -10,9 +10,6 @@
                 <label v-if="user">
                   <img :src="user.photo" alt="" class="dash__img">
                 </label>
-                <label v-else>
-                  <img src="user.photo" alt="" class="dash__img">
-                </label>
                 <img v-else src="/images/avatar.jpg" alt="" class="dash__img">
                 <div class="dash__text">
                   <p class="dash__title" v-if="user">
@@ -23,8 +20,16 @@
             </div>
           </b-col>
           <b-col xl="4" lg="4" md="6" class="dash__col">
-            <div class="dash__item dash__item_between">
-
+            <div class="dash__item dash__item_wrap">
+              <img v-if="bestCase" :src="bestCase.image" alt="" class="dash__img">
+              <div class="dash__text">
+                <p class="dash__title dash__title_block">
+                  {{ $t('bestCase') }}
+                </p>
+                <p v-if="bestCase" class="dash__desc">
+                  {{ bestCase.name }}
+                </p>
+              </div>
             </div>
           </b-col>
           <b-col xl="4" lg="4">
@@ -213,6 +218,7 @@ export default {
       crafts: 0,
       items: 0,
       bestItem: null,
+      bestCase: null,
       user: null,
       inventory: [],
       options: [],
@@ -232,6 +238,7 @@ export default {
       this.inventory = result.data.inventory
       this.soldItems = result.data.soldItems
       this.withdrewItems = result.data.withdrewItems
+      this.bestCase = result.data.bestCase
       if (!result.data) {
         this.options = []
       } else {

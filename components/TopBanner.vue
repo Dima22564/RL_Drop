@@ -102,8 +102,10 @@ export default {
     margin-bottom: 40px
   &__bg
     position: absolute
-    right: -30px
-    bottom: -30px
+    right: 0
+    bottom: 0
+    height: 100%
+    width: 100%
     user-select: none
     +lg
       width: 100%

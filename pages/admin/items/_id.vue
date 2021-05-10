@@ -11,6 +11,7 @@
           v-model.trim="form.name"
           type="text"
           placeholder="Enter Name"
+          required
         />
       </b-form-group>
 
@@ -27,6 +28,7 @@
               id="input-2"
               v-model.trim="form.xboxPrice"
               placeholder="Xbox"
+              required
             />
           </b-form-group>
 
@@ -38,6 +40,7 @@
               id="input-3"
               v-model.trim="form.ps4Price"
               placeholder="PS4"
+              required
             />
           </b-form-group>
 
@@ -49,6 +52,7 @@
               id="input-3"
               v-model.trim="form.pcPrice"
               placeholder="PC"
+              required
             />
           </b-form-group>
         </div>
@@ -66,6 +70,7 @@
           v-model.trim="form.itemType"
           value-field="id"
           text-field="type"
+          required
         />
       </b-form-group>
 
@@ -84,6 +89,7 @@
               v-model.trim="form.itemColor"
               value-field="color"
               text-field="name"
+              required
             />
           </b-form-group>
           <div :style="{ background: form.itemColor }" class="admin__color" />
@@ -100,6 +106,7 @@
           placeholder="Enter text"
           rows="3"
           max-rows="6"
+          required
         />
       </b-form-group>
 
@@ -198,20 +205,18 @@ export default {
       data.append('name', this.form.name)
       data.append('appear_in_chest', this.form.appearInChest ? 1 : 0)
       data.append('appear_in_craft', this.form.appearInCraft ? 1 : 0)
-      data.append('type', this.form.itemType)
+      data.append('type_id', this.form.itemType)
       data.append('xbox_price', this.form.xboxPrice)
       data.append('pc_price', this.form.pcPrice)
       data.append('ps4_price', this.form.ps4Price)
       data.append('color', this.form.itemColor)
       data.append('text', this.form.text)
       data.append('image', this.$refs.myVueDropzone.getAcceptedFiles()[0])
-      console.log(this.$refs.myVueDropzone.getAcceptedFiles()[0])
-
       try {
         const result = await this.$store.dispatch('admin/item/update', data)
+        this.showNotification('Item updated!', 'success')
         if (result.success) {
           this.showNotification('Item created!', 'success')
-          this.reset()
         }
       } catch (e) {
         this.showNotification('Something went wrong(', 'danger')

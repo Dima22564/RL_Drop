@@ -132,6 +132,7 @@
                 <span :style="{ 'background': item.winItem.type.color }" class="weapon__line" />
                 <img :src="item.winItem.image" alt="" class="weapon__img">
                 <span class="weapon__name">{{ item.winItem.name }}</span>
+                <span :style="{ 'background': item.winItem.color }" class="weapon__circle"></span>
               </nuxt-link>
             </div>
           </swiper-slide>
@@ -270,7 +271,6 @@ export default {
     width: 100%
   &__img
     width: 96px
-    height: 52px
   &_pink
     &::before
       background: #ff00aa
@@ -300,6 +300,13 @@ export default {
     color: white
     margin-top: 8px
     margin-bottom: 16px
+  &__circle
+    position: absolute
+    width: 16px
+    height: 16px
+    border-radius: 50%
+    top: 10px
+    right: 10px
 .platform
   display: flex
   align-items: center

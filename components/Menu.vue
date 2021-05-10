@@ -154,6 +154,9 @@
             <nuxt-link :to="localePath('/craft')" tag="div" class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_pl72">
               {{ $t('craft') }}
             </nuxt-link>
+            <nuxt-link :to="localePath('/faq')" tag="div" class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_pl72">
+              FAQ
+            </nuxt-link>
             <div @click="showLangs" class="mobileMenu__link mobileMenu__link_pt12 mobileMenu__link_withIcon">
               <img src="/images/russia.svg" alt="" class="mobileMenu__icon mobileMenu__img">
               <span>{{ $t('language') }}</span>
@@ -166,7 +169,7 @@
               <CardIcon class="mobileMenu__icon mobileMenu__icon_dark" />
               <span>{{ $t('balance') }}</span>
               <div class="mobileMenu__go">
-                <span>{{ Number(getUser.balance.toFixed(2)) }}</span>
+                <span>${{ Number(getUser.balance.toFixed(2)) }}</span>
                 <ArrowRIcon class="arrow" />
               </div>
             </div>

@@ -118,7 +118,7 @@ export const actions = {
       }
       return result
     } catch (e) {
-      throw e.response
+      throw e
     }
   }
 }

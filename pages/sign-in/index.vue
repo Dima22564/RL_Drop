@@ -174,14 +174,20 @@ export default {
               } else {
                 this.errorMessages.invalidCode = true
               }
+
+              if (result.data.loggedIn && this.getUser) {
+                this.privateRoomConnect()
+                await this.$router.replace({ path: '/' })
+                this.errorMessages.invalidCode = false
+              }
             } catch (e) {
-              this.showNotification('Invalid code', 'danger')
+              if (e.status === 403) {
+                this.showNotification(this.$t('invalidCode'), 'danger')
+              } else {
+                this.showNotification(this.$t('invalidCredentials'), 'danger')
+              }
+
             }
-          }
-          if (result.data.loggedIn && this.getUser) {
-            this.privateRoomConnect()
-            await this.$router.replace({ path: '/' })
-            this.errorMessages.invalidCode = false
           }
         } catch (e) {
           if (e.status === 401 || e.status === 400) {

@@ -131,17 +131,17 @@
       <b-container>
         <div class="faq__title">
           <h2>{{ $t('choose') }}</h2>
-          <div v-if="getWindowSize > 1200" class="faq__filter">
+          <div v-if="getWindowSize > 1200 && getTypes.length > 0" class="faq__filter">
+            <span
+              :class="showAll ? 'faq__filter_active' : ''"
+              @click="showAll = true"
+            >All</span>
             <span
               v-for="(item) in getTypes"
               :key="item.id"
               :class="filterItems.type === item.type && showAll === false ? 'faq__filter_active' : ''"
               @click="showItems(item)"
             >{{ item.type }}</span>
-            <span
-              :class="showAll ? 'faq__filter_active' : ''"
-              @click="showAll = true"
-            >All</span>
           </div>
           <client-only v-else-if="getWindowSize <= 1200 && getTypes.length > 0">
             <multiselect
@@ -159,7 +159,7 @@
           </client-only>
         </div>
 
-        <b-row class="inventoryItemCheck__row">
+        <b-row class="inventoryItemCheck__row" v-if="getCraftItems.length > 0">
           <InventoryItemCheck
             v-for="(item) in getCraftItems"
             v-show="item.type.type === filterItems.type || showAll"
@@ -258,7 +258,7 @@ export default {
         this.craftStatus = 1
         this.progress = 5
       } catch (e) {
-        this.showNotification(this.showNotification(this.$t('smtWrong'), 'danger'))
+        this.showNotification(this.$t('smtWrong'), 'danger')
       }
     } else {
       await this.$router.push(this.localePath('craft'))
@@ -394,6 +394,8 @@ export default {
 
 <style lang="sass">
 @import '@/theme/_mix.sass'
+.multiselect__content-wrapper
+  z-index: 100
 .inventory
   padding-bottom: 16px
   +lg

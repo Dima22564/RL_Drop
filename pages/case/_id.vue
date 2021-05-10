@@ -52,7 +52,7 @@
                   :disabled="checkBalance || Number(getCurrentChest.chest[`${getPlatform}Price`]) === 0"
                   :class="{'btn_primary_disabled': checkBalance || Number(getCurrentChest.chest[`${getPlatform}Price`]) === 0}"
                 >
-                  {{ $t('openChest') }} ${{ getCurrentChest.chest[`${getPlatform}Price`] }}
+                  {{ Number(getCurrentChest.chest[`${getPlatform}Price`]) === 0 ? $t('locked') : $t('openChest') }} ${{ getCurrentChest.chest[`${getPlatform}Price`] }}
                 </button>
                 <button @click.prevent="continuePlay" v-if="status === 2" class="btn btn_secondary btn-arrow">
                   <span>{{ $t('continue') }}</span><ArrowRightIcon class="btn__icon" />
@@ -171,6 +171,7 @@ export default {
         data.append('id', id)
         const result = await this.$store.dispatch('chest/openChest', data)
         if (result.success) {
+          this.emitOpenChest()
           this.showNotification('Chest opened!', 'success')
           const winItemNumber = Math.floor(Math.random() * (50 - 10))
           this.sliderItems = this.getCurrentChest.items

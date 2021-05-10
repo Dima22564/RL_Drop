@@ -30,7 +30,7 @@ export default {
   language: 'Язык',
   back: 'Назад',
   sound: 'Звук',
-  bestCrop: 'Лучший скин',
+  bestCrop: 'Лучший дроп',
   activate: 'Активировать',
   deactivate: 'Отключить',
   openChest: 'Открыть за',
@@ -49,6 +49,9 @@ export default {
   twoFaActivate: '2fa активированна успешно!',
   changesSaved: 'Ваши изменения сохранены!',
   signIn: 'Войти сейчас',
-  passwordLink: 'Ссылка на подтверждение пароля отправлена на Ваш email.'
-
+  passwordLink: 'Ссылка на подтверждение пароля отправлена на Ваш email.',
+  invalidCode: 'Неправильный код',
+  invalidCredentials: 'Неправильные данные для входа',
+  locked: 'Недоступен',
+  copied: 'Email скопирован в буфер обмена'
 }

@@ -57,8 +57,8 @@ export default {
   display: flex
   flex-direction: column
   justify-content: space-between
-  max-height: 160px
-  border-radius: 12px;
+  max-height: 190px
+  border-radius: 12px
   box-shadow: 0 8px 8px -4px rgba(20, 16, 41, 0.24), 0 2px 4px -1px rgba(20, 16, 41, 0.24), 0 0 1px 0 rgba(20, 16, 41, 0.4);
   background-color: #27273e
   padding-top: 16px
@@ -90,7 +90,7 @@ export default {
   &__img
     align-self: center
     width: 90px
-    height: 68px
+    max-height: 90px
   &__text
     padding: 0 16px 16px 16px
     font-size: 13px
