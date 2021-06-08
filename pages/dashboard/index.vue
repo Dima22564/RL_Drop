@@ -214,7 +214,12 @@ export default {
   methods: {
     handleFileUpload () {
       this.photo = this.$refs.photo.files[0]
-      this.changePhoto()
+      console.log(this.photo)
+      if (this.photo.size > 150000) {
+        this.showNotification(this.$t('tooBigImage'), 'danger')
+      } else {
+        this.changePhoto()
+      }
     },
     async changePhoto () {
       const data = new FormData()

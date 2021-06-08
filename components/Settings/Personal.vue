@@ -5,14 +5,14 @@
       :rightIcon="false"
       :leftIcon="false"
       name="userName"
-      label="User Name"
+      :label="$t('userName')"
       type="text"
       class="form__input"
       :error="Boolean(errorMessages.userName) || $v.userName.$error"
     >
       <template slot="error">
         <span v-if="errorMessages.userName">{{ errorMessages.userName }}</span>
-        <span v-if="!$v.userName.required && $v.userName.$error">Name required</span>
+        <span v-if="!$v.userName.required && $v.userName.$error">{{ $t('nameReq') }}</span>
       </template>
     </MyInput>
     <MyInput
@@ -27,8 +27,8 @@
     >
       <template slot="error">
         <span v-if="errorMessages.email">{{ errorMessages.email }}</span>
-        <span v-if="!$v.email.required && $v.email.$error">Password required</span>
-        <span v-if="!$v.email.email && $v.email.$error">Field email should be a valid email</span>
+        <span v-if="!$v.email.required && $v.email.$error">{{ $t('emailReq') }}</span>
+        <span v-if="!$v.email.email && $v.email.$error">{{ $('validEmail') }}</span>
       </template>
     </MyInput>
   </div>

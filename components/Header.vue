@@ -31,20 +31,20 @@
           </b-col>
 
           <b-col xl="2" lg="2" md="6" class="d-sm-none d-md-block d-lg-block d-xl-block d-none">
-            <div class="case case_green">
-              <LayersIcon class="case__icon" />
-              <div class="case__text">
-                <span class="emp">{{ getStats.crafts }}</span>
-                <span class="name">{{ $t('cases') }}</span>
-              </div>
-            </div>
-          </b-col>
-          <b-col xl="2" lg="2" md="6" class="d-sm-none d-md-block d-lg-block d-xl-block d-none">
             <div class="case case_blue">
               <EqualizerIcon class="case__icon" />
               <div class="case__text">
                 <span class="emp">{{ getStats.cases }}</span>
                 <span class="name">{{ $t('craft') }}</span>
+              </div>
+            </div>
+          </b-col>
+          <b-col xl="2" lg="2" md="6" class="d-sm-none d-md-block d-lg-block d-xl-block d-none">
+            <div class="case case_green">
+              <LayersIcon class="case__icon" />
+              <div class="case__text">
+                <span class="emp">{{ getStats.crafts }}</span>
+                <span class="name">{{ $t('cases') }}</span>
               </div>
             </div>
           </b-col>

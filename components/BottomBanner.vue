@@ -65,6 +65,8 @@ export default {
   padding: 40px
   position: relative
   min-height: 352px
+  +lg
+    min-height: 250px
   &__bg
     position: absolute
     right: 0
@@ -72,8 +74,6 @@ export default {
     border-radius: 12px
     width: 100%
     height: 100%
-    +lg
-      width: initial
   &__title
     margin-bottom: 32px
   &__text

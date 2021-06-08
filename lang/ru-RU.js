@@ -18,6 +18,7 @@ export default {
   personal: 'Приватность',
   done: 'Готово',
   userName: 'Имя',
+  nameReq: 'Имя обзятельно',
   users: 'Игроки',
   number: 'Номер телефона',
   security: 'Безопасность',
@@ -53,5 +54,19 @@ export default {
   invalidCode: 'Неправильный код',
   invalidCredentials: 'Неправильные данные для входа',
   locked: 'Недоступен',
-  copied: 'Email скопирован в буфер обмена'
+  copied: 'Email скопирован в буфер обмена',
+  for: 'за',
+  confirm: 'Подтвердить',
+  cancel: 'Отмена',
+  toAccount: 'Вывести',
+  links: 'Ссылки',
+  accounts: 'Игровые аккаунты',
+  emailReq: 'Email обязателен',
+  validEmail: 'Email должен быть корректным',
+  currentPassword: 'Действующий пароль',
+  newPassword: 'Новый пароль',
+  confirmPassword: 'Подтвердите пароль',
+  passwordReq: 'Пароль обязателен',
+  minPass: 'Минимальная длина пароля',
+  tooBigImage: 'Слишком большой размер файла'
 }

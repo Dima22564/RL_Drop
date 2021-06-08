@@ -36,7 +36,7 @@
       </div>
 
       <div class="footer__part-2">
-        <span class="footer__link-2">© RLZone 2020, All rights reserved.</span>
+        <span class="footer__link-2">© RLZone 2021, All rights reserved.</span>
         <p id="partnership" @click="copy" class="footer__link-2">
           Partnership
         </p>

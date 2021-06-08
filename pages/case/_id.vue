@@ -52,7 +52,7 @@
                   :disabled="checkBalance || Number(getCurrentChest.chest[`${getPlatform}Price`]) === 0"
                   :class="{'btn_primary_disabled': checkBalance || Number(getCurrentChest.chest[`${getPlatform}Price`]) === 0}"
                 >
-                  {{ Number(getCurrentChest.chest[`${getPlatform}Price`]) === 0 ? $t('locked') : $t('openChest') }} ${{ getCurrentChest.chest[`${getPlatform}Price`] }}
+                  {{ Number(getCurrentChest.chest[`${getPlatform}Price`]) === 0 ? $t('locked') : $t('openChest') }} ${{ Number(getCurrentChest.chest[`${getPlatform}Price`]) > 0 ? getCurrentChest.chest[`${getPlatform}Price`] : '' }}
                 </button>
                 <button @click.prevent="continuePlay" v-if="status === 2" class="btn btn_secondary btn-arrow">
                   <span>{{ $t('continue') }}</span><ArrowRightIcon class="btn__icon" />

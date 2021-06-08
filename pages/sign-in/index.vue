@@ -166,6 +166,12 @@ export default {
           let result = {}
           if (!this.get2fa) {
             result = await this.$store.dispatch('preLogin', data)
+
+            if (result.statusCode === 200) {
+              await this.$router.push('/')
+            } else if (result.success) {
+              this.showNotification(this.$t('invalidCredentials'), 'danger')
+            }
           } else {
             try {
               result = await this.$store.dispatch('loginWith2fa', data)
@@ -183,13 +189,16 @@ export default {
             } catch (e) {
               if (e.status === 403) {
                 this.showNotification(this.$t('invalidCode'), 'danger')
-              } else {
+              }
+              if (e.status === 401) {
                 this.showNotification(this.$t('invalidCredentials'), 'danger')
               }
-
             }
           }
         } catch (e) {
+          if (e.status === 401) {
+            this.showNotification(this.$t('invalidCredentials'), 'danger')
+          }
           if (e.status === 401 || e.status === 400) {
             this.errorMessages.invalidCode = false
           } else if (e.data.invalidCode) {

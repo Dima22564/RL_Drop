@@ -77,10 +77,10 @@
                 </div>
                 <div class="setting__text">
                   <p class="setting__name">
-                    Links
+                    {{ $t('links') }}
                   </p>
                   <p class="setting__desc">
-                    Game accounts
+                    {{ $t('accounts') }}
                   </p>
                 </div>
                 <ArrowR class="setting__next" />
@@ -96,7 +96,7 @@
                     <ArrowL class="icon" />
                     <span>{{ $t('back') }}</span>
                   </div>
-                  <h4>Personal</h4>
+                  <h4>{{ $t('personal') }}</h4>
                   <button :disabled="getButtonState" class="btn form__btn" type="submit">
                     {{ $t('done') }}
                   </button>
@@ -147,7 +147,7 @@
                     <ArrowL class="icon" />
                     <span>{{ $t('back') }}</span>
                   </div>
-                  <h4>Links</h4>
+                  <h4>{{ $t('links') }}</h4>
                   <button class="btn form__btn" type="submit">
                     {{ $t('done') }}
                   </button>

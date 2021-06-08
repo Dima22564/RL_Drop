@@ -6,13 +6,13 @@
       :leftIcon="false"
       :error="Boolean(errorMessages.currentPassword) || $v.currentPassword.$error"
       name="currentPassword"
-      label="Current Password"
+      :label="$t('currentPassword')"
       type="password"
       class="form__input"
     >
       <template slot="error">
         <span v-if="errorMessages.currentPassword">{{ errorMessages.currentPassword }}</span>
-        <span v-if="!$v.currentPassword.required && $v.currentPassword.$error">Password required</span>
+        <span v-if="!$v.currentPassword.required && $v.currentPassword.$error">{{ $t('passwordReq') }}</span>
       </template>
     </MyInput>
     <MyInput
@@ -21,14 +21,14 @@
       :leftIcon="false"
       :error="Boolean(errorMessages.newPassword) || $v.newPassword.$error"
       name="newPassword"
-      label="New Password"
+      :label="$t('newPassword')"
       type="password"
       class="form__input"
     >
       <template slot="error">
         <span v-if="errorMessages.newPassword">{{ errorMessages.newPassword[0] }}</span>
-        <span v-if="!$v.newPassword.required && $v.newPassword.$error">New Password required</span>
-        <span v-if="!$v.newPassword.minLength && $v.newPassword.$error">Password min length is {{ $v.newPassword.$params.minLength.min }}</span>
+        <span v-if="!$v.newPassword.required && $v.newPassword.$error">{{ $t('passwordReq') }}</span>
+        <span v-if="!$v.newPassword.minLength && $v.newPassword.$error">{{ $t('minPass') }} {{ $v.newPassword.$params.minLength.min }}</span>
       </template>
     </MyInput>
     <MyInput
@@ -37,13 +37,13 @@
       :leftIcon="false"
       :error="Boolean(errorMessages.confirmPassword) || $v.confirmPassword.$error"
       name="confirmPassword"
-      label="Confirm Password"
+      :label="$t('confirmPassword')"
       type="password"
       class="form__input form__input_w100"
     >
       <template slot="error">
         <span v-if="errorMessages.confirmPassword">{{ errorMessages.confirmPassword[0] }}</span>
-        <span v-if="!$v.confirmPassword.required && $v.confirmPassword.$error">Confirm your password</span>
+        <span v-if="!$v.confirmPassword.required && $v.confirmPassword.$error">{{ $t('confirmPassword') }}</span>
       </template>
     </MyInput>
   </div>

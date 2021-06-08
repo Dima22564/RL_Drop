@@ -141,7 +141,6 @@ export default {
   &__img
     margin-bottom: 16px
     width: 96px
-    height: 52px
   &__text
     display: flex
     flex-direction: column

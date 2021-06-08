@@ -18,10 +18,10 @@
           {{ desc }}
         </p>
         <button @click.prevent="sell" class="btn btn_primary inventoryItem__btn">
-          Sell
+          {{ $t('sell') }}
         </button>
         <button @click.prevent.once="withdraw({ id, platform, pivotId, userId: getUser.id })" class="btn btn_trans inventoryItem__acc">
-          To Account
+          {{ $t('toAccount') }}
         </button>
       </div>
 
@@ -33,16 +33,16 @@
 
       <div v-if="showConfirm && withdrawStatusData === null" @mouseleave="showConfirm = false" class="inventoryItem__click">
         <p class="inventoryItem__name">
-          Sell this item
+          {{ $t('sell') }}
         </p>
         <p class="inventoryItem__desc inventoryItem__desc_emp">
-          for ${{ price }}?
+          {{ $t('for') }} ${{ price }}?
         </p>
         <button @click="confirmSell({ id, platform, pivotId, price, userId: getUser.id })" class="btn btn_primary inventoryItem__btn">
-          Confirm
+          {{ $t('confirm') }}
         </button>
         <button @click.prevent="showConfirm = false" class="btn btn_trans inventoryItem__acc">
-          Cancel
+          {{ $t('cancel') }}
         </button>
       </div>
 
